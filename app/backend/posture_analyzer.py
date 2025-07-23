@@ -1,25 +1,31 @@
 import cv2 as cv
-from app.backend.pose_detector import poseDetector
-class PostureAnalyzer:
+from PyQt5.QtCore import QObject, pyqtSignal
+from app.backend.pose_detector import PoseDetector
+class PostureAnalyzer(QObject):
+    frame_ready = pyqtSignal(object)
     def __init__(self):
+        super().__init__()
         self.cap=cv.VideoCapture(0)
-        self.detector=poseDetector()
+        self.detector=PoseDetector()
 
     def run(self, test=False):
-        self.isRunning=True
-        while self.isRunning:
+        self.is_running=True
+        while self.is_running:
             isTrue, img=self.cap.read()
             if isTrue:
-                processedImg=self.detector.drawPose(img, True)
+                processed_img=self.detector.draw_pose(img, True)
 
 
                 if test:
-                    cv.imshow("Processed Image", processedImg) 
+                    cv.imshow("Processed Image", processed_img) 
                     if cv.waitKey(1) & 0xFF==ord('q'):
                         break
+        
+            self.frame_ready.emit(processed_img)
+
 
     def stop(self):
-        self.isRunning=False
+        self.is_running=False
     
 
 

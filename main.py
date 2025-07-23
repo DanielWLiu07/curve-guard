@@ -7,8 +7,8 @@ from app.backend.posture_analyzer import PostureAnalyzer
 def main():
     # Initilizes and runs Posture Analyzer
     analyzer = PostureAnalyzer()
-    analyzeThread=threading.Thread(target=analyzer.run)
-    analyzeThread.start()
+    analyze_thread=threading.Thread(target=analyzer.run)
+    analyze_thread.start()
 
     # Initializes and runs main window
     app=QApplication(sys.argv)
@@ -17,7 +17,7 @@ def main():
 
     # When app closes, wait for the analyzer thread to end
     exit_code = app.exec_()
-    analyzeThread.join()
+    analyze_thread.join()
     sys.exit(exit_code)
 
 if __name__ == "__main__":

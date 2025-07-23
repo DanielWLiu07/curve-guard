@@ -3,7 +3,7 @@ import mediapipe as mp
 import time
 import math
 
-class poseDetector:
+class PoseDetector:
     def __init__(self, staticMode=False, modelComplexity=1, smooth=True, detectCon=0.5, trackCon=0.5):
         """
         Initializes the pose detector with configurable parameters.
@@ -35,14 +35,14 @@ class poseDetector:
         )
 
 
-    def drawPose(self, img, draw):
+    def draw_pose(self, img, draw):
         # Returns Image after drawing landmark locations and connections.
 
         RGBImg=cv.cvtColor(img, cv.COLOR_BGR2RGB)
         self.results=self.pose.process(RGBImg)
         if self.results.pose_landmarks:
             if draw:
-                self.utilDraw.draw_landmarks(img, self.results.pose_landmarks, self.poseSolution.POSE_CONNECTIONS)
+                self.utilDraw.draw_landmarks(RGBImg, self.results.pose_landmarks, self.poseSolution.POSE_CONNECTIONS)
 
-        return img
+        return RGBImg
                 
