@@ -48,6 +48,10 @@ class MainWindow(QMainWindow):
         self.sidebar = QWidget()
         self.sidebar_layout = QVBoxLayout()
         self.sidebar.setLayout(self.sidebar_layout)
+        self.sidebar.setObjectName("sidebar")
+        self.sidebar.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.sidebar.setMinimumSize(0, 0)       
+
 
         # Main area
         self.main_area = QWidget()
@@ -63,6 +67,7 @@ class MainWindow(QMainWindow):
         self.body_area_layout.addWidget(self.sidebar, 1)
         self.body_area.setLayout(self.body_area_layout)
         self.body_area_layout.setContentsMargins(0, 0, 0, 0)
+        self.body_area_layout.setSpacing(0)
         self.main_area.setObjectName("body_area")
 
 

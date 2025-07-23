@@ -15,15 +15,7 @@ QWidget#top_bar {
     );
 }
 
+QWidget#sidebar {
+    background-color: #1c1f2a;
 
-/* Purpose	Color Code	Notes
-Background	#24283b	Deep navy / slate
-Sidebar	#1f2335	Slightly darker
-Topbar	#1a1b26	Even darker, subtle contrast
-Accent Blue	#7aa2f7	Hover/active state
-Accent Purple	#bb9af7	Buttons, headers
-Accent Cyan	#7dcfff	Icons, highlights
-Text Primary	#c0caf5	Main foreground text
-Text Muted	#565f89	Disabled/hint text
-Error Red	#f7768e	Warnings, errors
-Success Green	#9ece6a	Success, checkmarks  */
+}
