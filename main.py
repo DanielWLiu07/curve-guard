@@ -1,4 +1,5 @@
 import sys
+import os
 import threading
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
 from PyQt5.QtCore import QTimer
@@ -13,8 +14,12 @@ def main():
 
     # Initializes and runs main window
     app=QApplication(sys.argv)
+    style_path = os.path.join("app", "frontend", "style.qss")
+    with open(style_path) as f:
+        app.setStyleSheet(f.read())
     window=MainWindow(analyzer)
     window.show()
+    
 
     # When app closes, wait for the analyzer thread to end
     exit_code = app.exec_()

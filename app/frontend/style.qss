@@ -1,0 +1,29 @@
+QWidget#body_area {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #14151c,   /* darker left */
+        stop:1 #2c3044    /* lighter right */
+    );
+}
+
+QWidget#top_bar {
+    background-color: qlineargradient(
+        x1: 0, y1: 0,
+        x2: 0, y2: 1,
+        stop: 0 #14151c,
+        stop: 1 #1a1c26
+    );
+}
+
+
+/* Purpose	Color Code	Notes
+Background	#24283b	Deep navy / slate
+Sidebar	#1f2335	Slightly darker
+Topbar	#1a1b26	Even darker, subtle contrast
+Accent Blue	#7aa2f7	Hover/active state
+Accent Purple	#bb9af7	Buttons, headers
+Accent Cyan	#7dcfff	Icons, highlights
+Text Primary	#c0caf5	Main foreground text
+Text Muted	#565f89	Disabled/hint text
+Error Red	#f7768e	Warnings, errors
+Success Green	#9ece6a	Success, checkmarks  */
