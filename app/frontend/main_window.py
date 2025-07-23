@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, analyzer):
         super().__init__()
+        self.analyzer=analyzer
         self.setWindowTitle("Curve Guard")
 
         screen = QDesktopWidget().screenGeometry()
@@ -20,3 +21,6 @@ class MainWindow(QMainWindow):
         # Set geometry: x, y, width, height
         self.setGeometry(pos_x, pos_y, window_width, window_height)
 
+    def closeEvent(self, event):
+        self.analyzer.stop()
+        event.accept()

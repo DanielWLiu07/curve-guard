@@ -1,12 +1,24 @@
 import sys
+import threading
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
+from PyQt5.QtCore import QTimer
 from app.frontend.main_window import MainWindow
-
+from app.backend.posture_analyzer import PostureAnalyzer
 def main():
+    # Initilizes and runs Posture Analyzer
+    analyzer = PostureAnalyzer()
+    analyzeThread=threading.Thread(target=analyzer.run)
+    analyzeThread.start()
+
+    # Initializes and runs main window
     app=QApplication(sys.argv)
-    window=MainWindow()
+    window=MainWindow(analyzer)
     window.show()
-    sys.exit(app.exec_())
+
+    # When app closes, wait for the analyzer thread to end
+    exit_code = app.exec_()
+    analyzeThread.join()
+    sys.exit(exit_code)
 
 if __name__ == "__main__":
     main()  
