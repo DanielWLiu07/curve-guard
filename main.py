@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
 from PyQt5.QtCore import QTimer
 from app.frontend.main_window import MainWindow
 from app.backend.posture_analyzer import PostureAnalyzer
+
 def main():
     # Initilizes and runs Posture Analyzer
     analyzer = PostureAnalyzer()
