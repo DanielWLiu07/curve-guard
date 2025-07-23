@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
 
         # Top bar
         self.top_bar_widget = QWidget()
+        self.top_bar_widget.setFixedHeight(50)
         self.top_bar = QHBoxLayout()
         self.top_bar_widget.setLayout(self.top_bar)
 
@@ -48,8 +49,8 @@ class MainWindow(QMainWindow):
 
 
         self.body_layout = QHBoxLayout()
-        self.body_layout.addWidget(self.video_label)
-        self.body_layout.addWidget(self.sidebar)
+        self.body_layout.addWidget(self.video_label, 3)
+        self.body_layout.addWidget(self.sidebar, 1)
 
 
         self.main_layout = QVBoxLayout()
@@ -72,7 +73,7 @@ class MainWindow(QMainWindow):
         # Convert to QImage and display
         h, w, ch = img.shape
         bytes_per_line = ch * w
-        camera_image = QImage(img.data, w, h, bytes_per_line, QImage.Format_RGB888)
+        camera_image = QImage(img.tobytes(), w, h, bytes_per_line, QImage.Format_RGB888)
         self.video_label.setPixmap(QPixmap.fromImage(camera_image))
 
     def center_crop_resize(self, frame, target_width, target_height):

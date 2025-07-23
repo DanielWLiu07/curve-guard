@@ -37,9 +37,9 @@ class PoseDetector:
 
     def draw_pose(self, img, draw):
         # Returns Image after drawing landmark locations and connections.
-
         RGBImg=cv.cvtColor(img, cv.COLOR_BGR2RGB)
         self.results=self.pose.process(RGBImg)
+        
         if self.results.pose_landmarks:
             if draw:
                 self.utilDraw.draw_landmarks(RGBImg, self.results.pose_landmarks, self.poseSolution.POSE_CONNECTIONS)
