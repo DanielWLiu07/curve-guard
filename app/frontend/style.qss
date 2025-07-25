@@ -17,5 +17,10 @@ QWidget#top_bar {
 
 QWidget#sidebar {
     background-color: #1c1f2a;
+}
 
+QLabel#curve_guard_name{
+    font-family: "Orbitron";
+    font-size: 32px;
+    color: #f8f8ff;
 }

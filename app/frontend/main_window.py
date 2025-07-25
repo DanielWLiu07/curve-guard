@@ -1,15 +1,19 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QFontDatabase, QFont
 import cv2 as cv
 import math
-
+import os
 class MainWindow(QMainWindow):
     def __init__(self, analyzer):
         # Window Set Up
         super().__init__()
         self.setWindowTitle("Curve Guard")
        
-        
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        font_path = os.path.join(base_dir, "assets","Orbitron", "static","Orbitron-Regular.ttf")
+        self.font_id = QFontDatabase.addApplicationFont(font_path)
+        self.families = QFontDatabase.applicationFontFamilies(self.font_id)
+        self.orbitron = QFont(self.families[0], 12)
         self.analyzer=analyzer
         self.analyzer.frame_ready.connect(self.update_image)
 
@@ -43,6 +47,22 @@ class MainWindow(QMainWindow):
         self.top_bar_layout = QHBoxLayout()
         self.top_bar.setLayout(self.top_bar_layout)
         self.top_bar.setObjectName("top_bar")
+        self.top_bar_layout.setContentsMargins(0, 0, 0, 0) 
+        self.top_bar_layout.setSpacing(0)
+        
+        # Logo
+        self.logo=QLabel(self)
+        self.logo_pixmap=QPixmap()
+        self.logo.setPixmap(self.logo_pixmap)
+        self.top_bar_layout.addWidget(self.video_label)
+
+        # Curve Guard (App name)
+        self.curve_guard_name=QLabel("Curve Guard", self)
+        self.curve_guard_name.setObjectName("curve_name")
+        self.curve_guard_name.setObjectName("curve_guard_name")
+        self.curve_guard_name.setFont(self.orbitron)
+        self.top_bar_layout.addWidget(self.curve_guard_name)
+       
 
         # Side bar
         self.sidebar = QWidget()
@@ -51,7 +71,6 @@ class MainWindow(QMainWindow):
         self.sidebar.setObjectName("sidebar")
         self.sidebar.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.sidebar.setMinimumSize(0, 0)       
-
 
         # Main area
         self.main_area = QWidget()
@@ -68,7 +87,7 @@ class MainWindow(QMainWindow):
         self.body_area.setLayout(self.body_area_layout)
         self.body_area_layout.setContentsMargins(0, 0, 0, 0)
         self.body_area_layout.setSpacing(0)
-        self.main_area.setObjectName("body_area")
+        self.body_area.setObjectName("body_area")
 
 
         self.main_layout = QVBoxLayout()
@@ -103,7 +122,7 @@ class MainWindow(QMainWindow):
 
         # Scale so the image covers the whole label area, rounding up to avoid smaller size
         scale = max(target_width / w, target_height / h)
-        new_w, new_h = math.ceil(w * scale), math.ceil(h * scale)  # ceil instead of int
+        new_w, new_h = math.ceil(w * scale), math.ceil(h * scale)
         resized = cv.resize(frame, (new_w, new_h), interpolation=cv.INTER_AREA)
 
         x_start = (new_w - target_width) // 2
