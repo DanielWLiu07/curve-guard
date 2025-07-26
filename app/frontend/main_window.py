@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 import cv2 as cv
 import math
 import os
+
 class MainWindow(QMainWindow):
     def __init__(self, analyzer):
         # Window Set Up
@@ -100,18 +101,19 @@ class MainWindow(QMainWindow):
         self.sidebar_layout.addStretch()
 
         # Height Monitor Text
-        self.height_monitor_text=QLabel("Height Monitor", self)
+        self.height_monitor_text=QLabel("Posture Height Monitor", self)
         self.height_monitor_text.setFont(self.orbitron)
         self.height_monitor_text.setObjectName("height_monitor_text")
         self.height_monitor_layout.addWidget(self.height_monitor_text, 0, 0)
 
         # Calibrate Height Line Button
-        self.calibrate_height = QPushButton("Calibrate Height", self)
+        self.calibrate_height = QPushButton("Calibrate Default Eye Level", self)
         self.calibrate_height.setFont(self.orbitron)
         self.calibrate_height.setIcon(QIcon()) 
         self.height_monitor_layout.addWidget(self.calibrate_height, 1, 0, 1, 2, alignment=Qt.AlignCenter)
         self.calibrate_height.setFixedSize(260, 30)
         self.calibrate_height.setObjectName("calibrate")
+        self.calibrate_height.clicked.connect(self.analyzer.calibrate_height_line)
 
         # Height Leniency
         self.height_leniency_text=QLabel("Height Leniency (0-100%)", self)
@@ -199,7 +201,6 @@ class MainWindow(QMainWindow):
         cropped = resized[y_start:y_start + target_height, x_start:x_start + target_width]
 
         return cropped
-        
 
     def closeEvent(self, event):
         self.analyzer.stop()

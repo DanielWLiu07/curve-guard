@@ -50,7 +50,7 @@ class PoseDetector:
         self.lmList=[]
         if self.results.pose_landmarks:
             for id, lm in enumerate(self.results.pose_landmarks.landmark):
-                h, w= img.shape
+                h, w, c= img.shape
                 cx, cy = int(lm.x*w),int(lm.y*h)
                 self.lmList.append([id, cx, cy])
 
