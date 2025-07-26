@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy
-from PyQt5.QtGui import QPixmap, QImage, QFontDatabase, QFont
+from PyQt5.QtGui import QPixmap, QImage, QFontDatabase, QFont, QIcon
+from PyQt5.QtCore import Qt
 import cv2 as cv
 import math
 import os
@@ -8,9 +9,12 @@ class MainWindow(QMainWindow):
         # Window Set Up
         super().__init__()
         self.setWindowTitle("Curve Guard")
-       
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        font_path = os.path.join(base_dir, "assets","Orbitron", "static","Orbitron-Regular.ttf")
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        window_icon=os.path.join(self.base_dir, "assets", "logo.png")
+        self.setWindowIcon(QIcon(window_icon))
+
+        font_path = os.path.join(self.base_dir, "assets","Orbitron", "static","Orbitron-Regular.ttf")
         self.font_id = QFontDatabase.addApplicationFont(font_path)
         self.families = QFontDatabase.applicationFontFamilies(self.font_id)
         self.orbitron = QFont(self.families[0], 12)
@@ -49,20 +53,27 @@ class MainWindow(QMainWindow):
         self.top_bar.setObjectName("top_bar")
         self.top_bar_layout.setContentsMargins(0, 0, 0, 0) 
         self.top_bar_layout.setSpacing(0)
-        
+
         # Logo
         self.logo=QLabel(self)
-        self.logo_pixmap=QPixmap()
-        self.logo.setPixmap(self.logo_pixmap)
-        self.top_bar_layout.addWidget(self.video_label)
+        logo_path=os.path.join(self.base_dir, "assets", "logo.png")
+        self.logo_pixmap=QPixmap(logo_path)
+        self.scaled_pixmap = self.logo_pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.logo.setPixmap(self.scaled_pixmap)
+        self.top_bar_layout.addWidget(self.logo, 0, Qt.AlignLeft)
+        self.logo.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.logo.setObjectName("logo")
+        self.logo.setScaledContents(False)
 
         # Curve Guard (App name)
         self.curve_guard_name=QLabel("Curve Guard", self)
         self.curve_guard_name.setObjectName("curve_name")
         self.curve_guard_name.setObjectName("curve_guard_name")
         self.curve_guard_name.setFont(self.orbitron)
-        self.top_bar_layout.addWidget(self.curve_guard_name)
-       
+        self.curve_guard_name.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.top_bar_layout.addWidget(self.curve_guard_name, 0, Qt.AlignLeft)
+        self.top_bar_layout.addStretch(3)
+
 
         # Side bar
         self.sidebar = QWidget()

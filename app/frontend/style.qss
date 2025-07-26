@@ -1,3 +1,10 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+
+
 QWidget#body_area {
     background: qlineargradient(
         x1:0, y1:0, x2:1, y2:0,
@@ -23,4 +30,8 @@ QLabel#curve_guard_name{
     font-family: "Orbitron";
     font-size: 32px;
     color: #f8f8ff;
+}
+#logo{
+    margin-left: 25px;
+    margin-right: 25px;
 }
