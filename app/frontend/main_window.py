@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget, QSizePolicy, QPushButton, QLineEdit, QCheckBox
 from PyQt5.QtGui import QPixmap, QImage, QFontDatabase, QFont, QIcon
 from PyQt5.QtCore import Qt
 import cv2 as cv
@@ -65,10 +65,9 @@ class MainWindow(QMainWindow):
         self.logo.setObjectName("logo")
         self.logo.setScaledContents(False)
 
-        # Curve Guard (App name)
+        # Curve Guard Text (App name)
         self.curve_guard_name=QLabel("Curve Guard", self)
-        self.curve_guard_name.setObjectName("curve_name")
-        self.curve_guard_name.setObjectName("curve_guard_name")
+        self.curve_guard_name.setObjectName("curve_guard")
         self.curve_guard_name.setFont(self.orbitron)
         self.curve_guard_name.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.top_bar_layout.addWidget(self.curve_guard_name, 0, Qt.AlignLeft)
@@ -81,7 +80,65 @@ class MainWindow(QMainWindow):
         self.sidebar.setLayout(self.sidebar_layout)
         self.sidebar.setObjectName("sidebar")
         self.sidebar.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
-        self.sidebar.setMinimumSize(0, 0)       
+        self.sidebar.setMinimumSize(0, 0)    
+        self.sidebar.setFixedWidth(300)   
+        
+
+        # Control_Panel Text
+        self.control_panel=QLabel("Control Panel", self)
+        self.control_panel.setFont(self.orbitron)
+        self.sidebar_layout.addWidget(self.control_panel, 0, Qt.AlignLeft)
+        self.control_panel.setObjectName("control_panel")
+
+        # Height Monitor
+        self.height_monitor=QWidget()
+        self.sidebar_layout.addWidget(self.height_monitor)
+        self.height_monitor_layout= QGridLayout()
+        self.height_monitor.setLayout(self.height_monitor_layout)
+        self.height_monitor.setObjectName("height_monitor")
+        self.height_monitor.setFixedSize(280, 200);
+        self.sidebar_layout.addStretch()
+
+        # Height Monitor Text
+        self.height_monitor_text=QLabel("Height Monitor", self)
+        self.height_monitor_text.setFont(self.orbitron)
+        self.height_monitor_text.setObjectName("height_monitor_text")
+        self.height_monitor_layout.addWidget(self.height_monitor_text, 0, 0)
+
+        # Calibrate Height Line Button
+        self.calibrate_height = QPushButton("Calibrate Height", self)
+        self.calibrate_height.setFont(self.orbitron)
+        self.calibrate_height.setIcon(QIcon()) 
+        self.height_monitor_layout.addWidget(self.calibrate_height, 1, 0, 1, 2, alignment=Qt.AlignCenter)
+        self.calibrate_height.setFixedSize(260, 30)
+        self.calibrate_height.setObjectName("calibrate")
+
+        # Height Leniency
+        self.height_leniency_text=QLabel("Height Leniency (0-100%)", self)
+        self.height_monitor_layout.addWidget(self.height_leniency_text, 2, 0)
+        self.height_leniency_text.setObjectName("blue_settings_text")
+        self.height_leniency_entry=QLineEdit(self)
+        self.height_monitor_layout.addWidget(self.height_leniency_entry, 2, 1)
+        self.height_leniency_entry.editingFinished.connect(self.validate_height_leniency)
+
+        # Time Leniency
+        self.time_leniency_text=QLabel("Time Leniency (s)", self)
+        self.height_monitor_layout.addWidget(self.time_leniency_text, 3, 0)
+        self.time_leniency_text.setObjectName("blue_settings_text")
+        self.time_leniency_entry=QLineEdit(self)
+        self.height_monitor_layout.addWidget(self.time_leniency_entry, 3, 1)
+        self.height_monitor_layout.setRowStretch(self.height_monitor_layout.rowCount(), 1)
+
+        # Line Visibility
+        self.line_visibility_text=QLabel("Line Visibility", self)
+        self.height_monitor_layout.addWidget(self.line_visibility_text, 4, 0)
+        self.line_visibility_text.setObjectName("blue_settings_text")
+        self.line_visibility_checkbox=QCheckBox(self)
+        self.line_visibility_checkbox.setChecked(True)
+        self.height_monitor_layout.addWidget(self.line_visibility_checkbox, 4, 1)
+        
+
+        self.height_monitor_layout.setRowStretch(self.height_monitor_layout.rowCount(), 1)
 
         # Main area
         self.main_area = QWidget()
@@ -147,3 +204,14 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         self.analyzer.stop()
         event.accept()
+
+    def validate_height_leniency(self):
+        value = self.leniency_entry.text()
+        if not value.isdigit():
+            self.leniency_entry.setText("0")
+        else:
+            value = int(value)
+            if value < 0:
+                self.leniency_entry.setText("0")
+            elif value > 100:
+                self.leniency_entry.setText("100")

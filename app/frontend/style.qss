@@ -3,8 +3,6 @@
     padding: 0;
 }
 
-
-
 QWidget#body_area {
     background: qlineargradient(
         x1:0, y1:0, x2:1, y2:0,
@@ -26,12 +24,50 @@ QWidget#sidebar {
     background-color: #1c1f2a;
 }
 
-QLabel#curve_guard_name{
-    font-family: "Orbitron";
+QLabel#curve_guard{
     font-size: 32px;
     color: #f8f8ff;
 }
+
+QLabel#control_panel{
+    font-size: 32px;
+    color: #f8f8ff;
+}
+
 #logo{
     margin-left: 25px;
     margin-right: 25px;
 }
+
+QWidget#height_monitor{
+    border-radius: 15px;
+    border: 2px solid #7dcfff;
+    background-color: #1c1f2a;
+}
+
+QLabel#height_monitor_text{
+    font-size: 18px;
+    color: #7dcfff;
+
+}
+
+QPushButton#calibrate{
+    border-radius: 15px;
+    border: 2px solid #7dcfff;
+    background-color: #1c1f2a;
+    font-size: 12px;
+    
+}
+QPushButton#calibrate:hover{
+    border-radius: 15px;
+    border: 2px solid #54b0ff;
+    background-color: #273047;
+    font-size: 13px;
+    
+}
+
+QLabel#blue_settings_text{
+    font-size: 12px;
+    color: #7dcfff;
+}   
+
