@@ -1,9 +1,7 @@
 # CurveGuard
 
 **Posture-aware wellness tool powered by AI**  
-**CurveGuard** is a real-time posture monitoring desktop app that uses computer vision to promote healthy spinal habits. It leverages [MediaPipe](https://mediapipe.dev/) for body landmark detection and provides an intuitive PyQt5 interface to alert users of poor posture while using their computer.
-
-By encouraging upright sitting posture, CurveGuard aims to prevent long-term spinal issues such as **scoliosis**, **lordosis**, and **kyphosis**.
+**CurveGuard** is a real-time posture monitoring desktop app that uses computer vision to promote healthy spinal habits. It leverages [MediaPipe](https://mediapipe.dev/) for body landmark detection and provides an intuitive PyQt5 interface to alert users of poor posture while using their computer. By encouraging upright sitting posture, CurveGuard aims to prevent long-term spinal issues such as **scoliosis**, **lordosis**, and **kyphosis**.
 
 ---
 
