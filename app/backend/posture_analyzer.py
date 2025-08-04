@@ -6,22 +6,38 @@ class PostureAnalyzer(QObject):
     def __init__(self):
         super().__init__()
         self.cap=cv.VideoCapture(0)
-        self.detector=PoseDetector()
+        self.detector = PoseDetector()
+        self.height_line_visibility = True
+        self.shoulder_visibility = True
 
     def run(self, test=False):
         self.is_running=True
         isTrue, self.img=self.cap.read()
         self.eye_level=self.img.shape[1]
         print(type(self.eye_level))
+
         while self.is_running:
             isTrue, self.img=self.cap.read()
             if isTrue:
-                processed_img=self.detector.draw_pose(self.img, True)
+                processed_img=self.detector.draw_pose(self.img.copy(), True)
+                self.lmList=self.detector.find_cords(self.img)
 
-
-                if self.toggle_height_line:
+                if self.height_line_visibility:
                     cv.line(processed_img, (0, int(self.eye_level)), (9999, int(self.eye_level)), (255, 0, 0), 2)
-            
+
+                if self.shoulder_visibility:
+                    cv.circle(processed_img, (self.lmList[11][1], self.lmList[11][2]), 30, (255, 0, 0), 3)
+                    cv.circle(processed_img, (self.lmList[12][1], self.lmList[12][2]), 30, (255, 0, 0), 3)
+                 
+                    y1 = self.lmList[11][2]
+                    y2 = self.lmList[12][2]
+                    vertical_dist = abs(y1 - y2)
+                    text = f"Vertical Dist: {vertical_dist}px"
+
+                    x_pos = (self.lmList[11][1] + self.lmList[12][1]) // 2
+                    y_pos = min(y1, y2) - 20
+                    cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                
                 if test:
                     cv.imshow("Processed Image", processed_img) 
                     if cv.waitKey(1) & 0xFF==ord('q'):
@@ -34,14 +50,13 @@ class PostureAnalyzer(QObject):
         self.is_running=False
     
     def calibrate_height_line(self):
-        lmList=self.detector.find_cords(self.img)
-        self.eye_level = (lmList[2][2] + lmList[5][2]) / 2
+        self.eye_level = (self.lmList[2][2] + self.lmList[5][2]) / 2
 
-    def toggle_height_line(self):
-        if self.show_height_line:
-            self.show_height_line = False
-        else:
-            self.show_height_line = True
+    def toggle_shoulder_visibility(self, checked):
+        self.shoulder_visibility = checked
+        
+    def toggle_height_line(self, checked):
+        self.height_line_visibility = checked
 
 
 if __name__ == "__main__":
