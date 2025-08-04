@@ -75,7 +75,6 @@ class MainWindow(QMainWindow):
         self.top_bar_layout.addWidget(self.curve_guard_name, 0, Qt.AlignLeft)
         self.top_bar_layout.addStretch(3)
 
-
         # Side bar
         self.sidebar = QWidget()
         self.sidebar_layout = QVBoxLayout()
@@ -85,7 +84,6 @@ class MainWindow(QMainWindow):
         self.sidebar.setMinimumSize(0, 0)    
         self.sidebar.setFixedWidth(300)   
         
-
         # Control_Panel Text
         self.control_panel=QLabel("Control Panel", self)
         self.control_panel.setFont(self.orbitron)
@@ -100,7 +98,6 @@ class MainWindow(QMainWindow):
         self.height_monitor.setLayout(self.height_monitor_layout)
         self.height_monitor.setObjectName("height_monitor")
         self.height_monitor_layout.setSpacing(2)
-
 
         # Height Monitor Text
         self.height_monitor_text=QLabel("Height Monitor", self)
@@ -120,9 +117,8 @@ class MainWindow(QMainWindow):
         self.calibrate_height.setStyleSheet("padding: 0px; margin: 0px;")
         self.height_monitor_text.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
 
-
         # Height Leniency
-        self.height_leniency_text=QLabel("Height Leniency (0-100%)", self)
+        self.height_leniency_text=QLabel("Height Leniency (px)", self)
         self.height_monitor_layout.addWidget(self.height_leniency_text, 2, 0)
         self.height_leniency_text.setObjectName("blue_settings_text")
         self.height_leniency_text.setFont(self.orbitron)
@@ -152,6 +148,7 @@ class MainWindow(QMainWindow):
         self.line_visibility_text.setFont(self.orbitron)
         self.line_visibility_checkbox=QCheckBox(self)
         self.line_visibility_checkbox.setChecked(True)
+        self.line_visibility_checkbox.toggled.connect(self.analyzer.toggle_height_line)
         self.height_monitor_layout.addWidget(self.line_visibility_checkbox, 4, 1)
     
         # Shoulder Monitor
@@ -187,6 +184,7 @@ class MainWindow(QMainWindow):
         self.shoulder_visibility_checkbox=QCheckBox(self)
         self.shoulder_visibility_checkbox.setChecked(True)
         self.shoulder_monitor_layout.addWidget(self.shoulder_visibility_checkbox, 4, 1)
+        self.shoulder_visibility_checkbox.toggled.connect(self.analyzer.toggle_shoulder_visibility)
 
         # Head Monitor
         self.head_monitor=QWidget()
@@ -214,8 +212,8 @@ class MainWindow(QMainWindow):
         self.head_leniency_entry.setMinimumWidth(75)
         self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, 99999))
 
-        # Shoulder Points Visibility
-        self.head_visibility_text=QLabel("Shoulder Visibility", self)
+        # Head Points Visibility
+        self.head_visibility_text=QLabel("Head Visibility", self)
         self.head_visibility_text.setFont(self.orbitron)
         self.head_monitor_layout.addWidget(self.head_visibility_text, 4, 0)
         self.head_visibility_text.setObjectName("green_settings_text")
@@ -240,7 +238,6 @@ class MainWindow(QMainWindow):
         self.body_area_layout.setSpacing(0)
         self.body_area.setObjectName("body_area")
 
-
         self.main_layout = QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.main_layout.setSpacing(0)
@@ -249,9 +246,6 @@ class MainWindow(QMainWindow):
 
         central_widget.setLayout(self.main_layout)
         
-        
-        
-
     def update_image(self, cv_img):
         # Get target size from QLabel
         target_width = self.video_label.width()
