@@ -43,12 +43,12 @@ QWidget#height_monitor{
     border-radius: 15px;
     border: 2px solid #7dcfff;
     background-color: #1c1f2a;
+    spacing:0px;
 }
 
 QLabel#height_monitor_text{
     font-size: 18px;
     color: #7dcfff;
-
 }
 
 QPushButton#calibrate{
@@ -56,14 +56,16 @@ QPushButton#calibrate{
     border: 2px solid #7dcfff;
     background-color: #1c1f2a;
     font-size: 12px;
-    
+    color: #f7768e;
+    padding: 0px;
+    margin: 0px;
 }
 QPushButton#calibrate:hover{
     border-radius: 15px;
     border: 2px solid #54b0ff;
     background-color: #273047;
     font-size: 13px;
-    
+    color: #f7768e;
 }
 
 QLabel#blue_settings_text{
@@ -71,3 +73,34 @@ QLabel#blue_settings_text{
     color: #7dcfff;
 }   
 
+QWidget#shoulder_monitor{
+    border-radius: 15px;
+    border: 2px solid #bb9af7;
+    background-color: #1c1f2a;
+}
+
+QLabel#shoulder_monitor_text{
+    font-size: 18px;
+    color: #bb9af7	;
+}
+
+QLabel#purple_settings_text{
+    font-size: 12px;
+    color: #bb9af7;
+}   
+
+QWidget#head_monitor{
+    border-radius: 15px;
+    border: 2px solid #B9F27C;
+    background-color: #1c1f2a;
+}
+
+QLabel#head_monitor_text{
+    font-size: 18px;
+    color: #B9F27C;
+}
+
+QLabel#green_settings_text{
+    font-size: 12px;
+    color: #B9F27C;
+}   
