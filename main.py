@@ -20,7 +20,6 @@ def main():
     window=MainWindow(analyzer)
     window.show()
     
-
     # When app closes, wait for the analyzer thread to end
     exit_code = app.exec_()
     analyze_thread.join()
