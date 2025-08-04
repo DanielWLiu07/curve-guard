@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         central_widget=QWidget()
         self.setCentralWidget(central_widget)
         
-        #Processed Video feed
+        # Processed Video feed
         self.video_label=QLabel(self)
         self.video_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.video_label.setMinimumSize(320, 240)       
@@ -59,9 +59,10 @@ class MainWindow(QMainWindow):
         self.logo=QLabel(self)
         logo_path=os.path.join(self.base_dir, "assets", "logo.png")
         self.logo_pixmap=QPixmap(logo_path)
+        #self.logo.setFixedSize(75, 75)
         self.scaled_pixmap = self.logo_pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.logo.setPixmap(self.scaled_pixmap)
-        self.top_bar_layout.addWidget(self.logo, 0, Qt.AlignLeft)
+        self.top_bar_layout.addWidget(self.logo, 0, Qt.AlignCenter | Qt.AlignVCenter)
         self.logo.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.logo.setObjectName("logo")
         self.logo.setScaledContents(False)
@@ -94,53 +95,133 @@ class MainWindow(QMainWindow):
         # Height Monitor
         self.height_monitor=QWidget()
         self.sidebar_layout.addWidget(self.height_monitor)
+        self.height_monitor.setFixedHeight(150)
         self.height_monitor_layout= QGridLayout()
         self.height_monitor.setLayout(self.height_monitor_layout)
         self.height_monitor.setObjectName("height_monitor")
-        self.height_monitor.setFixedSize(280, 200);
-        self.sidebar_layout.addStretch()
+        self.height_monitor_layout.setSpacing(2)
+
 
         # Height Monitor Text
-        self.height_monitor_text=QLabel("Posture Height Monitor", self)
+        self.height_monitor_text=QLabel("Height Monitor", self)
         self.height_monitor_text.setFont(self.orbitron)
         self.height_monitor_text.setObjectName("height_monitor_text")
         self.height_monitor_layout.addWidget(self.height_monitor_text, 0, 0)
+        self.height_monitor_text.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
 
         # Calibrate Height Line Button
         self.calibrate_height = QPushButton("Calibrate Default Eye Level", self)
         self.calibrate_height.setFont(self.orbitron)
         self.calibrate_height.setIcon(QIcon()) 
-        self.height_monitor_layout.addWidget(self.calibrate_height, 1, 0, 1, 2, alignment=Qt.AlignCenter)
+        self.height_monitor_layout.addWidget(self.calibrate_height, 1, 0, alignment = Qt.AlignCenter)
         self.calibrate_height.setFixedSize(260, 30)
         self.calibrate_height.setObjectName("calibrate")
         self.calibrate_height.clicked.connect(self.analyzer.calibrate_height_line)
+        self.calibrate_height.setStyleSheet("padding: 0px; margin: 0px;")
+        self.height_monitor_text.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+
 
         # Height Leniency
         self.height_leniency_text=QLabel("Height Leniency (0-100%)", self)
         self.height_monitor_layout.addWidget(self.height_leniency_text, 2, 0)
         self.height_leniency_text.setObjectName("blue_settings_text")
+        self.height_leniency_text.setFont(self.orbitron)
         self.height_leniency_entry=QLineEdit(self)
         self.height_monitor_layout.addWidget(self.height_leniency_entry, 2, 1)
-        self.height_leniency_entry.editingFinished.connect(self.validate_height_leniency)
+        self.height_leniency_entry.setMinimumWidth(75)
+        self.height_leniency_entry.setText("50")
+        self.height_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.height_leniency_entry, 0, 100))
+        self.height_leniency_entry.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         # Time Leniency
         self.time_leniency_text=QLabel("Time Leniency (s)", self)
         self.height_monitor_layout.addWidget(self.time_leniency_text, 3, 0)
         self.time_leniency_text.setObjectName("blue_settings_text")
+        self.time_leniency_text.setFont(self.orbitron)
         self.time_leniency_entry=QLineEdit(self)
         self.height_monitor_layout.addWidget(self.time_leniency_entry, 3, 1)
+        self.height_leniency_entry.setMinimumWidth(75)
+        self.height_leniency_entry.setText("3")
         self.height_monitor_layout.setRowStretch(self.height_monitor_layout.rowCount(), 1)
+        self.time_leniency_entry.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         # Line Visibility
         self.line_visibility_text=QLabel("Line Visibility", self)
         self.height_monitor_layout.addWidget(self.line_visibility_text, 4, 0)
         self.line_visibility_text.setObjectName("blue_settings_text")
+        self.line_visibility_text.setFont(self.orbitron)
         self.line_visibility_checkbox=QCheckBox(self)
         self.line_visibility_checkbox.setChecked(True)
         self.height_monitor_layout.addWidget(self.line_visibility_checkbox, 4, 1)
-        
+    
+        # Shoulder Monitor
+        self.shoulder_monitor=QWidget()
+        self.sidebar_layout.addWidget(self.shoulder_monitor)
+        self.shoulder_monitor_layout= QGridLayout()
+        self.shoulder_monitor.setLayout(self.shoulder_monitor_layout)
+        self.shoulder_monitor.setObjectName("shoulder_monitor")
+        self.shoulder_monitor_layout.setSpacing(2)
 
-        self.height_monitor_layout.setRowStretch(self.height_monitor_layout.rowCount(), 1)
+        # Shoulder Monitor Text
+        self.shoulder_monitor_text=QLabel("Shoulder Monitor", self)
+        self.shoulder_monitor_text.setFont(self.orbitron)
+        self.shoulder_monitor_text.setObjectName("shoulder_monitor_text")
+        self.shoulder_monitor_layout.addWidget(self.shoulder_monitor_text, 0, 0)
+
+        # Shoulder Leniency
+        self.shoulder_leniency_text=QLabel("Unevenness Leniency (px)", self)
+        self.shoulder_monitor_layout.addWidget(self.shoulder_leniency_text, 2, 0)
+        self.shoulder_leniency_text.setObjectName("purple_settings_text")
+        self.shoulder_leniency_text.setFont(self.orbitron)
+        self.shoulder_leniency_entry=QLineEdit(self)
+        self.shoulder_leniency_entry.setText("50")
+        self.shoulder_monitor_layout.addWidget(self.shoulder_leniency_entry, 2, 1)
+        self.shoulder_leniency_entry.setMinimumWidth(75)
+        self.shoulder_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_leniency_entry, 99999))
+
+        # Shoulder Points Visibility
+        self.shoulder_visibility_text=QLabel("Shoulder Visibility", self)
+        self.shoulder_visibility_text.setFont(self.orbitron)
+        self.shoulder_monitor_layout.addWidget(self.shoulder_visibility_text, 4, 0)
+        self.shoulder_visibility_text.setObjectName("purple_settings_text")
+        self.shoulder_visibility_checkbox=QCheckBox(self)
+        self.shoulder_visibility_checkbox.setChecked(True)
+        self.shoulder_monitor_layout.addWidget(self.shoulder_visibility_checkbox, 4, 1)
+
+        # Head Monitor
+        self.head_monitor=QWidget()
+        self.sidebar_layout.addWidget(self.head_monitor)
+        self.head_monitor_layout= QGridLayout()
+        self.head_monitor.setLayout(self.head_monitor_layout)
+        self.head_monitor.setObjectName("head_monitor")
+        self.head_monitor_layout.setSpacing(2)
+        self.sidebar_layout.addStretch()
+
+        # Head Monitor Text
+        self.head_monitor_text=QLabel("Head Monitor", self)
+        self.head_monitor_text.setFont(self.orbitron)
+        self.head_monitor_text.setObjectName("head_monitor_text")
+        self.head_monitor_layout.addWidget(self.head_monitor_text, 0, 0)
+
+        # Head Leniency
+        self.head_leniency_text=QLabel("Unevenness Leniency (px)", self)
+        self.head_monitor_layout.addWidget(self.head_leniency_text, 2, 0)
+        self.head_leniency_text.setObjectName("green_settings_text")
+        self.head_leniency_text.setFont(self.orbitron)
+        self.head_leniency_entry=QLineEdit(self)
+        self.head_leniency_entry.setText("50")
+        self.head_monitor_layout.addWidget(self.head_leniency_entry, 2, 1)
+        self.head_leniency_entry.setMinimumWidth(75)
+        self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, 99999))
+
+        # Shoulder Points Visibility
+        self.head_visibility_text=QLabel("Shoulder Visibility", self)
+        self.head_visibility_text.setFont(self.orbitron)
+        self.head_monitor_layout.addWidget(self.head_visibility_text, 4, 0)
+        self.head_visibility_text.setObjectName("green_settings_text")
+        self.head_visibility_checkbox=QCheckBox(self)
+        self.head_visibility_checkbox.setChecked(True)
+        self.head_monitor_layout.addWidget(self.head_visibility_checkbox, 4, 1)
 
         # Main area
         self.main_area = QWidget()
@@ -206,13 +287,13 @@ class MainWindow(QMainWindow):
         self.analyzer.stop()
         event.accept()
 
-    def validate_height_leniency(self):
-        value = self.leniency_entry.text()
+    def validate_digit(self, entry, lower, upper):
+        value = entry.text()
         if not value.isdigit():
-            self.leniency_entry.setText("0")
+            entry.setText("0")
         else:
             value = int(value)
-            if value < 0:
-                self.leniency_entry.setText("0")
-            elif value > 100:
-                self.leniency_entry.setText("100")
+            if value < lower:
+                self.leniency_entry.setText(lower)
+            elif value > upper:
+                self.leniency_entry.setText(upper)
