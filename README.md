@@ -25,6 +25,8 @@ CurveGuard monitors three key indicators of posture in real-time:
 ### Eye Height Monitor
 Users can calibrate an eye-level reference line to help ensure they sit upright while using their device. This calibration is based on **MediaPipe pose landmarks 2 and 3**, which correspond to the left and right eyes.
 
+A demo of the calibration can be seen below:
+![default_screen](media/calibrate.gif)
 
 The system allows customizable settings:
 - **Calibrate**: Create a reference line based on the average eye positions (landmarks 2 and 3).
