@@ -44,6 +44,8 @@ Customizable settings include:
 - **Delay**: Set the number of seconds the shoulders must remain uneven before triggering a warning.
 - **Visibility**: Enable visibility of highlighted shoulder landmarks.
 
+![shoulder_monitor](media/shoulder_monitor.png)
+
 This promotes symmetrical posture and can help users avoid leaning or slouching over time.
 
 ### Head Tilt Monitor
@@ -54,6 +56,8 @@ Customizable settings include:
 - **Leniency**: Set the maximum vertical difference (in pixels) before it's considered incorrect posture.  
 - **Delay**: Set the number of seconds the head must remain tilted before triggering a warning.  
 - **Visibility**: Enable visibility of the on-screen tilt guideline for real-time feedback.
+
+![head_monitor](media/head_monitor.png)
 
 This feature helps reinforce neutral head alignment and reduce the risk of neck strain caused by prolonged poor posture.
 
