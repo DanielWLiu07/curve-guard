@@ -1,6 +1,7 @@
 import cv2 as cv
 from PyQt5.QtCore import QObject, pyqtSignal
 from app.backend.pose_detector import PoseDetector
+
 class PostureAnalyzer(QObject):
     frame_ready = pyqtSignal(object)
     def __init__(self):
@@ -38,6 +39,9 @@ class PostureAnalyzer(QObject):
                     y_pos = min(y1, y2) - 20
                     cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 
+                # eye level detecion
+                self.check_eye_level()
+
                 if test:
                     cv.imshow("Processed Image", processed_img) 
                     if cv.waitKey(1) & 0xFF==ord('q'):
@@ -45,6 +49,8 @@ class PostureAnalyzer(QObject):
         
             self.frame_ready.emit(processed_img)
 
+    def check_eye_level(self):
+        pass
 
     def stop(self):
         self.is_running=False
