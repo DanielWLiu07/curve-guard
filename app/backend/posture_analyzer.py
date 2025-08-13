@@ -42,6 +42,7 @@ class PostureAnalyzer(QObject):
                 # eye level detecion
                 self.check_eye_level()
 
+                self.check_shoulders()
                 if test:
                     cv.imshow("Processed Image", processed_img) 
                     if cv.waitKey(1) & 0xFF==ord('q'):
@@ -50,6 +51,9 @@ class PostureAnalyzer(QObject):
             self.frame_ready.emit(processed_img)
 
     def check_eye_level(self):
+        pass
+
+    def check_shoulders(self):
         pass
 
     def stop(self):
