@@ -59,7 +59,6 @@ class MainWindow(QMainWindow):
         self.logo=QLabel(self)
         logo_path=os.path.join(self.base_dir, "assets", "logo.png")
         self.logo_pixmap=QPixmap(logo_path)
-        #self.logo.setFixedSize(75, 75)
         self.scaled_pixmap = self.logo_pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.logo.setPixmap(self.scaled_pixmap)
         self.top_bar_layout.addWidget(self.logo, 0, Qt.AlignCenter | Qt.AlignVCenter)
@@ -68,7 +67,7 @@ class MainWindow(QMainWindow):
         self.logo.setScaledContents(False)
 
         # Curve Guard Text (App name)
-        self.curve_guard_name=QLabel("Curve Guard", self)
+        self.curve_guard_name = QLabel("Curve Guard", self)
         self.curve_guard_name.setObjectName("curve_guard")
         self.curve_guard_name.setFont(self.orbitron)
         self.curve_guard_name.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
