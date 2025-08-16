@@ -70,9 +70,13 @@ class PostureAnalyzer(QObject):
 
     def toggle_shoulder_visibility(self, checked):
         self.shoulder_visibility = checked
+
+    def toggle_head_visibility(self, checked):
+        pass
         
     def toggle_height_line(self, checked):
         self.height_line_visibility = checked
+
 
 
 if __name__ == "__main__":
