@@ -73,6 +73,9 @@ class PostureAnalyzer(QObject):
 
     def toggle_head_visibility(self, checked):
         pass
+
+    def update_head_time_leniency(self, time):
+        pass
         
     def toggle_height_line(self, checked):
         self.height_line_visibility = checked
