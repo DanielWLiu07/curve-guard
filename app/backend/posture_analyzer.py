@@ -3,13 +3,20 @@ from PyQt5.QtCore import QObject, pyqtSignal
 from app.backend.pose_detector import PoseDetector
 
 class PostureAnalyzer(QObject):
+
     frame_ready = pyqtSignal(object)
+
     def __init__(self):
         super().__init__()
         self.cap=cv.VideoCapture(0)
         self.detector = PoseDetector()
         self.height_line_visibility = True
         self.shoulder_visibility = True
+        self.head_visibility = True
+
+        self.head_time_leniency = 3
+        self.shoulder_time_leniency = 3
+
 
     def run(self, test=False):
         self.is_running=True
@@ -39,6 +46,18 @@ class PostureAnalyzer(QObject):
                     y_pos = min(y1, y2) - 20
                     cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 
+                if self.head_visibility:
+                    cv.circle(processed_img, (self.lmList[2][1], self.lmList[2][2]), 30, (255, 0, 0), 3)
+                    cv.circle(processed_img, (self.lmList[5][1], self.lmList[5][2]), 30, (255, 0, 0), 3)
+
+                    y1 = self.lmList[2][2]
+                    y2 = self.lmList[5][2]
+                    vertical_dist = abs(y1 - y2)
+                    text = f"Vertical Dist: {vertical_dist}px"
+
+                    x_pos = (self.lmList[2][1] + self.lmList[5][1]) // 2
+                    y_pos = min(y1, y2) - 20
+                    cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 # eye level detecion
                 self.check_eye_level()
 
@@ -72,13 +91,13 @@ class PostureAnalyzer(QObject):
         self.shoulder_visibility = checked
 
     def toggle_head_visibility(self, checked):
-        pass
+        self.head_visibility = checked
 
     def update_head_time_leniency(self, time):
-        pass
+        self.head_time_leniency = time
 
     def update_shoulder_time_leniency(self, time):
-        pass
+        self.shoulder_time_leniency = time
         
     def toggle_height_line(self, checked):
         self.height_line_visibility = checked
