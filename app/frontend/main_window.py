@@ -125,7 +125,7 @@ class MainWindow(QMainWindow):
         self.height_monitor_layout.addWidget(self.height_leniency_entry, 2, 1)
         self.height_leniency_entry.setMinimumWidth(75)
         self.height_leniency_entry.setText("50")
-        self.height_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.height_leniency_entry, 0, 100))
+        #self.height_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.height_leniency_entry, 0, 100))
         self.height_leniency_entry.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         # Line Time Leniency
@@ -173,7 +173,7 @@ class MainWindow(QMainWindow):
         self.shoulder_leniency_entry.setText("50")
         self.shoulder_monitor_layout.addWidget(self.shoulder_leniency_entry, 2, 1)
         self.shoulder_leniency_entry.setMinimumWidth(75)
-        self.shoulder_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_leniency_entry, 99999))
+        #self.shoulder_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_leniency_entry, 99999))
 
         # Shoulder Time Leniency
         self.shoulder_time_leniency_text=QLabel("Time Leniency (s)", self)
@@ -219,7 +219,7 @@ class MainWindow(QMainWindow):
         self.head_leniency_entry.setText("50")
         self.head_monitor_layout.addWidget(self.head_leniency_entry, 2, 1)
         self.head_leniency_entry.setMinimumWidth(75)
-        self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, 99999))
+        #self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, 99999))
 
         # Head Time Leniency
         self.head_time_leniency_text=QLabel("Time Leniency (s)", self)
@@ -230,6 +230,8 @@ class MainWindow(QMainWindow):
         self.head_monitor_layout.addWidget(self.head_time_leniency_entry, 3, 1)
         self.head_time_leniency_entry.setMinimumWidth(75)
         self.head_time_leniency_entry.setText("3")
+        self.head_time_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_time_leniency_entry, upper = 99999, func = self.analyzer.update_head_time_leniency))
+
 
         # Head Points Visibility
         self.head_visibility_text=QLabel("Head Visibility", self)
@@ -239,6 +241,7 @@ class MainWindow(QMainWindow):
         self.head_visibility_checkbox=QCheckBox(self)
         self.head_visibility_checkbox.setChecked(True)
         self.head_monitor_layout.addWidget(self.head_visibility_checkbox, 4, 1)
+        self.head_visibility_checkbox.toggled.connect(self.analyzer.toggle_head_visibility)
 
         # Main area
         self.main_area = QWidget()
@@ -300,13 +303,18 @@ class MainWindow(QMainWindow):
         self.analyzer.stop()
         event.accept()
 
-    def validate_digit(self, entry, lower, upper):
+    def validate_digit(self, entry, lower = 0, upper = 9999999, func = None):
         value = entry.text()
         if not value.isdigit():
             entry.setText("0")
         else:
             value = int(value)
             if value < lower:
-                self.leniency_entry.setText(lower)
-            elif value > upper:
-                self.leniency_entry.setText(upper)
+                entry.setText(str(lower))
+            if value > upper:
+                entry.setText(str(upper))
+            
+            if func:
+                func(int(entry.text()))
+
+            
