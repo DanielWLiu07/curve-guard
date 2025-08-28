@@ -202,7 +202,6 @@ class MainWindow(QMainWindow):
         self.head_monitor.setLayout(self.head_monitor_layout)
         self.head_monitor.setObjectName("head_monitor")
         self.head_monitor_layout.setSpacing(2)
-        self.sidebar_layout.addStretch()
 
         # Head Monitor Text
         self.head_monitor_text=QLabel("Head Monitor", self)
@@ -232,7 +231,6 @@ class MainWindow(QMainWindow):
         self.head_time_leniency_entry.setText("3")
         self.head_time_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_time_leniency_entry, upper = 99999, func = self.analyzer.update_head_time_leniency))
 
-
         # Head Points Visibility
         self.head_visibility_text=QLabel("Head Visibility", self)
         self.head_visibility_text.setFont(self.orbitron)
@@ -242,6 +240,15 @@ class MainWindow(QMainWindow):
         self.head_visibility_checkbox.setChecked(True)
         self.head_monitor_layout.addWidget(self.head_visibility_checkbox, 4, 1)
         self.head_visibility_checkbox.toggled.connect(self.analyzer.toggle_head_visibility)
+
+        # Landmarks
+        self.landmarks = QWidget()
+        self.sidebar_layout.addWidget(self.landmarks)
+        self.landmarks_layout = QGridLayout()
+        self.landmarks.setLayout(self.landmarks_layout)
+        self.landmarks.setObjectName("landmarks")
+        self.landmarks_layout.setSpacing(2)
+        self.sidebar_layout.addStretch()
 
         # Main area
         self.main_area = QWidget()
