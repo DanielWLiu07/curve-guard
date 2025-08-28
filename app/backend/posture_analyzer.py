@@ -22,7 +22,6 @@ class PostureAnalyzer(QObject):
         self.is_running=True
         isTrue, self.img=self.cap.read()
         self.eye_level=self.img.shape[1]
-        print(type(self.eye_level))
 
         while self.is_running:
             isTrue, self.img=self.cap.read()
@@ -47,8 +46,12 @@ class PostureAnalyzer(QObject):
                     cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 
                 if self.head_visibility:
-                    cv.circle(processed_img, (self.lmList[2][1], self.lmList[2][2]), 30, (255, 0, 0), 3)
-                    cv.circle(processed_img, (self.lmList[5][1], self.lmList[5][2]), 30, (255, 0, 0), 3)
+                    left_eye = (self.lmList[2][1], self.lmList[2][2])
+                    right_eye = (self.lmList[5][1], self.lmList[5][2])
+
+                    cv.circle(processed_img, left_eye, 30, (255, 0, 0), 3)
+                    cv.circle(processed_img, right_eye, 30, (255, 0, 0), 3)
+                    cv.line(processed_img, left_eye, right_eye, (255, 0, 0), 2)
 
                     y1 = self.lmList[2][2]
                     y2 = self.lmList[5][2]
