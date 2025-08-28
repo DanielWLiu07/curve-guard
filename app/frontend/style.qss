@@ -104,3 +104,9 @@ QLabel#green_settings_text{
     font-size: 12px;
     color: #B9F27C;
 }   
+
+QWidget#landmarks{
+    border-radius: 15px;
+    border: 2px solid #FFFF00;
+    background-color: #1c1f2a;
+}
