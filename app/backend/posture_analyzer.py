@@ -33,9 +33,13 @@ class PostureAnalyzer(QObject):
                     cv.line(processed_img, (0, int(self.eye_level)), (9999, int(self.eye_level)), (255, 0, 0), 2)
 
                 if self.shoulder_visibility:
-                    cv.circle(processed_img, (self.lmList[11][1], self.lmList[11][2]), 30, (255, 0, 0), 3)
-                    cv.circle(processed_img, (self.lmList[12][1], self.lmList[12][2]), 30, (255, 0, 0), 3)
-                 
+                    left_shoulder = (self.lmList[11][1], self.lmList[11][2])
+                    right_shoulder = (self.lmList[12][1], self.lmList[12][2])
+                    
+                    cv.circle(processed_img, left_shoulder, 30, (255, 0, 0), 3)
+                    cv.circle(processed_img, right_shoulder, 30, (255, 0, 0), 3)
+                    cv.line(processed_img, left_shoulder, right_shoulder, (255, 0, 0), 2)
+
                     y1 = self.lmList[11][2]
                     y2 = self.lmList[12][2]
                     vertical_dist = abs(y1 - y2)
