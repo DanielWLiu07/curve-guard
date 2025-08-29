@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget, QSizePolicy, QPushButton, QLineEdit, QCheckBox
+from PyQt5.QtWidgets import QApplication, QSpacerItem, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget, QSizePolicy, QPushButton, QLineEdit, QCheckBox
 from PyQt5.QtGui import QPixmap, QImage, QFontDatabase, QFont, QIcon
 from PyQt5.QtCore import Qt
 import cv2 as cv
@@ -255,7 +255,24 @@ class MainWindow(QMainWindow):
         self.landmarks_text.setFont(self.orbitron)
         self.landmarks_text.setObjectName("landmarks_text")
         self.landmarks_layout.addWidget(self.landmarks_text, 0, 0)
+        self.landmarks_layout.setColumnStretch(1, 1)
 
+
+        # Landmarks Visibility
+        self.landmark_visibility_text = QLabel("Landmark Visiblity               ", self)
+        self.landmark_visibility_text.setFont(self.orbitron)
+        self.landmarks_layout.addWidget(self.landmark_visibility_text, 1, 0)
+        self.landmark_visibility_text.setObjectName("yellow_settings_text")
+        self.landmark_visibility_checkbox = QCheckBox(self)
+        self.landmark_visibility_checkbox.setChecked(True)
+        self.landmarks_layout.setSpacing(2)
+
+        self.landmarks_layout.addWidget(self.landmark_visibility_checkbox, 1, 1)
+        
+        self.landmarks_layout.setColumnStretch(0, 1)
+
+        #self.landmark_visibility_checkbox.toggled.connect(self.analyzer.)
+        
         # Main area
         self.main_area = QWidget()
         self.main_area_layout = QHBoxLayout()
