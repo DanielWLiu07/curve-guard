@@ -115,3 +115,8 @@ QLabel#landmarks_text{
     font-size: 18px;
     color: #FFFF00;
 }
+
+QLabel#yellow_settings_text{
+    font-size: 12px;
+    color: #FFFF00;
+}   
