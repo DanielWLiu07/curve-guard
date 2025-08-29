@@ -110,3 +110,8 @@ QWidget#landmarks{
     border: 2px solid #FFFF00;
     background-color: #1c1f2a;
 }
+
+QLabel#landmarks_text{
+    font-size: 18px;
+    color: #FFFF00;
+}
