@@ -250,6 +250,12 @@ class MainWindow(QMainWindow):
         self.landmarks_layout.setSpacing(2)
         self.sidebar_layout.addStretch()
 
+        # Landmarks Text
+        self.landmarks_text=QLabel("Landmarks", self)
+        self.landmarks_text.setFont(self.orbitron)
+        self.landmarks_text.setObjectName("landmarks_text")
+        self.landmarks_layout.addWidget(self.landmarks_text, 0, 0)
+
         # Main area
         self.main_area = QWidget()
         self.main_area_layout = QHBoxLayout()
