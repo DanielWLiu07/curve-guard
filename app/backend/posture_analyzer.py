@@ -13,6 +13,7 @@ class PostureAnalyzer(QObject):
         self.height_line_visibility = True
         self.shoulder_visibility = True
         self.head_visibility = True
+        self.landmark_visiblity = True
 
         self.head_time_leniency = 3
         self.shoulder_time_leniency = 3
@@ -26,7 +27,7 @@ class PostureAnalyzer(QObject):
         while self.is_running:
             isTrue, self.img=self.cap.read()
             if isTrue:
-                processed_img=self.detector.draw_pose(self.img.copy(), True)
+                processed_img = self.detector.draw_pose(self.img.copy(), self.landmark_visiblity)
                 self.lmList=self.detector.find_cords(self.img)
 
                 if self.height_line_visibility:
@@ -108,6 +109,9 @@ class PostureAnalyzer(QObject):
         
     def toggle_height_line(self, checked):
         self.height_line_visibility = checked
+
+    def toggle_landmarks_visibility (self, checked):
+        self.landmark_visiblity = checked
 
 
 
