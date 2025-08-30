@@ -101,7 +101,7 @@ class PostureAnalyzer(QObject):
     def toggle_head_visibility(self, checked):
         self.head_visibility = checked
 
-    def update_head_height_leniency(self, height):
+    def update_head_uneveness_leniency(self, height):
         self.head_height_leniency = height
 
     def update_head_time_leniency(self, time):
