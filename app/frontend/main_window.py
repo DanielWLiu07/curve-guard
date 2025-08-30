@@ -266,12 +266,9 @@ class MainWindow(QMainWindow):
         self.landmark_visibility_checkbox = QCheckBox(self)
         self.landmark_visibility_checkbox.setChecked(True)
         self.landmarks_layout.setSpacing(2)
-
         self.landmarks_layout.addWidget(self.landmark_visibility_checkbox, 1, 1)
-        
         self.landmarks_layout.setColumnStretch(0, 1)
-
-        #self.landmark_visibility_checkbox.toggled.connect(self.analyzer.)
+        self.landmark_visibility_checkbox.toggled.connect(self.analyzer.toggle_landmarks_visibility)
         
         # Main area
         self.main_area = QWidget()
