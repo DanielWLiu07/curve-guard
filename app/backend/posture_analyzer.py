@@ -17,7 +17,7 @@ class PostureAnalyzer(QObject):
 
         self.head_time_leniency = 3
         self.shoulder_time_leniency = 3
-
+        self.head_height_leniency = 3
 
     def run(self, test=False):
         self.is_running=True
@@ -100,6 +100,9 @@ class PostureAnalyzer(QObject):
 
     def toggle_head_visibility(self, checked):
         self.head_visibility = checked
+
+    def update_head_height_leniency(self, height):
+        self.head_height_leniency = height
 
     def update_head_time_leniency(self, time):
         self.head_time_leniency = time
