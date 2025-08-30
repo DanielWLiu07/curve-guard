@@ -218,7 +218,7 @@ class MainWindow(QMainWindow):
         self.head_leniency_entry.setText("50")
         self.head_monitor_layout.addWidget(self.head_leniency_entry, 2, 1)
         self.head_leniency_entry.setMinimumWidth(75)
-        self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, 99999, func = self.analyzer.update_head_height_leniency))
+        self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, upper = 99999, func = self.analyzer.update_head_uneveness_leniency))
 
         # Head Time Leniency
         self.head_time_leniency_text=QLabel("Time Leniency (s)", self)
