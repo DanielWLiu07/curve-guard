@@ -173,7 +173,8 @@ class MainWindow(QMainWindow):
         self.shoulder_leniency_entry.setText("50")
         self.shoulder_monitor_layout.addWidget(self.shoulder_leniency_entry, 2, 1)
         self.shoulder_leniency_entry.setMinimumWidth(75)
-        #self.shoulder_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_leniency_entry, 99999))
+        self.shoulder_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_leniency_entry, upper = 99999, func = self.analyzer.update_shoulder_uneveness_leniency))
+
 
         # Shoulder Time Leniency
         self.shoulder_time_leniency_text=QLabel("Time Leniency (s)", self)
