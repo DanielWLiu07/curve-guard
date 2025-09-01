@@ -15,6 +15,7 @@ class PostureAnalyzer(QObject):
         self.head_visibility = True
         self.landmark_visiblity = True
 
+        self.eye_height_leniency = 50
         self.head_time_leniency = 3
         self.shoulder_time_leniency = 3
         self.head_height_leniency = 3
@@ -94,6 +95,9 @@ class PostureAnalyzer(QObject):
     
     def calibrate_height_line(self):
         self.eye_level = (self.lmList[2][2] + self.lmList[5][2]) / 2
+
+    def update_eye_height_leniency(self, leniency):
+        self.eye_height_leniency = leniency
 
     def toggle_shoulder_visibility(self, checked):
         self.shoulder_visibility = checked
