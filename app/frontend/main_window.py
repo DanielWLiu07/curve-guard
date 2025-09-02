@@ -116,7 +116,7 @@ class MainWindow(QMainWindow):
         self.calibrate_height.setStyleSheet("padding: 0px; margin: 0px;")
         self.height_monitor_text.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
 
-        # Height Leniency
+        # Eye Height Leniency
         self.height_leniency_text=QLabel("Height Leniency (px)", self)
         self.height_monitor_layout.addWidget(self.height_leniency_text, 2, 0)
         self.height_leniency_text.setObjectName("blue_settings_text")
@@ -125,10 +125,11 @@ class MainWindow(QMainWindow):
         self.height_monitor_layout.addWidget(self.height_leniency_entry, 2, 1)
         self.height_leniency_entry.setMinimumWidth(75)
         self.height_leniency_entry.setText("50")
-        #self.height_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.height_leniency_entry, 0, 100))
         self.height_leniency_entry.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.height_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.height_leniency_entry, upper = 99999, func = self.analyzer.update_eye_height_leniency))
 
-        # Line Time Leniency
+
+        # Eye Time Leniency
         self.line_time_leniency_text=QLabel("Time Leniency (s)", self)
         self.height_monitor_layout.addWidget(self.line_time_leniency_text, 3, 0)
         self.line_time_leniency_text.setObjectName("blue_settings_text")
@@ -139,6 +140,7 @@ class MainWindow(QMainWindow):
         self.line_time_leniency_entry.setText("3")
         self.height_monitor_layout.setRowStretch(self.height_monitor_layout.rowCount(), 1)
         self.line_time_leniency_entry.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.line_time_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.line_time_leniency_entry, upper = 99999, func = self.analyzer.update_eye_time_leniency))
 
         # Line Visibility
         self.line_visibility_text=QLabel("Line Visibility", self)
@@ -175,7 +177,6 @@ class MainWindow(QMainWindow):
         self.shoulder_leniency_entry.setMinimumWidth(75)
         self.shoulder_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_leniency_entry, upper = 99999, func = self.analyzer.update_shoulder_uneveness_leniency))
 
-
         # Shoulder Time Leniency
         self.shoulder_time_leniency_text=QLabel("Time Leniency (s)", self)
         self.shoulder_monitor_layout.addWidget(self.shoulder_time_leniency_text, 3, 0)
@@ -185,6 +186,7 @@ class MainWindow(QMainWindow):
         self.shoulder_monitor_layout.addWidget(self.shoulder_time_leniency_entry, 3, 1)
         self.shoulder_time_leniency_entry.setMinimumWidth(75)
         self.shoulder_time_leniency_entry.setText("3")
+        self.shoulder_time_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_time_leniency_entry, upper = 99999, func = self.analyzer.update_shoulder_time_leniency))
 
         # Shoulder Points Visibility
         self.shoulder_visibility_text=QLabel("Shoulder Visibility", self)
@@ -257,7 +259,6 @@ class MainWindow(QMainWindow):
         self.landmarks_text.setObjectName("landmarks_text")
         self.landmarks_layout.addWidget(self.landmarks_text, 0, 0)
         self.landmarks_layout.setColumnStretch(1, 1)
-
 
         # Landmarks Visibility
         self.landmark_visibility_text = QLabel("Landmark Visiblity               ", self)
