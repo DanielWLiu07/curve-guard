@@ -100,14 +100,17 @@ class PostureAnalyzer(QObject):
     def update_eye_height_leniency(self, leniency):
         self.eye_height_leniency = leniency
     
-    def update_eye_time_leniency(self, leniency):
-        self.eye_time_leniency = leniency
+    def update_eye_time_leniency(self, time):
+        self.eye_time_leniency = time
 
     def toggle_shoulder_visibility(self, checked):
         self.shoulder_visibility = checked
 
     def update_shoulder_uneveness_leniency(self, leniency):
         self.shoulder_uneveness_leniency = leniency
+    
+    def update_shoulder_time_leniency(self, time):
+        self.shoulder_time_leniency = time
 
     def toggle_head_visibility(self, checked):
         self.head_visibility = checked
@@ -117,9 +120,6 @@ class PostureAnalyzer(QObject):
 
     def update_head_time_leniency(self, time):
         self.head_time_leniency = time
-
-    def update_shoulder_time_leniency(self, time):
-        self.shoulder_time_leniency = time
         
     def toggle_height_line(self, checked):
         self.height_line_visibility = checked
