@@ -1,4 +1,5 @@
 import cv2 as cv
+import time
 from PyQt5.QtCore import QObject, pyqtSignal
 from app.backend.pose_detector import PoseDetector
 
@@ -83,7 +84,20 @@ class PostureAnalyzer(QObject):
             self.frame_ready.emit(processed_img)
 
     def check_eye_level(self):
-        pass
+        left_eye_y = self.lmList[2][2]
+        right_eye_y = self.lmList[5][2]
+        avg_eye_y = (left_eye_y + right_eye_y) / 2
+
+        if avg_eye_y < (self.eye_level - self.eye_height_leniency):
+            if self.eye_above_start is None:
+                self.eye_above_start = time.time()
+            else:
+                elapsed = time.time() - self.eye_above_start
+                if elapsed >= self.eye_time_leniency and not self.eye_above_triggered:
+                    self.eye_above_triggered = True
+        else:
+            self.eye_above_start = None
+            self.eye_above_triggered = False
 
     def check_head_tilt(self):
         pass
