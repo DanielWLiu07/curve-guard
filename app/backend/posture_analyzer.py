@@ -60,15 +60,15 @@ class PostureAnalyzer(QObject):
                     cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 
                 if self.head_visibility:
-                    left_eye = (self.lmList[2][1], self.lmList[2][2])
-                    right_eye = (self.lmList[5][1], self.lmList[5][2])
+                    left_eye = self.lmList[2]
+                    right_eye = self.lmList[5]
 
                     cv.circle(processed_img, left_eye, 30, (255, 0, 0), 3)
                     cv.circle(processed_img, right_eye, 30, (255, 0, 0), 3)
                     cv.line(processed_img, left_eye, right_eye, (255, 0, 0), 2)
 
-                    y1 = self.lmList[2][2]
-                    y2 = self.lmList[5][2]
+                    y1 = left_eye[2]
+                    y2 = right_eye[2]
                     vertical_dist = abs(y1 - y2)
                     text = f"Vertical Dist: {vertical_dist}px"
 
@@ -106,7 +106,8 @@ class PostureAnalyzer(QObject):
             self.eye_above_triggered = False
 
     def check_head_tilt(self):
-        pass
+        left_eye = self.lmList[2]
+        right_eye = self.lmList[5]
 
     def check_shoulders(self):
         left_shoulder_y = self.lmList[11][2]
