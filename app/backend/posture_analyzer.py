@@ -108,7 +108,7 @@ class PostureAnalyzer(QObject):
         vertical_dist = abs(right_eye[2] - left_eye[2])
 
         if vertical_dist > self.head_height_leniency:
-            if self.head_uneven_start:
+            if self.head_uneven_start is None:
                 self.head_uneven_start = time.time()
             else:
                 time_elapsed = time.time() - self.head_uneven_start
