@@ -27,6 +27,7 @@ class PostureAnalyzer(QObject):
         self.eye_above_triggered = False
         self.shoulder_uneven_start = None
         self.shoulder_uneven_triggered = False
+        self.head_uneven_start = None
 
     def run(self, test=False):
         self.is_running=True
@@ -104,6 +105,16 @@ class PostureAnalyzer(QObject):
     def check_head_tilt(self):
         left_eye = self.lmList[2]
         right_eye = self.lmList[5]
+
+        vertical_dist = abs(right_eye[2] - left_eye[2])
+
+        if vertical_dist > self.head_height_leniency:
+            if self.head_uneven_start:
+                self.head_uneven_start = time.time()
+            
+        else:
+            self.head_uneven_start = None
+
 
     def check_shoulders(self):
         left_shoulder_y = self.lmList[11][2]
