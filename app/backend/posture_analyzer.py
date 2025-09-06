@@ -28,6 +28,7 @@ class PostureAnalyzer(QObject):
         self.shoulder_uneven_start = None
         self.shoulder_uneven_triggered = False
         self.head_uneven_start = None
+        self.head_uneven_triggered = False
 
     def run(self, test=False):
         self.is_running=True
@@ -72,11 +73,9 @@ class PostureAnalyzer(QObject):
                     x_pos = (self.lmList[2][1] + self.lmList[5][1]) // 2
                     y_pos = min(left_eye[2], right_eye[2]) - 20
                     cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                # eye level detecion
+               
                 self.check_eye_level()
-
                 self.check_shoulders()
-
                 self.check_head_tilt()
                 
                 if test:
@@ -111,9 +110,14 @@ class PostureAnalyzer(QObject):
         if vertical_dist > self.head_height_leniency:
             if self.head_uneven_start:
                 self.head_uneven_start = time.time()
-            
+            else:
+                time_elapsed = time.time() - self.head_uneven_start
+
+                if time_elapsed >= self.shoulder_time_leniency and not self.head_uneven_triggered:
+                    self.head_uneven_triggered = True
         else:
             self.head_uneven_start = None
+            self.head_uneven_triggered = False
 
 
     def check_shoulders(self):
