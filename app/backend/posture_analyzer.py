@@ -139,15 +139,17 @@ class PostureAnalyzer(QObject):
             self.shoulder_uneven_triggered = False
 
     def output_posture_error(self, img):
+        offset = 0
         if self.eye_above_triggered:
-            cv.putText(img, "Warning: Eyes Below Line! Stop Slouching!!", (50, 50), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
+            cv.putText(img, "Warning: Eyes Below Line! Stop Slouching!!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            offset += 30
         if self.shoulder_uneven_triggered:
-            cv.putText(img, "Warning: Shoulders Uneven!", (50, 80), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
+            cv.putText(img, "Warning: Shoulders Uneven!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            offset += 30
         if self.head_uneven_triggered:
-            cv.putText(img, "Warning: Head tilted unevenly!", (50, 110), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
+            cv.putText(img, "Warning: Head tilted unevenly!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            offset += 30
+            
         return img
 
     def stop(self):
