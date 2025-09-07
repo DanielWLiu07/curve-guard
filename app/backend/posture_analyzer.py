@@ -78,6 +78,7 @@ class PostureAnalyzer(QObject):
                 self.check_shoulders()
                 self.check_head_tilt()
                 
+                
                 if test:
                     cv.imshow("Processed Image", processed_img) 
                     if cv.waitKey(1) & 0xFF==ord('q'):
@@ -136,6 +137,18 @@ class PostureAnalyzer(QObject):
         else:
             self.shoulder_uneven_start = None
             self.shoulder_uneven_triggered = False
+
+    def output_posture_error(self, img):
+        if self.eye_above_triggered:
+            cv.putText(img, "Warning: Eyes Below Line! Stop Slouching!!", (50, 50), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+        if self.shoulder_uneven_triggered:
+            cv.putText(img, "Warning: Shoulders Uneven!", (50, 80), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+        if self.head_uneven_triggered:
+            cv.putText(img, "Warning: Head tilted unevenly!", (50, 110), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+        return img
 
     def stop(self):
         self.is_running=False
