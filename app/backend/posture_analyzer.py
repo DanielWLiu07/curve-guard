@@ -1,5 +1,8 @@
 import cv2 as cv
 import time
+import threading
+import simpleaudio as sa
+import os
 from PyQt5.QtCore import QObject, pyqtSignal
 from app.backend.pose_detector import PoseDetector
 
@@ -29,6 +32,11 @@ class PostureAnalyzer(QObject):
         self.shoulder_uneven_triggered = False
         self.head_uneven_start = None
         self.head_uneven_triggered = False
+
+        APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        SOUND_DIR = os.path.join(APP_DIR, "assets", "error.wav")
+        self.error_wave = sa.WaveObject.from_wave_file(SOUND_DIR)
+        self.error_play_obj = None
 
     def run(self, test=False):
         self.is_running=True
@@ -140,17 +148,34 @@ class PostureAnalyzer(QObject):
 
     def output_posture_error(self, img):
         offset = 0
+        error_sound = False
         if self.eye_above_triggered:
             cv.putText(img, "Warning: Eyes Below Line! Stop Slouching!!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             offset += 30
+            error_sound = True
         if self.shoulder_uneven_triggered:
             cv.putText(img, "Warning: Shoulders Uneven!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             offset += 30
+            error_sound = True
         if self.head_uneven_triggered:
             cv.putText(img, "Warning: Head tilted unevenly!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             offset += 30
-            
+            error_sound = True
+        
+        if error_sound:
+             self.error_play_obj = self.error_wave.play()
+        else:
+            self.error_play_obj.stop()
+
         return img
+
+    def start_error_sound(self):
+        if self.error_play_obj is None or not self.error_play_obj.is_playing():
+            self.error_play_obj = self.error_wave.play()
+
+    def stop_error_sound(self):
+        if self.error_play_obj is not None and self.error_play_obj.is_playing():
+            self.error_play_obj.stop()
 
     def stop(self):
         self.is_running=False
