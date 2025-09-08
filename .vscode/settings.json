@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "ui",
         "backend",
-        "frontend"
+        "frontend",
+        "assets"
     ]
 }
