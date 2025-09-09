@@ -52,7 +52,8 @@ class PostureAnalyzer(QObject):
                 if self.height_line_visibility:
                     cv.line(processed_img, (0, int(self.eye_level)), (9999, int(self.eye_level)), (255, 0, 0), 2)
 
-                if self.shoulder_visibility:
+                if self.shoulder_visibility and len(self.lmList) > 12:
+
                     left_shoulder = self.lmList[11]
                     right_shoulder = self.lmList[12]
                     
@@ -100,6 +101,7 @@ class PostureAnalyzer(QObject):
         avg_eye_y = (left_eye_y + right_eye_y) / 2
 
         if avg_eye_y < (self.eye_level - self.eye_height_leniency):
+            print("error")
             if self.eye_above_start is None:
                 self.eye_above_start = time.time()
             else:
@@ -130,12 +132,26 @@ class PostureAnalyzer(QObject):
 
 
     def check_shoulders(self):
-        left_shoulder_y = self.lmList[11][2]
-        right_shoulder_y = self.lmList[12][2]
+        if len(self.lmList) > 11 and self.lmList[11] is not None:
+            left_shoulder = self.lmList[11]
+            self.last_left_shoulder = left_shoulder
+        else:
+            left_shoulder = getattr(self, 'last_left_shoulder', None)
 
-        vertical_dist = abs(left_shoulder_y - right_shoulder_y)
+        if len(self.lmList) > 12 and self.lmList[12] is not None:
+            right_shoulder = self.lmList[12]
+            self.last_right_shoulder = right_shoulder
+        else:
+            right_shoulder = getattr(self, 'last_right_shoulder', None)
 
-        if vertical_dist > self.shoulder_uneveness_leniency:
+        if left_shoulder is None or right_shoulder is None:
+            return
+
+        left_y = left_shoulder[1]  
+        right_y = right_shoulder[1]
+        diff = abs(left_y - right_y)
+
+        if diff > self.shoulder_leniency:
             if self.shoulder_uneven_start is None:
                 self.shoulder_uneven_start = time.time()
             else:
@@ -145,29 +161,6 @@ class PostureAnalyzer(QObject):
         else:
             self.shoulder_uneven_start = None
             self.shoulder_uneven_triggered = False
-
-    def output_posture_error(self, img):
-        offset = 0
-        error_sound = False
-        if self.eye_above_triggered:
-            cv.putText(img, "Warning: Eyes Below Line! Stop Slouching!!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-            offset += 30
-            error_sound = True
-        if self.shoulder_uneven_triggered:
-            cv.putText(img, "Warning: Shoulders Uneven!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-            offset += 30
-            error_sound = True
-        if self.head_uneven_triggered:
-            cv.putText(img, "Warning: Head tilted unevenly!", (50, 50 + offset), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-            offset += 30
-            error_sound = True
-        
-        if error_sound:
-             self.error_play_obj = self.error_wave.play()
-        else:
-            self.error_play_obj.stop()
-
-        return img
 
     def start_error_sound(self):
         if self.error_play_obj is None or not self.error_play_obj.is_playing():
