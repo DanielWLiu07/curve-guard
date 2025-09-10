@@ -101,9 +101,9 @@ class PostureAnalyzer(QObject):
         left_eye_y = self.lmList[2][2]
         right_eye_y = self.lmList[5][2]
         avg_eye_y = (left_eye_y + right_eye_y) / 2
-
-        if avg_eye_y < (self.eye_level - self.eye_height_leniency):
-            print("error")
+        print(f"{avg_eye_y} {self.eye_level + self.eye_height_leniency}")
+        if avg_eye_y > (self.eye_level + self.eye_height_leniency):
+            
             if self.eye_above_start is None:
                 self.eye_above_start = time.time()
             else:
