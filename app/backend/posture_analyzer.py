@@ -67,7 +67,9 @@ class PostureAnalyzer(QObject):
                     x_pos = (self.lmList[11][1] + self.lmList[12][1]) // 2
                     y_pos = min(left_shoulder[2], right_shoulder[2]) - 20
                     cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                
+                    self.check_shoulders()
+
+
                 if self.head_visibility and len(self.lmList)>5:
                     left_eye = self.lmList[2]
                     right_eye = self.lmList[5]
@@ -82,10 +84,10 @@ class PostureAnalyzer(QObject):
                     x_pos = (self.lmList[2][1] + self.lmList[5][1]) // 2
                     y_pos = min(left_eye[2], right_eye[2]) - 20
                     cv.putText(processed_img, text, (x_pos, y_pos), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-               
-                self.check_eye_level()
-                self.check_shoulders()
-                self.check_head_tilt()
+                    self.check_eye_level()
+                    self.check_head_tilt()
+
+
                 
                 
                 if test:
@@ -151,7 +153,7 @@ class PostureAnalyzer(QObject):
         right_y = right_shoulder[1]
         diff = abs(left_y - right_y)
 
-        if diff > self.shoulder_leniency:
+        if diff > self.shoulder_uneveness_leniency:
             if self.shoulder_uneven_start is None:
                 self.shoulder_uneven_start = time.time()
             else:
