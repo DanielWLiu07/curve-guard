@@ -156,17 +156,17 @@ class PostureAnalyzer(QObject):
         y_offset = 50
 
         if self.eye_above_triggered:
-            cv.putText(processed_img, "Eyes too low!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            cv.putText(processed_img, "Eyes too low!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
 
         if self.head_uneven_triggered:
-            cv.putText(processed_img, "Head tilt detected!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            cv.putText(processed_img, "Head tilt detected!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
 
         if self.shoulder_uneven_triggered:
-            cv.putText(processed_img, "Uneven shoulders!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            cv.putText(processed_img, "Uneven shoulders!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
 
