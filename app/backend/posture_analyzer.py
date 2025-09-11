@@ -87,7 +87,7 @@ class PostureAnalyzer(QObject):
                     self.check_eye_level()
                     self.check_head_tilt()
 
-
+                processed_img = self.check_errors(processed_img)
                 
                 
                 if test:
@@ -110,6 +110,7 @@ class PostureAnalyzer(QObject):
                 elapsed = time.time() - self.eye_above_start
                 if elapsed >= self.eye_time_leniency and not self.eye_above_triggered:
                     self.eye_above_triggered = True
+    
         else:
             self.eye_above_start = None
             self.eye_above_triggered = False
@@ -134,26 +135,12 @@ class PostureAnalyzer(QObject):
 
 
     def check_shoulders(self):
-        if len(self.lmList) > 11 and self.lmList[11] is not None:
-            left_shoulder = self.lmList[11]
-            self.last_left_shoulder = left_shoulder
-        else:
-            left_shoulder = getattr(self, 'last_left_shoulder', None)
+        left_shoulder = self.lmList[11]
+        right_shoulder = self.lmList[12]
 
-        if len(self.lmList) > 12 and self.lmList[12] is not None:
-            right_shoulder = self.lmList[12]
-            self.last_right_shoulder = right_shoulder
-        else:
-            right_shoulder = getattr(self, 'last_right_shoulder', None)
+        vertical_dist = abs(left_shoulder[2] - right_shoulder[2])
 
-        if left_shoulder is None or right_shoulder is None:
-            return
-
-        left_y = left_shoulder[1]  
-        right_y = right_shoulder[1]
-        diff = abs(left_y - right_y)
-
-        if diff > self.shoulder_uneveness_leniency:
+        if vertical_dist > self.shoulder_uneveness_leniency:
             if self.shoulder_uneven_start is None:
                 self.shoulder_uneven_start = time.time()
             else:
@@ -163,6 +150,34 @@ class PostureAnalyzer(QObject):
         else:
             self.shoulder_uneven_start = None
             self.shoulder_uneven_triggered = False
+
+    def check_errors(self, processed_img):
+        error_triggered = False
+        y_offset = 50
+
+        if self.eye_above_triggered:
+            cv.putText(processed_img, "Eyes too low!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            error_triggered = True
+            y_offset += 40
+
+        if self.head_uneven_triggered:
+            cv.putText(processed_img, "Head tilt detected!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            error_triggered = True
+            y_offset += 40
+
+        if self.shoulder_uneven_triggered:
+            cv.putText(processed_img, "Uneven shoulders!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            error_triggered = True
+            y_offset += 40
+
+        if error_triggered:
+            self.start_error_sound()
+        else:
+            self.stop_error_sound()
+
+        return processed_img
+            
+
 
     def start_error_sound(self):
         if self.error_play_obj is None or not self.error_play_obj.is_playing():
