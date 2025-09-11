@@ -88,8 +88,7 @@ class PostureAnalyzer(QObject):
                     self.check_head_tilt()
 
                 processed_img = self.check_errors(processed_img)
-                
-                
+
                 if test:
                     cv.imshow("Processed Image", processed_img) 
                     if cv.waitKey(1) & 0xFF==ord('q'):
@@ -152,21 +151,34 @@ class PostureAnalyzer(QObject):
             self.shoulder_uneven_triggered = False
 
     def check_errors(self, processed_img):
+        img_width = processed_img[1]
         error_triggered = False
         y_offset = 50
 
         if self.eye_above_triggered:
-            cv.putText(processed_img, "Eyes too low!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+            msg = "Eyes too low!"
+            text_size = cv.getTextSize(msg, cv.FONT_HERSHEY_SIMPLEX, 0.8, 2)[0]
+            text_width = text_size[0]
+            center_x = (img_width - text_width) // 2
+            cv.putText(processed_img, msg, (center_x, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
 
         if self.head_uneven_triggered:
-            cv.putText(processed_img, "Head tilt detected!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+            msg = "Head tilt detected!"
+            text_size = cv.getTextSize(msg, cv.FONT_HERSHEY_SIMPLEX, 0.8, 2)[0]
+            text_width = text_size[0]
+            center_x = (img_width - text_width) // 2
+            cv.putText(processed_img, msg, (center_x, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
 
         if self.shoulder_uneven_triggered:
-            cv.putText(processed_img, "Uneven shoulders!", (50, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+            msg = "Uneven shoulders!"
+            text_size = cv.getTextSize(msg, cv.FONT_HERSHEY_SIMPLEX, 0.8, 2)[0]
+            text_width = text_size[0]
+            center_x = (img_width - text_width) // 2
+            cv.putText(processed_img, msg, (center_x, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
 
