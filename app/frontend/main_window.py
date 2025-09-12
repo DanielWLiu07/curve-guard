@@ -218,7 +218,7 @@ class MainWindow(QMainWindow):
         self.head_leniency_text.setObjectName("green_settings_text")
         self.head_leniency_text.setFont(self.orbitron)
         self.head_leniency_entry=QLineEdit(self)
-        self.head_leniency_entry.setText("50")
+        self.head_leniency_entry.setText("20")
         self.head_monitor_layout.addWidget(self.head_leniency_entry, 2, 1)
         self.head_leniency_entry.setMinimumWidth(75)
         self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, upper = 99999, func = self.analyzer.update_head_uneveness_leniency))
