@@ -22,9 +22,9 @@ class PostureAnalyzer(QObject):
         self.eye_height_leniency = 50
         self.eye_time_leniency = 3
         self.head_time_leniency = 3
-        self.shoulder_uneveness_leniency = 3
+        self.shoulder_uneveness_leniency = 50
         self.shoulder_time_leniency = 3
-        self.head_height_leniency = 3
+        self.head_height_leniency = 20
 
         self.eye_above_start = None
         self.eye_above_triggered = False
@@ -100,7 +100,6 @@ class PostureAnalyzer(QObject):
         left_eye_y = self.lmList[2][2]
         right_eye_y = self.lmList[5][2]
         avg_eye_y = (left_eye_y + right_eye_y) / 2
-        print(f"{avg_eye_y} {self.eye_level + self.eye_height_leniency}")
         if avg_eye_y > (self.eye_level + self.eye_height_leniency):
             
             if self.eye_above_start is None:
@@ -138,12 +137,13 @@ class PostureAnalyzer(QObject):
         right_shoulder = self.lmList[12]
 
         vertical_dist = abs(left_shoulder[2] - right_shoulder[2])
-
         if vertical_dist > self.shoulder_uneveness_leniency:
             if self.shoulder_uneven_start is None:
+                
                 self.shoulder_uneven_start = time.time()
             else:
                 elapsed = time.time() - self.shoulder_uneven_start
+                print(elapsed)
                 if elapsed >= self.shoulder_time_leniency and not self.shoulder_uneven_triggered:
                     self.shoulder_uneven_triggered = True
         else:
@@ -151,15 +151,15 @@ class PostureAnalyzer(QObject):
             self.shoulder_uneven_triggered = False
 
     def check_errors(self, processed_img):
-        img_width = processed_img[1]
+        img_width = processed_img.shape[1]
         error_triggered = False
         y_offset = 50
 
         if self.eye_above_triggered:
             msg = "Eyes too low!"
             text_size = cv.getTextSize(msg, cv.FONT_HERSHEY_SIMPLEX, 0.8, 2)[0]
-            text_width = text_size[0]
-            center_x = (img_width - text_width) // 2
+            text_width = int(text_size[0])
+            center_x = int(img_width - text_width) // 2
             cv.putText(processed_img, msg, (center_x, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
@@ -167,8 +167,8 @@ class PostureAnalyzer(QObject):
         if self.head_uneven_triggered:
             msg = "Head tilt detected!"
             text_size = cv.getTextSize(msg, cv.FONT_HERSHEY_SIMPLEX, 0.8, 2)[0]
-            text_width = text_size[0]
-            center_x = (img_width - text_width) // 2
+            text_width = int(text_size[0])
+            center_x = int(img_width - text_width) // 2
             cv.putText(processed_img, msg, (center_x, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
@@ -176,8 +176,8 @@ class PostureAnalyzer(QObject):
         if self.shoulder_uneven_triggered:
             msg = "Uneven shoulders!"
             text_size = cv.getTextSize(msg, cv.FONT_HERSHEY_SIMPLEX, 0.8, 2)[0]
-            text_width = text_size[0]
-            center_x = (img_width - text_width) // 2
+            text_width = int(text_size[0])
+            center_x = int(img_width - text_width) // 2
             cv.putText(processed_img, msg, (center_x, y_offset), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             error_triggered = True
             y_offset += 40
