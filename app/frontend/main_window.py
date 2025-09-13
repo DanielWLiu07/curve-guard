@@ -4,6 +4,15 @@ from PyQt5.QtCore import Qt
 import cv2 as cv
 import math
 import os
+import sys
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 
 class MainWindow(QMainWindow):
     def __init__(self, analyzer):
@@ -15,10 +24,15 @@ class MainWindow(QMainWindow):
         window_icon=os.path.join(self.base_dir, "assets", "logo.png")
         self.setWindowIcon(QIcon(window_icon))
 
-        font_path = os.path.join(self.base_dir, "assets","Orbitron", "static","Orbitron-Regular.ttf")
-        self.font_id = QFontDatabase.addApplicationFont(font_path)
-        self.families = QFontDatabase.applicationFontFamilies(self.font_id)
-        self.orbitron = QFont(self.families[0], 12)
+        font_path = resource_path("app/frontend/assets/Orbitron/static/Orbitron-Regular.ttf")
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id == -1:
+            print("Failed to load Orbitron font")
+            self.orbitron = QFont("Arial", 12)  # fallback
+        else:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            self.orbitron = QFont(font_family, 12)
+
         self.analyzer=analyzer
         self.analyzer.frame_ready.connect(self.update_image)
 

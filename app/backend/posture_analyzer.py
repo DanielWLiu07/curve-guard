@@ -143,7 +143,6 @@ class PostureAnalyzer(QObject):
                 self.shoulder_uneven_start = time.time()
             else:
                 elapsed = time.time() - self.shoulder_uneven_start
-                print(elapsed)
                 if elapsed >= self.shoulder_time_leniency and not self.shoulder_uneven_triggered:
                     self.shoulder_uneven_triggered = True
         else:

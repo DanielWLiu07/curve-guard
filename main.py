@@ -7,6 +7,11 @@ from PyQt5.QtCore import QTimer
 from app.frontend.main_window import MainWindow
 from app.backend.posture_analyzer import PostureAnalyzer
 
+def resource_path(relative_path):
+        if hasattr(sys, "_MEIPASS"):
+            return os.path.join(sys._MEIPASS, relative_path)
+        return os.path.join(os.path.abspath("."), relative_path)
+
 def main():
     # Initilizes and runs Posture Analyzer
     analyzer = PostureAnalyzer()
@@ -15,7 +20,7 @@ def main():
 
     # Initializes and runs main window
     app=QApplication(sys.argv)
-    style_path = os.path.join("app", "frontend", "style.qss")
+    style_path = resource_path("app/frontend/style.qss")
     with open(style_path) as f:
         app.setStyleSheet(f.read())
     window=MainWindow(analyzer)
@@ -25,6 +30,8 @@ def main():
     exit_code = app.exec_()
     analyze_thread.join()
     sys.exit(exit_code)
+
+    
 
 if __name__ == "__main__":
     main()  
