@@ -1,5 +1,6 @@
 import sys
 import os
+import cv2
 import threading
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
 from PyQt5.QtCore import QTimer
