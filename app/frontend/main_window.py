@@ -6,14 +6,6 @@ import math
 import os
 import sys
 
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except AttributeError:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
-
-
 class MainWindow(QMainWindow):
     def __init__(self, analyzer):
         # Window Set Up
@@ -24,7 +16,7 @@ class MainWindow(QMainWindow):
         window_icon=os.path.join(self.base_dir, "assets", "logo.png")
         self.setWindowIcon(QIcon(window_icon))
 
-        font_path = resource_path("app/frontend/assets/Orbitron/static/Orbitron-Regular.ttf")
+        font_path = os.path.join(self.base_dir, "assets", "Orbitron", "static", "Orbitron-Regular.ttf")
         font_id = QFontDatabase.addApplicationFont(font_path)
         if font_id == -1:
             print("Failed to load Orbitron font")
