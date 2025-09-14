@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('app/frontend/style.qss', 'app/frontend'), ('app/frontend/assets/Orbitron/static/Orbitron-Regular.ttf', 'app/frontend/assets/Orbitron/static'), ('app/assets/error.wav', 'app/assets'), ('/opt/homebrew/lib/python3.10/site-packages/mediapipe/modules', 'mediapipe/modules'), ('app/frontend/assets/logo.png', 'app/frontend/assets')],
+    datas=[('app/frontend/style.qss', 'app/frontend'), ('app/frontend/assets/Orbitron/static/Orbitron-Regular.ttf', 'app/frontend/assets/Orbitron/static'), ('app/assets/error.wav', 'app/assets'), ('/opt/homebrew/lib/python3.10/site-packages/mediapipe/modules', 'mediapipe/modules')],
     hiddenimports=['mediapipe'],
     hookspath=[],
     hooksconfig={},
