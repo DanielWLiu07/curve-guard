@@ -5,8 +5,8 @@ export default function Navbar() {
     <header className="w-full border-b border-gray-200 bg-white/70 backdrop-blur">
       <div className="mx-auto w-full max-w-[102rem] px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded bg-gray-200" aria-hidden="true" />
-          <a href="/" className="text-lg font-semibold tracking-tight">CurveGuard</a>
+          <img src ="images/logo.png" alt = "CurveGuard Logo"className= "h-10 w-auto"/>
+          <a href="/" className="text-xl font-semibold tracking-tight">CurveGuard</a>
         </div>
         <nav className="flex items-center gap-4">
           <a

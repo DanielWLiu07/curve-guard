@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar.jsx';
+import HeroCanvas from '../components/HeroCanvas.jsx';
 
 export default function Landing() {
   return (
@@ -20,6 +21,9 @@ export default function Landing() {
             </a>
           </div>
         </div>
+          <div className="mt-10 h-64 rounded-lg overflow-hidden border border-gray-200">
+            <HeroCanvas />
+          </div>
       </div>
       </main>
     </div>
