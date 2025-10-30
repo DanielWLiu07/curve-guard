@@ -1,9 +1,13 @@
 import React from 'react';
+import Navbar from '../components/Navbar.jsx';
 
 export default function Landing() {
   return (
-    <main className="min-h-screen flex items-center bg-gradient-to-b from-white to-gray-50 p-6">
-      <div className="mx-auto w-full max-w-[102rem]">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <Navbar />
+
+      <main className="p-6 min-h-[calc(100vh-72px)] flex items-center">
+        <div className="mx-auto w-full max-w-[102rem]">
         <div className="max-w-xl">
           <h1 className="text-5xl font-extrabold tracking-tight">CurveGuard</h1>
           <p className="mt-3 text-gray-600 text-lg">Real-time posture awareness for healthier screen time.</p>
@@ -17,7 +21,8 @@ export default function Landing() {
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }
 
