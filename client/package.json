@@ -9,24 +9,26 @@
     "preview": "vite preview --port 5173"
   },
   "dependencies": {
+    "@aws-amplify/ui-react": "^6.13.1",
+    "@radix-ui/colors": "^3.0.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slider": "^1.1.2",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "@react-three/drei": "^9.86.7",
+    "@react-three/fiber": "^8.15.10",
+    "aws-amplify": "^6.15.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@radix-ui/react-switch": "^1.0.3",
-    "@radix-ui/react-dialog": "^1.0.5",
-    "@radix-ui/react-tooltip": "^1.0.7",
-    "@radix-ui/react-dropdown-menu": "^2.0.6",
-    "@radix-ui/react-slider": "^1.1.2",
-    "@radix-ui/react-icons": "^1.3.0",
-    "three": "^0.170.0",
-    "@react-three/fiber": "^8.15.10",
-    "@react-three/drei": "^9.86.7"
+    "three": "^0.170.0"
   },
   "devDependencies": {
-    "vite": "^5.4.10",
     "@vitejs/plugin-react": "^4.3.3",
-    "tailwindcss": "^3.4.14",
+    "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
-    "autoprefixer": "^10.4.20"
+    "tailwindcss": "^3.4.14",
+    "vite": "^5.4.10"
   }
 }
-

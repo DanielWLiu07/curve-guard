@@ -1,9 +1,18 @@
+@import '@radix-ui/colors/jade.css';
+@import '@radix-ui/colors/blue-dark.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* App-wide defaults */
 html, body, #root { height: 100%; }
-body { @apply bg-gray-50 text-gray-900; }
+
+@layer base {
+  body {
+    background-color: var(--jade-12);
+    color: white;
+  }
+}
 
 
