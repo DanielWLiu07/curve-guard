@@ -1,2 +1,18 @@
 __pycache__/
 *.pyc
+
+# Node
+node_modules/
+client/node_modules/
+server/node_modules/
+client/dist/
+
+# Env files
+server/.env
+client/.env
+
+# macOS
+.DS_Store
+
+# Python venvs
+.desktop/.venv/
