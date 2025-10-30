@@ -1,0 +1,17 @@
+{
+  "version": "1.4",
+  "auth": {
+    "user_pool_id": "us-east-1_PLACEHOLDER",
+    "user_pool_client_id": "PLACEHOLDER_CLIENT_ID",
+    "identity_pool_id": "us-east-1:PLACEHOLDER_IDENTITY_POOL",
+    "auth_url": "https://PLACEHOLDER.auth.us-east-1.amazoncognito.com/oauth2/authorize",
+    "auth_domain": "PLACEHOLDER.auth.us-east-1.amazoncognito.com",
+    "oauth": {
+      "redirect_sign_in": "http://localhost:5173/",
+      "redirect_sign_out": "http://localhost:5173/",
+      "response_type": "code",
+      "scopes": ["phone", "email", "profile", "openid", "aws.cognito.signin.user.admin"],
+      "domain": "PLACEHOLDER.auth.us-east-1.amazoncognito.com"
+    }
+  }
+}

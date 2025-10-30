@@ -9,6 +9,7 @@
     "preview": "vite preview --port 5173"
   },
   "dependencies": {
+    "@aws-amplify/backend": "^1.17.0",
     "@aws-amplify/ui-react": "^6.13.1",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -22,6 +23,7 @@
     "aws-amplify": "^6.15.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.9.5",
     "three": "^0.170.0"
   },
   "devDependencies": {

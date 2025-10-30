@@ -1,13 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { Navigate } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import HeroCanvas from '../components/HeroCanvas.jsx';
 import HeroSection from '../components/HeroSection.jsx';
 
-export default function Landing() {
+function AuthenticatedContent() {
+  const { signOut, user } = useAuthenticator();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-jade-12 to-jade-10 relative">
-      <Navbar />
+      <Navbar signOut={signOut} user={user} />
 
       <div className="absolute inset-0">
         <HeroCanvas />
@@ -18,4 +21,10 @@ export default function Landing() {
   );
 }
 
-
+export default function ProtectedApp() {
+  return (
+    <Authenticator>
+      <AuthenticatedContent />
+    </Authenticator>
+  );
+}
