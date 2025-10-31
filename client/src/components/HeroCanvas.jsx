@@ -28,11 +28,11 @@ function ScreenLight() {
     <>
       <spotLight
         ref={lightRef}
-        position={[-3, 1.2, 0.5]} // Closer position for more visible effect
-        angle={0.2} // Slightly wider beam for better visibility
-        penumbra={0.2} // Sharper edges
-        intensity={10} // Much more reasonable intensity for visibility
-        color="#00ff88" // Bright green screen light
+        position={[-3, 1.2, 0.5]}
+        angle={0.2}
+        penumbra={0.2}
+        intensity={10}
+        color="#00ff88"
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
@@ -57,8 +57,8 @@ export default function HeroCanvas() {
         gl={{ antialias: true }}
       >
         <SceneSetup />
-        <color attach="background" args={['#0a0f1a']} /> {/* Dark blue-gray background */}
-        <ambientLight intensity={0.3} color="#4a5568" /> {/* Further dimmed ambient light */}
+        <color attach="background" args={['#0a0f1a']} />
+        <ambientLight intensity={0.3} color="#4a5568" />
         <directionalLight
           position={[3, 2, 3]}
           intensity={0.4}
@@ -66,7 +66,7 @@ export default function HeroCanvas() {
           castShadow
         />
         <ScreenLight />
-        <pointLight position={[-2, 1, -2]} intensity={0.2} color="#60a5fa" /> {/* Dimmed blue accent light */}
+        <pointLight position={[-2, 1, -2]} intensity={0.2} color="#60a5fa" /> 
         <Model position={[0, 0, 0]} rotation={[0, -Math.PI / 4, 0]} />
 
         <OrbitControls enablePan={false} enableZoom={false} />
