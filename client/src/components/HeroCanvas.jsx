@@ -1,34 +1,77 @@
-import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import React, { useRef, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { OrbitControls, useGLTF } from '@react-three/drei';
+import * as THREE from 'three';
 
-function SpinningBox(props) {
-  const ref = useRef();
-  useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.x += delta * 0.5;
-      ref.current.rotation.y += delta * 0.8;
+function SceneSetup() {
+  const { scene } = useThree();
+
+  useEffect(() => {
+    // Add exponential fog for dark atmospheric effect
+    scene.fog = new THREE.FogExp2(0x0a0f1a, 0.08); // Dark blue-gray fog with moderate density
+  }, [scene]);
+
+  return null;
+}
+
+function ScreenLight() {
+  const lightRef = useRef();
+  const targetRef = useRef();
+
+  useEffect(() => {
+    if (lightRef.current && targetRef.current) {
+      lightRef.current.target = targetRef.current;
     }
-  });
+  }, []);
+
   return (
-    <mesh ref={ref} {...props}>
-      <boxGeometry args={[1.2, 1.2, 1.2]} />
-      <meshStandardMaterial color="#46a758" />
-    </mesh>
+    <>
+      <spotLight
+        ref={lightRef}
+        position={[-3, 1.2, 0.5]} // Closer position for more visible effect
+        angle={0.2} // Slightly wider beam for better visibility
+        penumbra={0.2} // Sharper edges
+        intensity={10} // Much more reasonable intensity for visibility
+        color="#00ff88" // Bright green screen light
+        castShadow
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+      />
+      <object3D ref={targetRef} position={[0.2, 1.4, 0]} />
+    </>
   );
+}
+
+function Model(props) {
+  const { scene } = useGLTF('/skeleton.glb');
+  const ref = useRef();
+
+  return <primitive ref={ref} object={scene} {...props} />;
 }
 
 export default function HeroCanvas() {
-  
   return (
-    <Canvas camera={{ position: [2.5, 2, 2.5], fov: 50 }}>
-      <color attach="background" args={['#0d1512']} />
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[3, 3, 3]} intensity={0.9} />
-      <SpinningBox position={[0, 0, 0]} />
-      <OrbitControls enablePan={false} enableZoom={false} />
-    </Canvas>
+    <div className="absolute inset-0 z-10">
+      <Canvas
+        camera={{ position: [0, 1.6, 0.4], fov: 50 }}
+        gl={{ antialias: true }}
+      >
+        <SceneSetup />
+        <color attach="background" args={['#0a0f1a']} /> {/* Dark blue-gray background */}
+        <ambientLight intensity={0.3} color="#4a5568" /> {/* Further dimmed ambient light */}
+        <directionalLight
+          position={[3, 2, 3]}
+          intensity={0.4}
+          color="#e2e8f0"
+          castShadow
+        />
+        <ScreenLight />
+        <pointLight position={[-2, 1, -2]} intensity={0.2} color="#60a5fa" /> {/* Dimmed blue accent light */}
+        <Model position={[0, 0, 0]} rotation={[0, -Math.PI / 4, 0]} />
+
+        <OrbitControls enablePan={false} enableZoom={false} />
+        <OrbitControls target={[0, 1.7, 0]} />
+      </Canvas>
+    </div>
   );
 }
-
-
