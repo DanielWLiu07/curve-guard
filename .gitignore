@@ -21,9 +21,8 @@ client/.env
 # Amplify — local only
 amplify/.config/local-aws-info.json
 amplify/.config/local-env-info.json
+amplify/#current-cloud-backend/
 
-# SHOULD be committed -> project-config.json
-# amplify/.config/project-config.json   <-- keep this tracked
 
 # Local Amplify state
 amplify/#current-cloud-backend/
@@ -33,3 +32,9 @@ aws-exports.json
 aws-exports.ts
 !src/aws-exports.js
 !src/aws-exports.ts
+
+# ignore packages
+*.pkg
+
+# Hidden local cache
+.amplify/
