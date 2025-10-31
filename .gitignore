@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.pyc
 
@@ -16,3 +17,19 @@ client/.env
 
 # Python venvs
 .desktop/.venv/
+
+# Amplify — local only
+amplify/.config/local-aws-info.json
+amplify/.config/local-env-info.json
+
+# SHOULD be committed -> project-config.json
+# amplify/.config/project-config.json   <-- keep this tracked
+
+# Local Amplify state
+amplify/#current-cloud-backend/
+
+# Auto-generated aws-exports (except src/)
+aws-exports.json
+aws-exports.ts
+!src/aws-exports.js
+!src/aws-exports.ts
