@@ -77,6 +77,21 @@ This feature helps reinforce neutral head alignment and reduce the risk of neck 
 
 ---
 
+## Credits
+
+### Asset Credits
+
+This project uses the following CC-BY 3D assets:
+
+- **"Free Pack – Human Skeleton"** by **PolyOne Studio**, licensed under **CC BY 4.0**.  
+  Source: https://sketchfab.com/3d-models/free-pack-human-skeleton-xxxx
+
+- **"Headphones Free Model"** by **OSCAR CREATIVO**, licensed under **CC BY 4.0**.  
+  Source: https://sketchfab.com/3d-models/headphones-free-model-xxxx
+  Some assets have been modified from their originals.
+
+---
+
 ## Installation
 
 ### Requirements
