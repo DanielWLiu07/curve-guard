@@ -22,9 +22,13 @@ export default function Navbar({ signOut, user }) {
               Sign out
             </button>
           ) : (
-            <Button color="gray" variant="outline" highContrast>
-                Sign In
-              </Button>
+            <button
+  class="group inline-flex items-center justify-center gap-3
+         px-8 py-2 font-semibold text-md
+        hover:shadow-xl hover:opacity-80 hover:scale-105
+         transition-all duration-150">
+  Sign in
+</button>
             
           )}
         </nav>
