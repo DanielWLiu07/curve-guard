@@ -7,23 +7,13 @@ export default function HeroSection() {
     <main className="absolute inset-0 flex items-center z-10">
       <div className="mx-auto w-full max-w-[90rem] p-6">
         <div className="max-w-2xl space-y-8">
-          {/* Main Heading with Gradient and Glow Effect */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-blue-9/20 rounded-lg border border-blue-8/30">
-                <TargetIcon className="w-6 h-6 text-blue-9" />
-              </div>
-              <span className="text-blue-8 font-medium text-sm uppercase tracking-wider">
-                Posture Monitoring
-              </span>
-            </div>
 
             <h1 className="text-6xl md:text-7xl font-black tracking-tight">
-              <span className="bg-gradient-to-r from-white via-blue-4 to-white bg-clip-text text-transparent">
-                FIX YOUR
-              </span>
               <br />
-              <span className="bg-gradient-to-r from-red-9 via-orange-9 to-yellow-9 bg-clip-text text-transparent animate-pulse">
+              <span className="bg-gradient-to-r from-jade-9 via-jade-6 to-white bg-clip-text text-transparent animate-pulse">
+                FIX GOBLIN
+                    <br />
                 POSTURE
               </span>
             </h1>
@@ -34,7 +24,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Description with Better Typography */}
           <div className="space-y-4">
             <p className="text-xl text-white/90 leading-relaxed max-w-lg">
               Transform your daily habits with AI-powered posture detection.
@@ -57,7 +46,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Enhanced CTA Button */}
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <Link
               to="/signin"
@@ -72,12 +60,9 @@ export default function HeroSection() {
             </button>
           </div>
 
-          {/* Trust Indicators */}
           <div className="pt-8 border-t border-white/10">
             <p className="text-white/60 text-sm mb-4">Trusted by professionals worldwide</p>
             <div className="flex items-center gap-8 opacity-60">
-              <div className="text-white/40 font-semibold">5000+</div>
-              <div className="text-white/40 font-semibold">99.9%</div>
               <div className="text-white/40 font-semibold">24/7</div>
             </div>
           </div>
