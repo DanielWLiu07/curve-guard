@@ -30,7 +30,6 @@ function ScreenLight() {
   useFrame((state, delta) => {
     if (!lightRef.current) return;
 
-    // Smoothly interpolate to target intensity
     const lerpFactor = 0.1;
     const newIntensity = THREE.MathUtils.lerp(currentIntensity, targetIntensity, lerpFactor);
     setCurrentIntensity(newIntensity);
@@ -52,10 +51,8 @@ function ScreenLight() {
       const randomIntensity = flickerPatterns[Math.floor(Math.random() * flickerPatterns.length)];
       setTargetIntensity(randomIntensity);
 
-      // Reset flicker timer for next potential flicker
       setFlickerTimer(0);
-    } else if (flickerTimer > 0.3) { // Faster recovery
-      // Gradually return to base intensity after flicker
+    } else if (flickerTimer > 0.3) { 
       setTargetIntensity(30);
     }
   });
@@ -111,7 +108,7 @@ export default function HeroCanvas() {
   return (
     <div className="absolute inset-0 z-10">
       <Canvas
-        camera={{ position: [0, 1.6, 0.4], fov: 50 }}
+        camera={{ position: [0, 1.6, 0.25], fov: 50 }}
         gl={{ antialias: true }}
       >
         <SceneSetup />
@@ -125,7 +122,7 @@ export default function HeroCanvas() {
         />
         <ScreenLight />
         <pointLight position={[-2, 1, -2]} intensity={0.2} color="#60a5fa" /> 
-        <Model position={[0.12, 0, 0]} rotation={[0, -Math.PI / 4, 0]} />
+        <Model position={[0.08, 0, 0]} rotation={[0, -Math.PI / 4, 0]} />
 
         <OrbitControls enablePan={false} enableZoom={false} />
         <OrbitControls target={[0, 1.7, 0]} />
