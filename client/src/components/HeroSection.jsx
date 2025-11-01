@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRightIcon, LightningBoltIcon, TargetIcon } from '@radix-ui/react-icons';
 
-export default function HeroSection() {
+export default function HeroSection({ onShowSignIn }) {
   return (
     <main className="absolute inset-0 flex items-center z-10">
       <div className="mx-auto w-full max-w-[90rem] p-6">
@@ -33,10 +32,11 @@ export default function HeroSection() {
 
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+          <div className="flex flex-col md:flex-row gap-4 pt-4">
             <button
-              to="/signin"
-              className="group inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-9 to-blue-10 px-8 py-4 text-white font-semibold text-lg shadow-2xl shadow-blue-9/25 hover:shadow-blue-9/40 hover:scale-105 transition-all duration-300 border border-blue-8/30 hover:border-blue-7/50">
+              onClick={onShowSignIn}
+              className="group inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-9 to-blue-10 px-8 py-4 text-white font-semibold text-lg shadow-2xl shadow-blue-9/25 hover:shadow-blue-9/40 hover:scale-105 transition-all duration-300 border border-blue-8/30 hover:border-blue-7/50"
+            >
               Get Started Free
               <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
