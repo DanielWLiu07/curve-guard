@@ -10,9 +10,11 @@ export default function Landing() {
     <div className="min-h-screen bg-gradient-to-b from-jade-12 to-jade-10 relative">
       <Navbar />
 
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <HeroCanvas />
-        <Vignette intensity={0.3} size={100} />
+      </div>
+      <div className = "absolute inset-0 z-10">
+        <Vignette intensity={100} size={10} />
       </div>
 
       <HeroSection />
