@@ -30,20 +30,7 @@ export default function HeroSection() {
               Get instant feedback and build better posture habits for life.
             </p>
 
-            <div className="flex flex-wrap gap-4 text-sm text-white/70">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-9 rounded-full animate-pulse"></div>
-                Real-time monitoring
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-9 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                AI-powered analysis
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-9 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                Personalized insights
-              </div>
-            </div>
+
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -60,11 +47,27 @@ export default function HeroSection() {
             </button>
           </div>
 
-          <div className="pt-8 border-t border-white/10">
-            <p className="text-white/60 text-sm mb-4">Trusted by professionals worldwide</p>
-            <div className="flex items-center gap-8 opacity-60">
-              <div className="text-white/40 font-semibold">24/7</div>
+          <div className="pt-8 border-t border-white/10"> 
+            <div className="flex gap-4 text-sm text-white/70">
+              <div className="flex items-center gap-2">
+                <div className="rounded-full animate-pulse">
+                  Real-time monitoring
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}>
+                  AI-powered analysis
+                  </div>
+                
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="animate-pulse" style={{ animationDelay: '0.4s' }}>
+                  Personalized insights
+                </div>
+            
+              </div>
             </div>
+
           </div>
         </div>
       </div>
