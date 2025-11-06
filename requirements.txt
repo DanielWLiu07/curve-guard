@@ -1,4 +1,7 @@
-mediapipe==0.10.7
-opencv-python==4.9.0.80
-PyQt5==5.15.9
-numpy==1.24.4 
+mediapipe==0.10.7mediapipe==0.10.7
+
+opencv-python==4.9.0.80opencv-python==4.9.0.80
+
+PyQt5==5.15.9PyQt5==5.15.9
+
+numpy==1.24.4numpy==1.24.4 
