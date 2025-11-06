@@ -5,7 +5,6 @@ import { Navigate } from 'react-router-dom';
 export default function ProtectedApp() {
   const { user } = useAuthenticator();
 
-  // Redirect to home if not authenticated
   if (!user) {
     return <Navigate to="/" replace />;
   }

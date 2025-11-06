@@ -26,11 +26,11 @@ async function start() {
   try {
     await mongoose.connect(mongoUri, { dbName: process.env.MONGODB_DB || undefined });
     console.log('Connected to MongoDB');
-    app.listen(port, () => console.log(`Server listening on :${port}`));
   } catch (err) {
-    console.error('Failed to start server', err);
-    process.exit(1);
+    console.warn('MongoDB connection failed, continuing without database:', err.message);
   }
+
+  app.listen(port, () => console.log(`Server listening on :${port}`));
 }
 
 start();
