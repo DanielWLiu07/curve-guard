@@ -30,7 +30,8 @@ export default function SignInSection({ showSignIn, onBackToHero }) {
       const result = await signIn(signInInput);
 
       if (result.isSignedIn) {
-        navigate('/app');
+        // Close the sign-in section and let the landing page update with the authenticated state
+        handleBackToHeroInternal();
       } else if (result.nextStep.signInStep === 'CONFIRM_SIGN_UP') {
         setIsConfirming(true);
         setSuccess('Please check your email for a confirmation code.');

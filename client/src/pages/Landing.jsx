@@ -12,13 +12,6 @@ export default function Landing() {
   const navigate = useNavigate();
   const [showSignIn, setShowSignIn] = useState(false);
 
-  // Redirect to protected app if user is signed in
-  useEffect(() => {
-    if (user) {
-      navigate('/app');
-    }
-  }, [user, navigate]);
-
   const handleShowSignIn = () => {
     setShowSignIn(true);
   };
@@ -47,7 +40,7 @@ export default function Landing() {
       <div className={`absolute inset-0 z-10 transition-all duration-700 ease-in-out ${
         showSignIn ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
       }`}>
-        <HeroSection onShowSignIn={handleShowSignIn} />
+        <HeroSection onShowSignIn={handleShowSignIn} user={user} />
       </div>
 
       {/* Sign In Section */}

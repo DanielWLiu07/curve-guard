@@ -1,7 +1,14 @@
 import React from 'react';
 import { ArrowRightIcon, LightningBoltIcon, TargetIcon } from '@radix-ui/react-icons';
+import { useNavigate } from 'react-router-dom';
 
-export default function HeroSection({ onShowSignIn }) {
+export default function HeroSection({ onShowSignIn, user }) {
+  const navigate = useNavigate();
+
+  const handleGoToApp = () => {
+    navigate('/detection');
+  };
+
   return (
     <main className="absolute inset-0 flex items-center z-10">
       <div className="mx-auto w-full max-w-[90rem] p-6">
@@ -33,20 +40,30 @@ export default function HeroSection({ onShowSignIn }) {
           </div>
 
           <div className="flex flex-col md:flex-row gap-4 pt-4">
-            <button
-              onClick={onShowSignIn}
-              className="group inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-9 to-blue-10 px-8 py-4 text-white font-semibold text-lg shadow-2xl shadow-blue-9/25 hover:shadow-blue-9/40 hover:scale-105 transition-all duration-300 border border-blue-8/30 hover:border-blue-7/50"
-            >
-              Get Started Free
-              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
+            {user ? (
+              <button
+                onClick={handleGoToApp}
+                className="group inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-green-9 to-green-10 px-8 py-4 text-white font-semibold text-lg shadow-2xl shadow-green-9/25 hover:shadow-green-9/40 hover:scale-105 transition-all duration-300 border border-green-8/30 hover:border-green-7/50"
+              >
+                Go to App
+                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
+            ) : (
+              <button
+                onClick={onShowSignIn}
+                className="group inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-9 to-blue-10 px-8 py-4 text-white font-semibold text-lg shadow-2xl shadow-blue-9/25 hover:shadow-blue-9/40 hover:scale-105 transition-all duration-300 border border-blue-8/30 hover:border-blue-7/50"
+              >
+                Get Started Free
+                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
+            )}
 
             <button className="inline-flex items-center justify-center gap-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/20 px-8 py-4 text-white font-medium text-lg hover:bg-white/10 hover:border-white/30 transition-all duration-300">
               Learn More
             </button>
           </div>
 
-          <div className="pt-8 border-t border-white/10"> 
+          <div className="pt-8 border-t border-white/10">
             <div className="flex gap-4 text-sm text-white/70">
               <div className="flex items-center gap-2">
                 <div className="rounded-full animate-pulse">
@@ -57,13 +74,13 @@ export default function HeroSection({ onShowSignIn }) {
                 <div className="rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}>
                   AI-powered analysis
                   </div>
-                
+
               </div>
               <div className="flex items-center gap-2">
                 <div className="animate-pulse" style={{ animationDelay: '0.4s' }}>
                   Personalized insights
                 </div>
-            
+
               </div>
             </div>
 
