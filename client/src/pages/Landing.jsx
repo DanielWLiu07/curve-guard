@@ -20,6 +20,10 @@ export default function Landing() {
     setShowSignIn(false);
   };
 
+  const handleGoToDetection = () => {
+    navigate('/detection');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-jade-12 to-jade-10 relative overflow-hidden">
       <Navbar

@@ -1,12 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@radix-ui/themes";
 
 export default function Navbar({ signOut, user, onShowSignIn, showSignIn }) {
+  const location = useLocation();
+  const isDetectionPage = location.pathname === '/detection';
+
   return (
     <header className="w-full bg-jade-12/70 transparent z-20 relative">
       <div className="mx-auto w-full max-w-[102rem] pl-12 pr-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <Link to="/" className="flex items-center gap-4">
           <img src="images/logo.png" alt="CurveGuard Logo" className="h-14 w-auto" />
           
           <span className="bg-gradient-to-r from-jade-9 to-jade-6 bg-clip-text text-transparent font-bold text-lg tracking-wide whitespace-nowrap">
@@ -27,7 +30,7 @@ export default function Navbar({ signOut, user, onShowSignIn, showSignIn }) {
               Creator
             </a>
           </div>
-        </div>
+        </Link>
         <nav className="flex items-center gap-4 hidden md:flex ml-auto mr-4">
           {user ? (
             <button
@@ -37,16 +40,18 @@ export default function Navbar({ signOut, user, onShowSignIn, showSignIn }) {
               Sign out
             </button>
           ) : (
-            <button
-              onClick={onShowSignIn}
-              className={`group inline-flex items-center justify-center gap-3
-                     px-8 py-2 font-medium text-sm text-white/60
-                    hover:shadow-xl hover:text-white
-                     transition-all duration-500 ease-in-out
-                     ${showSignIn ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}
-            >
-              Sign in
-            </button>
+            !isDetectionPage && (
+              <button
+                onClick={onShowSignIn}
+                className={`group inline-flex items-center justify-center gap-3
+                       px-8 py-2 font-medium text-sm text-white/60
+                      hover:shadow-xl hover:text-white
+                       transition-all duration-500 ease-in-out
+                       ${showSignIn ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}
+              >
+                Sign in
+              </button>
+            )
           )}
         </nav>
       </div>

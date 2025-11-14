@@ -8,7 +8,5 @@ export default function ProtectedApp() {
   if (!user) {
     return <Navigate to="/" replace />;
   }
-
-  // Redirect authenticated users to detection page
   return <Navigate to="/detection" replace />;
 }
