@@ -10,10 +10,21 @@ class PostureAnalyzer(QObject):
 
     frame_ready = pyqtSignal(object)
 
-    def __init__(self):
+    def __init__(self, settings=None):
         super().__init__()
+        self.settings = settings or {
+            'landmarkDetection': 'full',
+            'detectionConfidence': 0.5,
+            'trackingConfidence': 0.5,
+            'smoothingFactor': 0.8
+        }
+        
         self.cap=cv.VideoCapture(0)
-        self.detector = PoseDetector()
+        self.detector = PoseDetector(
+            detectCon=self.settings['detectionConfidence'],
+            trackCon=self.settings['trackingConfidence'],
+            landmarkMode=self.settings['landmarkDetection']
+        )
         self.height_line_visibility = True
         self.shoulder_visibility = True
         self.head_visibility = True
