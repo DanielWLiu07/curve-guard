@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
-import { initPose, startPoseDetection, stopPoseDetection } from '../lib/pose';
+import { useRef, useState } from 'react';
 
 export const useCamera = () => {
   const videoRef = useRef(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [cameraStatus, setCameraStatus] = useState('disconnected');
+  const [alerts, setAlerts] = useState([]);
 
-  const startCamera = async (settings, poseDetectionCallback) => {
+  const startCamera = async () => {
     try {
       setCameraStatus('connecting');
 
@@ -24,33 +24,27 @@ export const useCamera = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
 
-        await initPose(settings);
-
-        const video = videoRef.current;
-
-        const startDrawing = () => {
-          startPoseDetection(video, poseDetectionCallback);
-          video.play().then(() => {
-            setIsStreaming(true);
-            setCameraStatus('streaming');
-          });
-        };
-
-        if (video.readyState >= 1) {
-          startDrawing();
-        } else {
-          video.addEventListener('loadedmetadata', startDrawing, { once: true });
-        }
+        videoRef.current.play().then(() => {
+          setIsStreaming(true);
+          setCameraStatus('streaming');
+        }).catch(error => {
+          setCameraStatus('error');
+          setAlerts([{
+            type: 'error',
+            message: `Unable to play video: ${error.message}`
+          }]);
+        });
       }
     } catch (error) {
       setCameraStatus('error');
-      throw error;
+      setAlerts([{
+        type: 'error',
+        message: `Unable to access camera: ${error.message}. Please check permissions.`
+      }]);
     }
   };
 
   const stopCamera = () => {
-    stopPoseDetection();
-
     if (videoRef.current?.srcObject) {
       const stream = videoRef.current.srcObject;
       const tracks = stream.getTracks();
@@ -60,26 +54,16 @@ export const useCamera = () => {
 
     setIsStreaming(false);
     setCameraStatus('disconnected');
+    setAlerts([]);
   };
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      stopCamera();
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      stopCamera();
-    };
-  }, []);
 
   return {
     videoRef,
     isStreaming,
     cameraStatus,
+    alerts,
     startCamera,
-    stopCamera
+    stopCamera,
+    setAlerts
   };
 };
