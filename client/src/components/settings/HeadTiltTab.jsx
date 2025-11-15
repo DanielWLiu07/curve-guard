@@ -1,39 +1,48 @@
 import React from 'react';
-import { ToggleButton } from '../ui/ToggleButton';
-import { SettingsSlider } from '../ui/SettingsSlider';
+import SettingsButton from '../ui/SettingsButton';
+import SettingsSlider from '../ui/SettingsSlider';
 
-export const HeadTiltTab = ({ settings, setSettings }) => (
-  <>
-    <ToggleButton
-      label="Enable Head Tilt Detection"
-      value={settings.enableHeadTiltDetection}
-      onChange={(value) => setSettings({ ...settings, enableHeadTiltDetection: value })}
-      trueText="Disable Head Tilt Detection"
-      falseText="Enable Head Tilt Detection"
-    />
+const HeadTiltTab = ({ settings, setSettings }) => {
+  return (
+    <div className="space-y-3">
+      <SettingsButton
+        label="Enable Head Tilt Detection"
+        isActive={settings.enableHeadTiltDetection}
+        onClick={() => {
+          const newValue = !settings.enableHeadTiltDetection;
+          setSettings({...settings, enableHeadTiltDetection: newValue});
+        }}
+        activeText="Disable Head Tilt Detection"
+        inactiveText="Enable Head Tilt Detection"
+      />
 
-    <div className="grid grid-cols-2 gap-4">
       <SettingsSlider
         label="Head Tilt Tolerance"
-        value={settings.headTiltTolerance || 15}
-        onChange={(value) => setSettings({ ...settings, headTiltTolerance: value })}
+        value={[settings.headTiltTolerance]}
+        onValueChange={([value]) => {
+          setSettings({...settings, headTiltTolerance: value});
+        }}
         min={5}
         max={50}
         step={1}
-        displayValue={`${settings.headTiltTolerance || 15}°`}
+        displayValue={settings.headTiltTolerance}
+        unit="°"
       />
 
       <SettingsSlider
         label="Head Tilt Time Tolerance"
-        value={settings.headTiltTimeTolerance || 2}
-        onChange={(value) => setSettings({ ...settings, headTiltTimeTolerance: value })}
+        value={[settings.headTiltTimeTolerance]}
+        onValueChange={([value]) => {
+          setSettings({...settings, headTiltTimeTolerance: value});
+        }}
         min={1}
         max={10}
         step={0.5}
-        displayValue={`${settings.headTiltTimeTolerance || 2}s`}
+        displayValue={settings.headTiltTimeTolerance}
+        unit="s"
       />
 
-      <div className="space-y-2 col-span-2">
+      <div className="space-y-2">
         <label className="block text-white text-xs font-medium">
           Reset Settings
         </label>
@@ -51,5 +60,7 @@ export const HeadTiltTab = ({ settings, setSettings }) => (
         </button>
       </div>
     </div>
-  </>
-);
+  );
+};
+
+export default HeadTiltTab;

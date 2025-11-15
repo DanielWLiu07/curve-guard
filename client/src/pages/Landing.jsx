@@ -47,7 +47,6 @@ export default function Landing() {
         <HeroSection onShowSignIn={handleShowSignIn} user={user} />
       </div>
 
-      {/* Sign In Section */}
       <SignInSection showSignIn={showSignIn} onBackToHero={handleBackToHero} />
     </div>
   );

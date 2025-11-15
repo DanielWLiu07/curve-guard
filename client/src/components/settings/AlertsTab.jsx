@@ -1,53 +1,47 @@
 import React from 'react';
-import { Switch } from '@radix-ui/react-switch';
-import { SettingsSlider } from '../ui/SettingsSlider';
-import { SoundSelect } from '../ui/SoundSelect';
+import SettingsToggle from '../ui/SettingsToggle';
+import SettingsSlider from '../ui/SettingsSlider';
+import SettingsSelect from '../ui/SettingsSelect';
 
-export const AlertsTab = ({ settings, setSettings }) => (
-  <div className="grid grid-cols-3 gap-4">
-    <div className="space-y-2">
-      <label className="block text-white text-xs font-medium">
-        Audio Alerts
-      </label>
-      <div className="flex items-center space-x-2">
-        <Switch
-          checked={settings.enableAudioAlerts}
-          onCheckedChange={(checked) => setSettings({ ...settings, enableAudioAlerts: checked })}
-        />
-        <span className="text-slate-400 text-xs">
-          {settings.enableAudioAlerts ? 'On' : 'Off'}
-        </span>
-      </div>
+const AlertsTab = ({ settings, setSettings }) => {
+  return (
+    <div className="space-y-3">
+      <SettingsToggle
+        label="Audio Alerts"
+        checked={settings.enableAudioAlerts}
+        onCheckedChange={(checked) => setSettings({...settings, enableAudioAlerts: checked})}
+      />
+
+      <SettingsToggle
+        label="Visual Alerts"
+        checked={settings.enableVisualAlerts}
+        onCheckedChange={(checked) => setSettings({...settings, enableVisualAlerts: checked})}
+      />
+
+      <SettingsSlider
+        label="Alert Cooldown"
+        value={[settings.alertCooldown]}
+        onValueChange={([value]) => setSettings({...settings, alertCooldown: value})}
+        min={5}
+        max={120}
+        step={5}
+        displayValue={settings.alertCooldown}
+        unit="s"
+      />
+
+      <SettingsSelect
+        label="Alert Sound"
+        value={settings.alertSound}
+        onValueChange={(value) => setSettings({...settings, alertSound: value})}
+        options={[
+          { value: 'beep', label: 'Beep' },
+          { value: 'chime', label: 'Chime' },
+          { value: 'bell', label: 'Bell' },
+          { value: 'none', label: 'None' }
+        ]}
+      />
     </div>
+  );
+};
 
-    <div className="space-y-2">
-      <label className="block text-white text-xs font-medium">
-        Visual Alerts
-      </label>
-      <div className="flex items-center space-x-2">
-        <Switch
-          checked={settings.enableVisualAlerts}
-          onCheckedChange={(checked) => setSettings({ ...settings, enableVisualAlerts: checked })}
-        />
-        <span className="text-slate-400 text-xs">
-          {settings.enableVisualAlerts ? 'On' : 'Off'}
-        </span>
-      </div>
-    </div>
-
-    <SettingsSlider
-      label="Alert Cooldown"
-      value={settings.alertCooldown}
-      onChange={(value) => setSettings({ ...settings, alertCooldown: value })}
-      min={5}
-      max={120}
-      step={5}
-      displayValue={`${settings.alertCooldown}s`}
-    />
-
-    <SoundSelect
-      value={settings.alertSound}
-      onChange={(value) => setSettings({ ...settings, alertSound: value })}
-    />
-  </div>
-);
+export default AlertsTab;

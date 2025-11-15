@@ -1,39 +1,46 @@
 import React from 'react';
-import { ToggleButton } from '../ui/ToggleButton';
-import { SettingsSlider } from '../ui/SettingsSlider';
+import SettingsButton from '../ui/SettingsButton';
+import SettingsSlider from '../ui/SettingsSlider';
 
-export const ShouldersTab = ({ settings, setSettings }) => (
-  <>
-    <ToggleButton
-      label="Enable Shoulder Detection"
-      value={settings.enableShoulderDetection}
-      onChange={(value) => setSettings({ ...settings, enableShoulderDetection: value })}
-      trueText="Disable Shoulder Detection"
-      falseText="Enable Shoulder Detection"
-    />
+const ShouldersTab = ({ settings, setSettings }) => {
+  return (
+    <div className="space-y-3">
+      <SettingsButton
+        label="Enable Shoulder Detection"
+        isActive={settings.enableShoulderDetection}
+        onClick={() => {
+          const newValue = !settings.enableShoulderDetection;
+          setSettings({...settings, enableShoulderDetection: newValue});
+        }}
+        activeText="Disable Shoulder Detection"
+        inactiveText="Enable Shoulder Detection"
+      />
 
-    <div className="grid grid-cols-2 gap-4">
       <SettingsSlider
         label="Shoulder Unevenness"
-        value={settings.shoulderUnevennessLeniency || 0.1}
-        onChange={(value) => setSettings({ ...settings, shoulderUnevennessLeniency: value })}
+        value={[settings.shoulderUnevennessLeniency]}
+        onValueChange={([value]) => setSettings({...settings, shoulderUnevennessLeniency: value})}
         min={0.01}
         max={0.3}
         step={0.01}
-        displayValue={`${(settings.shoulderUnevennessLeniency * 100).toFixed(1)}%`}
+        displayValue={(settings.shoulderUnevennessLeniency * 100).toFixed(1)}
+        unit="%"
       />
 
       <SettingsSlider
         label="Shoulder Time Tolerance"
-        value={settings.shoulderTimeTolerance || 2}
-        onChange={(value) => setSettings({ ...settings, shoulderTimeTolerance: value })}
+        value={[settings.shoulderTimeTolerance]}
+        onValueChange={([value]) => {
+          setSettings({...settings, shoulderTimeTolerance: value});
+        }}
         min={1}
         max={10}
         step={0.5}
-        displayValue={`${settings.shoulderTimeTolerance || 2}s`}
+        displayValue={settings.shoulderTimeTolerance}
+        unit="s"
       />
 
-      <div className="space-y-2 col-span-2">
+      <div className="space-y-2">
         <label className="block text-white text-xs font-medium">
           Reset Settings
         </label>
@@ -51,5 +58,7 @@ export const ShouldersTab = ({ settings, setSettings }) => (
         </button>
       </div>
     </div>
-  </>
-);
+  );
+};
+
+export default ShouldersTab;

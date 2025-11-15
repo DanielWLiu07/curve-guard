@@ -41,55 +41,63 @@ function ScreenLight() {
   );
 }
 
-function WebcamScreen({ poseCanvas, isStreaming, width = 0.2, height = 0.24, position = { x: -0.1, y: 1.6, z: 0 } }) {
+function WebcamScreen({ videoRef, poseCanvas, isStreaming, width = 0.2, height = 0.24, position = { x: -0.1, y: 1.6, z: 0 } }) {
   const meshRef = useRef();
   const textureRef = useRef();
 
   useEffect(() => {
-    return () => {
-      if (textureRef.current) {
-        textureRef.current.dispose();
-        textureRef.current = null;
-      }
-    };
-  }, []);
+    if (isStreaming && (videoRef.current || poseCanvas)) {
 
-  useEffect(() => {
-    if (poseCanvas && isStreaming) {
-      try {
-        if (textureRef.current) {
-          textureRef.current.dispose();
-          textureRef.current = null;
+      const createTexture = () => {
+
+        const sourceElement = poseCanvas || videoRef.current;
+        const isReady = poseCanvas || (videoRef.current && !videoRef.current.paused && !videoRef.current.ended);
+
+        if (sourceElement && isReady) {
+          try {
+            if (textureRef.current) {
+              textureRef.current.dispose();
+            }
+
+            const texture = poseCanvas 
+              ? new THREE.CanvasTexture(sourceElement)
+              : new THREE.VideoTexture(sourceElement);
+            
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            if (!poseCanvas) {
+              texture.format = THREE.RGBFormat;
+            }
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+
+            texture.needsUpdate = true;
+
+            const displayAspect = width / height;
+            const sourceAspect = 4/3;
+
+            if (displayAspect > sourceAspect) {
+              const cropFactor = sourceAspect / displayAspect;
+              texture.repeat.set(1, cropFactor);
+              texture.offset.set(0, (1 - cropFactor) / 2);
+            } else {
+              const cropFactor = displayAspect / sourceAspect;
+              texture.repeat.set(cropFactor, 1);
+              texture.offset.set((1 - cropFactor) / 2, 0);
+            }
+
+            textureRef.current = texture;
+
+            if (meshRef.current) {
+              meshRef.current.material.map = texture;
+              meshRef.current.material.needsUpdate = true;
+            }
+          } catch (error) {
+          }
         }
+      };
 
-        const texture = new THREE.CanvasTexture(poseCanvas);
-        texture.minFilter = THREE.LinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-        texture.wrapS = THREE.ClampToEdgeWrapping;
-        texture.wrapT = THREE.ClampToEdgeWrapping;
-
-        const displayAspect = width / height;
-        const sourceAspect = 4/3;
-
-        if (displayAspect > sourceAspect) {
-          const cropFactor = sourceAspect / displayAspect;
-          texture.repeat.set(1, cropFactor);
-          texture.offset.set(0, (1 - cropFactor) / 2);
-        } else {
-          const cropFactor = displayAspect / sourceAspect;
-          texture.repeat.set(cropFactor, 1);
-          texture.offset.set((1 - cropFactor) / 2, 0);
-        }
-
-        textureRef.current = texture;
-
-        if (meshRef.current) {
-          meshRef.current.material.map = texture;
-          meshRef.current.material.needsUpdate = true;
-        }
-      } catch (error) {
-        console.error('Error creating texture:', error);
-      }
+      createTexture();
     } else {
       if (textureRef.current) {
         textureRef.current.dispose();
@@ -100,10 +108,10 @@ function WebcamScreen({ poseCanvas, isStreaming, width = 0.2, height = 0.24, pos
         meshRef.current.material.needsUpdate = true;
       }
     }
-  }, [poseCanvas, isStreaming, width, height]);
+  }, [videoRef, poseCanvas, isStreaming]);
 
   useFrame(() => {
-    if (textureRef.current && isStreaming) {
+    if (textureRef.current) {
       textureRef.current.needsUpdate = true;
     }
   });
@@ -115,7 +123,7 @@ function WebcamScreen({ poseCanvas, isStreaming, width = 0.2, height = 0.24, pos
         side={THREE.DoubleSide}
         transparent={true}
         opacity={isStreaming ? 1 : 0.1}
-        color={isStreaming ? '#ffffff' : '#000000'}
+        color={isStreaming ? '#ffffff' : '#000000'} 
       />
     </mesh>
   );
@@ -149,20 +157,22 @@ function PhoneModel(props) {
   return <primitive ref={ref} object={scene} {...props} />;
 }
 
-function WebcamWithPhone({ poseCanvas, isStreaming, rotation = [0, -6, 0] }) {
+function WebcamWithPhone({ videoRef, poseCanvas, isStreaming, rotation = [0, -6, 0] }) {
   const webcamPosition = { x: 0, y: 0, z: 0.0049 };
 
   return (
     <group rotation={rotation}>
-      <PhoneModel
-        position={[0, 0, 0]}
+      <PhoneModel 
+        position={[0, 0, 0]} 
         rotation={[0, 0, 0]}
-        scale={1.2}
+        scale={1.2} 
       />
-      <WebcamScreen
+
+      <WebcamScreen 
+        videoRef={videoRef} 
         poseCanvas={poseCanvas}
-        isStreaming={isStreaming}
-        width={0.086}
+        isStreaming={isStreaming} 
+        width={0.086} 
         height={0.16}
         position={webcamPosition}
       />
@@ -190,7 +200,8 @@ export default function DetectionCanvas({ videoRef, isStreaming, poseLandmarks, 
         <pointLight position={[-2, 1, -2]} intensity={0.2} color="#60a5fa" />
 
         <group position={[-0.1, 1.6, 0]}>
-          <WebcamWithPhone
+          <WebcamWithPhone 
+            videoRef={videoRef} 
             poseCanvas={poseCanvas}
             isStreaming={isStreaming}
             rotation={[0, 0.6, 0]}
@@ -199,7 +210,7 @@ export default function DetectionCanvas({ videoRef, isStreaming, poseLandmarks, 
 
         <Model position={[0.08, 0, 0]} rotation={[0, -Math.PI / 4, 0]} />
 
-        <OrbitControls enablePan={false} enableZoom={false} target={[0, 1.6, 0]} />
+  <OrbitControls enablePan={false} enableZoom={false} target={[0, 1.6, 0]} />
 
       </Canvas>
 
