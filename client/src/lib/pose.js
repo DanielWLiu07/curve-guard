@@ -4,56 +4,69 @@ import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 
 let pose = null;
 let camera = null;
-let canvas = null;
-let ctx = null;
+let isRunning = false;
 
 export async function initPose(settings = {}) {
-  const poseConfig = {
-    locateFile: (file) => {
-      return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-    }
-  };
+  if (!pose) {
+    const poseConfig = {
+      locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+      }
+    };
 
-  pose = new Pose(poseConfig);
+    pose = new Pose(poseConfig);
 
-  const modelComplexity = settings.landmarkDetection === 'minimal' ? 0 :
-                         settings.landmarkDetection === 'upper_body' ? 1 : 1;
+    const modelComplexity = settings.landmarkDetection === 'minimal' ? 0 : 
+                           settings.landmarkDetection === 'upper_body' ? 1 : 1;
 
-  pose.setOptions({
-    modelComplexity: modelComplexity,
-    smoothLandmarks: settings.smoothingFactor > 0.5,
-    enableSegmentation: false,
-    smoothSegmentation: false,
-    minDetectionConfidence: settings.detectionConfidence || 0.5,
-    minTrackingConfidence: settings.trackingConfidence || 0.5,
-  });
+    pose.setOptions({
+      modelComplexity: modelComplexity,
+      smoothLandmarks: settings.smoothingFactor > 0.5,
+      enableSegmentation: false,
+      smoothSegmentation: false,
+      minDetectionConfidence: settings.detectionConfidence || 0.5,
+      minTrackingConfidence: settings.trackingConfidence || 0.5,
+    });
 
-  canvas = document.createElement('canvas');
-  canvas.width = 640;
-  canvas.height = 480;
-  ctx = canvas.getContext('2d');
-  ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    await pose.initialize();
+  } else {
+    const modelComplexity = settings.landmarkDetection === 'minimal' ? 0 : 
+                           settings.landmarkDetection === 'upper_body' ? 1 : 1;
+
+    pose.setOptions({
+      modelComplexity: modelComplexity,
+      smoothLandmarks: settings.smoothingFactor > 0.5,
+      enableSegmentation: false,
+      smoothSegmentation: false,
+      minDetectionConfidence: settings.detectionConfidence || 0.5,
+      minTrackingConfidence: settings.trackingConfidence || 0.5,
+    });
+  }
 
   return pose;
 }
 
 export function startPoseDetection(videoElement, onResults, settingsOrGetter = {}) {
-  if (!pose) {
-    initPose(settings);
+  if (isRunning) {
+    return;
   }
+  
+  isRunning = true;
 
   pose.onResults((results) => {
+    
     const currentSettings = typeof settingsOrGetter === 'function' ? settingsOrGetter() : settingsOrGetter;
-
-    if (ctx && canvas) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (videoElement.readyState >= 2) {
-        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-      }
+    
+    const frameCanvas = document.createElement('canvas');
+    frameCanvas.width = 640;
+    frameCanvas.height = 480;
+    const frameCtx = frameCanvas.getContext('2d');
+    
+    frameCtx.fillStyle = 'black';
+    frameCtx.fillRect(0, 0, frameCanvas.width, frameCanvas.height);
+    
+    if (videoElement.readyState >= 1) {
+      frameCtx.drawImage(videoElement, 0, 0, frameCanvas.width, frameCanvas.height);
     }
 
     if (results.poseLandmarks) {
@@ -66,8 +79,8 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
         filteredLandmarks = results.poseLandmarks.filter((_, index) => index <= 24);
       }
 
-      if (currentSettings.showLandmarks && ctx && canvas) {
-        drawConnectors(ctx, filteredLandmarks, [
+      if (currentSettings.showLandmarks && frameCtx && frameCanvas) {
+        drawConnectors(frameCtx, filteredLandmarks, [
           [11, 12], [11, 13], [13, 15], [15, 17], [15, 19], [15, 21],
           [12, 14], [14, 16], [16, 18], [16, 20], [16, 22],
           [11, 23], [12, 24], [23, 24],
@@ -80,7 +93,7 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
                    currentSettings.landmarkColor === 'yellow' ? '#ffff00' :
                    currentSettings.landmarkColor === 'cyan' ? '#00ffff' : '#00ff88', lineWidth: 4 });
 
-        drawLandmarks(ctx, filteredLandmarks, {
+        drawLandmarks(frameCtx, filteredLandmarks, {
           color: currentSettings.landmarkColor === 'white' ? '#ffffff' :
                  currentSettings.landmarkColor === 'red' ? '#ff0000' :
                  currentSettings.landmarkColor === 'green' ? '#00ff00' :
@@ -90,37 +103,42 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
           lineWidth: 2,
           radius: currentSettings.landmarkRadius || 6
         });
+
+        frameCanvas.version = Date.now();
       }
 
-      if (currentSettings.eyeHeightCalibrationLine != null && ctx && canvas) {
-        ctx.strokeStyle = '#ff6b6b';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([10, 5]);
-        ctx.beginPath();
-        ctx.moveTo(0, currentSettings.eyeHeightCalibrationLine);
-        ctx.lineTo(canvas.width, currentSettings.eyeHeightCalibrationLine);
-        ctx.stroke();
-        ctx.setLineDash([]);
+      if (currentSettings.eyeHeightCalibrationLine != null && frameCtx && frameCanvas) {
+        frameCtx.strokeStyle = '#ff6b6b';
+        frameCtx.lineWidth = 3;
+        frameCtx.setLineDash([10, 5]);
+        frameCtx.beginPath();
+        frameCtx.moveTo(0, currentSettings.eyeHeightCalibrationLine);
+        frameCtx.lineTo(frameCanvas.width, currentSettings.eyeHeightCalibrationLine);
+        frameCtx.stroke();
+        frameCtx.setLineDash([]);
       }
 
-      if (currentSettings.alerts && currentSettings.alerts.length > 0 && ctx && canvas) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
-        ctx.lineWidth = 3;
-        ctx.font = 'bold 24px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+      if (currentSettings.alerts && currentSettings.alerts.length > 0 && frameCtx && frameCanvas) {
+
+        frameCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        frameCtx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+        frameCtx.lineWidth = 3;
+        frameCtx.font = 'bold 24px Arial';
+        frameCtx.textAlign = 'center';
+        frameCtx.textBaseline = 'middle';
 
         currentSettings.alerts.forEach((alert, index) => {
-          const yPosition = canvas.height / 2 + (index * 40) - ((currentSettings.alerts.length - 1) * 20);
-          ctx.strokeText(alert.message, canvas.width / 2, yPosition);
-          ctx.fillText(alert.message, canvas.width / 2, yPosition);
+          const yPosition = frameCanvas.height / 2 + (index * 40) - ((currentSettings.alerts.length - 1) * 20);
+
+          frameCtx.strokeText(alert.message, frameCanvas.width / 2, yPosition);
+          frameCtx.fillText(alert.message, frameCanvas.width / 2, yPosition);
         });
+
       }
 
-      onResults(filteredLandmarks, canvas);
+      onResults(filteredLandmarks, frameCanvas);
     } else {
-      onResults(null, canvas);
+      onResults(null, frameCanvas);
     }
   });
 
@@ -130,7 +148,7 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
 
   camera = new Camera(videoElement, {
     onFrame: async () => {
-      if (pose) {
+      if (videoElement.readyState >= 2 && pose && isRunning) {
         await pose.send({ image: videoElement });
       }
     },
@@ -141,11 +159,13 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
   camera.start();
 }
 
-export function stopPoseDetection() {
+export async function stopPoseDetection() {
   if (camera) {
     camera.stop();
     camera = null;
   }
+  
+  isRunning = false;
 }
 
 export function runPostureChecks(landmarks, settings) {
@@ -154,6 +174,7 @@ export function runPostureChecks(landmarks, settings) {
   const errors = [];
 
   const getLandmark = (idx) => landmarks[idx];
+  const getY = (idx) => (landmarks[idx] ? landmarks[idx].y : null);
 
   const leftEye = getLandmark(2);
   const rightEye = getLandmark(5);
