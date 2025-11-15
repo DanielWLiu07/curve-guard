@@ -20,13 +20,12 @@ class PoseDetector:
         self.staticMode = staticMode
         self.landmarkMode = landmarkMode
         
-        # Adjust model complexity based on landmark mode
         if landmarkMode == 'minimal':
-            self.modelComplexity = 0  # Lite model - 17 landmarks
+            self.modelComplexity = 0
         elif landmarkMode == 'upper_body':
-            self.modelComplexity = 1  # Full model but we'll filter to upper body
-        else:  # 'full'
-            self.modelComplexity = 1  # Full model - 33 landmarks
+            self.modelComplexity = 1
+        else:
+            self.modelComplexity = 1
             
         self.smooth = smooth
         self.detectCon = detectCon
@@ -46,7 +45,6 @@ class PoseDetector:
 
 
     def draw_pose(self, img, draw):
-        # Returns Image after drawing landmark locations and connections.
         RGBImg=cv.cvtColor(img, cv.COLOR_BGR2RGB)
         self.results=self.pose.process(RGBImg)
         
@@ -60,13 +58,10 @@ class PoseDetector:
         self.lmList=[]
         if self.results.pose_landmarks:
             for id, lm in enumerate(self.results.pose_landmarks.landmark):
-                # Filter landmarks based on mode
                 if self.landmarkMode == 'minimal':
-                    # Only include basic pose landmarks (17 landmarks)
                     if id not in [0, 2, 5, 7, 8, 11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28]:
                         continue
                 elif self.landmarkMode == 'upper_body':
-                    # Include upper body landmarks (exclude legs: 25-32)
                     if id > 24:
                         continue
                 

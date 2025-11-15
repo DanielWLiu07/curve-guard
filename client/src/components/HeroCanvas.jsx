@@ -82,20 +82,15 @@ function Model(props) {
   const jawRef = useRef();
 
   useEffect(() => {
-    // Your specific head bone selection code
     const skeletonRoot = ref.current.getObjectByName('SM_HumanSkeleton');
     if (skeletonRoot) {
       headRef.current = skeletonRoot.getObjectByName('SM_HumanSkeleton_17');
       jawRef.current = skeletonRoot.getObjectByName('SM_HumanSkeleton_18');
-      console.log('Head bone:', headRef.current);
-      console.log('Jaw bone:', jawRef.current);
     }
 
-    // Disable the outline object
     const outlineObject = ref.current.getObjectByName('OutLine');
     if (outlineObject) {
       outlineObject.visible = false;
-      console.log('Outline object disabled');
     }
   }, [scene]);
 

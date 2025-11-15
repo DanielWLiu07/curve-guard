@@ -8,7 +8,6 @@ import sys
 
 class MainWindow(QMainWindow):
     def __init__(self, analyzer):
-        # Window Set Up
         super().__init__()
         self.setWindowTitle("Curve Guard")
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +18,6 @@ class MainWindow(QMainWindow):
         font_path = os.path.join(self.base_dir, "assets", "Orbitron", "static", "Orbitron-Regular.ttf")
         font_id = QFontDatabase.addApplicationFont(font_path)
         if font_id == -1:
-            print("Failed to load Orbitron font")
             self.orbitron = QFont("Arial", 12)  # fallback
         else:
             font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
@@ -28,14 +26,12 @@ class MainWindow(QMainWindow):
         self.analyzer=analyzer
         self.analyzer.frame_ready.connect(self.update_image)
 
-        # Calculate window size (80% of width & 70% of height)
         screen = QDesktopWidget().screenGeometry()
         screen_width = screen.width()
         screen_height = screen.height()
         window_width = int(screen_width * 0.8)
         window_height = int(screen_height * 0.7)
 
-        # Calculate position to center window
         pos_x = (screen_width - window_width) // 2
         pos_y = (screen_height - window_height) // 2
         self.setGeometry(pos_x, pos_y, window_width, window_height)
@@ -43,16 +39,13 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        # Set up central widget
         central_widget=QWidget()
         self.setCentralWidget(central_widget)
         
-        # Processed Video feed
         self.video_label=QLabel(self)
         self.video_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.video_label.setMinimumSize(320, 240)       
 
-        # Top bar
         self.top_bar = QWidget()
         self.top_bar.setFixedHeight(50)
         self.top_bar_layout = QHBoxLayout()
@@ -61,7 +54,6 @@ class MainWindow(QMainWindow):
         self.top_bar_layout.setContentsMargins(0, 0, 0, 0) 
         self.top_bar_layout.setSpacing(0)
 
-        # Logo
         self.logo=QLabel(self)
         logo_path=os.path.join(self.base_dir, "assets", "logo.png")
         self.logo_pixmap=QPixmap(logo_path)
@@ -72,7 +64,6 @@ class MainWindow(QMainWindow):
         self.logo.setObjectName("logo")
         self.logo.setScaledContents(False)
 
-        # Curve Guard Text (App name)
         self.curve_guard_name = QLabel("Curve Guard", self)
         self.curve_guard_name.setObjectName("curve_guard")
         self.curve_guard_name.setFont(self.orbitron)
@@ -80,7 +71,6 @@ class MainWindow(QMainWindow):
         self.top_bar_layout.addWidget(self.curve_guard_name, 0, Qt.AlignLeft)
         self.top_bar_layout.addStretch(3)
 
-        # Side bar
         self.sidebar = QWidget()
         self.sidebar_layout = QVBoxLayout()
         self.sidebar.setLayout(self.sidebar_layout)
@@ -89,13 +79,11 @@ class MainWindow(QMainWindow):
         self.sidebar.setMinimumSize(0, 0)    
         self.sidebar.setFixedWidth(300)   
         
-        # Control_Panel Text
         self.control_panel=QLabel("Control Panel", self)
         self.control_panel.setFont(self.orbitron)
         self.sidebar_layout.addWidget(self.control_panel, 0, Qt.AlignLeft)
         self.control_panel.setObjectName("control_panel")
 
-        # Height Monitor
         self.height_monitor=QWidget()
         self.sidebar_layout.addWidget(self.height_monitor)
         self.height_monitor.setFixedHeight(150)
@@ -104,14 +92,12 @@ class MainWindow(QMainWindow):
         self.height_monitor.setObjectName("height_monitor")
         self.height_monitor_layout.setSpacing(2)
 
-        # Height Monitor Text
         self.height_monitor_text=QLabel("Height Monitor", self)
         self.height_monitor_text.setFont(self.orbitron)
         self.height_monitor_text.setObjectName("height_monitor_text")
         self.height_monitor_layout.addWidget(self.height_monitor_text, 0, 0)
         self.height_monitor_text.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
 
-        # Calibrate Height Line Button
         self.calibrate_height = QPushButton("Calibrate Default Eye Level", self)
         self.calibrate_height.setFont(self.orbitron)
         self.calibrate_height.setIcon(QIcon()) 
@@ -122,7 +108,6 @@ class MainWindow(QMainWindow):
         self.calibrate_height.setStyleSheet("padding: 0px; margin: 0px;")
         self.height_monitor_text.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
 
-        # Eye Height Leniency
         self.height_leniency_text=QLabel("Height Leniency (px)", self)
         self.height_monitor_layout.addWidget(self.height_leniency_text, 2, 0)
         self.height_leniency_text.setObjectName("blue_settings_text")
@@ -135,7 +120,6 @@ class MainWindow(QMainWindow):
         self.height_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.height_leniency_entry, upper = 99999, func = self.analyzer.update_eye_height_leniency))
 
 
-        # Eye Time Leniency
         self.line_time_leniency_text=QLabel("Time Leniency (s)", self)
         self.height_monitor_layout.addWidget(self.line_time_leniency_text, 3, 0)
         self.line_time_leniency_text.setObjectName("blue_settings_text")
@@ -148,7 +132,6 @@ class MainWindow(QMainWindow):
         self.line_time_leniency_entry.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.line_time_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.line_time_leniency_entry, upper = 99999, func = self.analyzer.update_eye_time_leniency))
 
-        # Line Visibility
         self.line_visibility_text=QLabel("Line Visibility", self)
         self.height_monitor_layout.addWidget(self.line_visibility_text, 4, 0)
         self.line_visibility_text.setObjectName("blue_settings_text")
@@ -158,7 +141,6 @@ class MainWindow(QMainWindow):
         self.line_visibility_checkbox.toggled.connect(self.analyzer.toggle_height_line)
         self.height_monitor_layout.addWidget(self.line_visibility_checkbox, 4, 1)
     
-        # Shoulder Monitor
         self.shoulder_monitor=QWidget()
         self.sidebar_layout.addWidget(self.shoulder_monitor)
         self.shoulder_monitor_layout= QGridLayout()
@@ -166,13 +148,11 @@ class MainWindow(QMainWindow):
         self.shoulder_monitor.setObjectName("shoulder_monitor")
         self.shoulder_monitor_layout.setSpacing(2)
 
-        # Shoulder Monitor Text
         self.shoulder_monitor_text=QLabel("Shoulder Monitor", self)
         self.shoulder_monitor_text.setFont(self.orbitron)
         self.shoulder_monitor_text.setObjectName("shoulder_monitor_text")
         self.shoulder_monitor_layout.addWidget(self.shoulder_monitor_text, 0, 0)
 
-        # Shoulder Leniency
         self.shoulder_leniency_text=QLabel("Unevenness Leniency (px)", self)
         self.shoulder_monitor_layout.addWidget(self.shoulder_leniency_text, 2, 0)
         self.shoulder_leniency_text.setObjectName("purple_settings_text")
@@ -183,7 +163,6 @@ class MainWindow(QMainWindow):
         self.shoulder_leniency_entry.setMinimumWidth(75)
         self.shoulder_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_leniency_entry, upper = 99999, func = self.analyzer.update_shoulder_uneveness_leniency))
 
-        # Shoulder Time Leniency
         self.shoulder_time_leniency_text=QLabel("Time Leniency (s)", self)
         self.shoulder_monitor_layout.addWidget(self.shoulder_time_leniency_text, 3, 0)
         self.shoulder_time_leniency_text.setObjectName("purple_settings_text")
@@ -194,7 +173,6 @@ class MainWindow(QMainWindow):
         self.shoulder_time_leniency_entry.setText("3")
         self.shoulder_time_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.shoulder_time_leniency_entry, upper = 99999, func = self.analyzer.update_shoulder_time_leniency))
 
-        # Shoulder Points Visibility
         self.shoulder_visibility_text=QLabel("Shoulder Visibility", self)
         self.shoulder_visibility_text.setFont(self.orbitron)
         self.shoulder_monitor_layout.addWidget(self.shoulder_visibility_text, 4, 0)
@@ -204,7 +182,6 @@ class MainWindow(QMainWindow):
         self.shoulder_monitor_layout.addWidget(self.shoulder_visibility_checkbox, 4, 1)
         self.shoulder_visibility_checkbox.toggled.connect(self.analyzer.toggle_shoulder_visibility)
 
-        # Head Monitor
         self.head_monitor=QWidget()
         self.sidebar_layout.addWidget(self.head_monitor)
         self.head_monitor_layout= QGridLayout()
@@ -212,13 +189,11 @@ class MainWindow(QMainWindow):
         self.head_monitor.setObjectName("head_monitor")
         self.head_monitor_layout.setSpacing(2)
 
-        # Head Monitor Text
         self.head_monitor_text=QLabel("Head Monitor", self)
         self.head_monitor_text.setFont(self.orbitron)
         self.head_monitor_text.setObjectName("head_monitor_text")
         self.head_monitor_layout.addWidget(self.head_monitor_text, 0, 0)
 
-        # Head Leniency
         self.head_leniency_text=QLabel("Unevenness Leniency (px)", self)
         self.head_monitor_layout.addWidget(self.head_leniency_text, 2, 0)
         self.head_leniency_text.setObjectName("green_settings_text")
@@ -229,7 +204,6 @@ class MainWindow(QMainWindow):
         self.head_leniency_entry.setMinimumWidth(75)
         self.head_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_leniency_entry, upper = 99999, func = self.analyzer.update_head_uneveness_leniency))
 
-        # Head Time Leniency
         self.head_time_leniency_text=QLabel("Time Leniency (s)", self)
         self.head_monitor_layout.addWidget(self.head_time_leniency_text, 3, 0)
         self.head_time_leniency_text.setObjectName("green_settings_text")
@@ -240,7 +214,6 @@ class MainWindow(QMainWindow):
         self.head_time_leniency_entry.setText("3")
         self.head_time_leniency_entry.editingFinished.connect(lambda: self.validate_digit(self.head_time_leniency_entry, upper = 99999, func = self.analyzer.update_head_time_leniency))
 
-        # Head Points Visibility
         self.head_visibility_text=QLabel("Head Visibility", self)
         self.head_visibility_text.setFont(self.orbitron)
         self.head_monitor_layout.addWidget(self.head_visibility_text, 4, 0)
@@ -250,7 +223,6 @@ class MainWindow(QMainWindow):
         self.head_monitor_layout.addWidget(self.head_visibility_checkbox, 4, 1)
         self.head_visibility_checkbox.toggled.connect(self.analyzer.toggle_head_visibility)
 
-        # Landmarks
         self.landmarks = QWidget()
         self.sidebar_layout.addWidget(self.landmarks)
         self.landmarks_layout = QGridLayout()
@@ -259,14 +231,12 @@ class MainWindow(QMainWindow):
         self.landmarks_layout.setSpacing(2)
         self.sidebar_layout.addStretch()
 
-        # Landmarks Text
         self.landmarks_text=QLabel("Landmarks", self)
         self.landmarks_text.setFont(self.orbitron)
         self.landmarks_text.setObjectName("landmarks_text")
         self.landmarks_layout.addWidget(self.landmarks_text, 0, 0)
         self.landmarks_layout.setColumnStretch(1, 1)
 
-        # Landmarks Visibility
         self.landmark_visibility_text = QLabel("Landmark Visiblity               ", self)
         self.landmark_visibility_text.setFont(self.orbitron)
         self.landmarks_layout.addWidget(self.landmark_visibility_text, 1, 0)
@@ -278,14 +248,12 @@ class MainWindow(QMainWindow):
         self.landmarks_layout.setColumnStretch(0, 1)
         self.landmark_visibility_checkbox.toggled.connect(self.analyzer.toggle_landmarks_visibility)
         
-        # Main area
         self.main_area = QWidget()
         self.main_area_layout = QHBoxLayout()
         self.main_area_layout.addWidget(self.video_label)
         self.main_area.setLayout(self.main_area_layout)
         self.main_area.setObjectName("main_area")
         
-        # Body area
         self.body_area = QWidget()
         self.body_area_layout = QHBoxLayout()
         self.body_area_layout.addWidget(self.main_area, 3)
@@ -304,14 +272,11 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(self.main_layout)
         
     def update_image(self, cv_img):
-        # Get target size from QLabel
         target_width = self.video_label.width()
         target_height = self.video_label.height()
 
-        # Resize + Center Crop
         img = self.center_crop_resize(cv_img, target_width, target_height)
 
-        # Convert to QImage and display
         h, w, ch = img.shape
 
         bytes_per_line = ch * w
@@ -322,7 +287,6 @@ class MainWindow(QMainWindow):
     def center_crop_resize(self, frame, target_width, target_height):
         h, w, _ = frame.shape
 
-        # Scale so the image covers the whole label area, rounding up to avoid smaller size
         scale = max(target_width / w, target_height / h)
         new_w, new_h = math.ceil(w * scale), math.ceil(h * scale)
         resized = cv.resize(frame, (new_w, new_h), interpolation=cv.INTER_AREA)

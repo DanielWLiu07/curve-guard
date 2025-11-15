@@ -23,6 +23,9 @@ const defaultSettings = {
   shoulderUnevennessLeniency: 0.1,
   shoulderTimeTolerance: 2,
   shoulderViolationStart: null,
+  landmarkRadius: 6,
+  landmarkColor: 'white',
+  alertSound: 'beep'
 };
 
 export const useDetectionSettings = () => {
@@ -49,10 +52,15 @@ export const useDetectionSettings = () => {
     }
   };
 
+  const resetSettings = () => {
+    setSettings(defaultSettings);
+  };
+
   return {
     settings,
     setSettings,
     settingsRef,
-    calibrateHeight
+    calibrateHeight,
+    resetSettings
   };
 };

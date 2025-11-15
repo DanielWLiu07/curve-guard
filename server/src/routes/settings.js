@@ -3,7 +3,6 @@ import Setting from '../models/Setting.js';
 
 const router = Router();
 
-// For demo purposes, identify users by a simple header; replace with real auth later
 function getUserId(req) {
   return req.headers['x-user-id'] || 'demo-user';
 }

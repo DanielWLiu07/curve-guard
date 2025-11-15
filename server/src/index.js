@@ -25,12 +25,10 @@ const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/curve_gua
 async function start() {
   try {
     await mongoose.connect(mongoUri, { dbName: process.env.MONGODB_DB || undefined });
-    console.log('Connected to MongoDB');
   } catch (err) {
-    console.warn('MongoDB connection failed, continuing without database:', err.message);
   }
 
-  app.listen(port, () => console.log(`Server listening on :${port}`));
+  app.listen(port, () => {});
 }
 
 start();

@@ -7,7 +7,7 @@ export default function Navbar({ signOut, user, onShowSignIn, showSignIn }) {
   const isDetectionPage = location.pathname === '/detection';
 
   return (
-    <header className="w-full bg-jade-12/70 transparent z-20 relative">
+    <header className="w-full bg-jade-12/70 transparent z-40 relative">
       <div className="mx-auto w-full max-w-[102rem] pl-12 pr-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-4">
           <img src="images/logo.png" alt="CurveGuard Logo" className="h-14 w-auto" />

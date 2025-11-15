@@ -1,7 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 
 const schema = a.schema({
-  // Placeholder model for now
   Placeholder: a.model({
     id: a.id(),
     name: a.string(),
