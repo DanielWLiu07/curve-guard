@@ -1,61 +1,19 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import React, { useRef, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
-import * as THREE from 'three';
+import { gsap } from 'gsap';
+import { SceneSetup } from './three';
 
-
-function SceneSetup() {
-  const { scene } = useThree();
-
-  useEffect(() => {
-    scene.fog = new THREE.Fog(0x000000, 0, 0.7);
-  }, [scene]);
-
-  return null;
-}
 
 function ScreenLight() {
   const lightRef = useRef();
   const targetRef = useRef();
-  const [currentIntensity, setCurrentIntensity] = useState(30);
-  const [targetIntensity, setTargetIntensity] = useState(30);
-  const [flickerTimer, setFlickerTimer] = useState(0);
 
   useEffect(() => {
     if (lightRef.current && targetRef.current) {
       lightRef.current.target = targetRef.current;
     }
   }, []);
-
-  useFrame((state, delta) => {
-    if (!lightRef.current) return;
-
-    const lerpFactor = 0.1;
-    const newIntensity = THREE.MathUtils.lerp(currentIntensity, targetIntensity, lerpFactor);
-    setCurrentIntensity(newIntensity);
-    lightRef.current.intensity = newIntensity;
-
-    setFlickerTimer(prev => prev + delta);
-
-    if (Math.random() < 0.025) {
-      const flickerPatterns = [
-        35,  // Normal
-        50,  // Bright
-        70,  // Very bright
-        90,  // Extremely bright
-        45,  // Medium bright
-        60,  // Bright
-        80,  // Very bright
-        100, // Maximum bright
-      ];
-      const randomIntensity = flickerPatterns[Math.floor(Math.random() * flickerPatterns.length)];
-      setTargetIntensity(randomIntensity);
-
-      setFlickerTimer(0);
-    } else if (flickerTimer > 0.3) { 
-      setTargetIntensity(30);
-    }
-  });
 
   return (
     <>
@@ -64,7 +22,7 @@ function ScreenLight() {
         position={[-3, 1.2, 0.5]}
         angle={0.2}
         penumbra={0.2}
-        intensity={currentIntensity}
+        intensity={30}
         color="#00ff88"
         castShadow
         shadow-mapSize-width={1024}
@@ -75,36 +33,101 @@ function ScreenLight() {
   );
 }
 
-function Model(props) {
+function Model({ currentSection, animateExit }) {
   const { scene } = useGLTF('/skeleton.glb');
   const ref = useRef();
-  const headRef = useRef();
-  const jawRef = useRef();
 
   useEffect(() => {
-    const skeletonRoot = ref.current.getObjectByName('SM_HumanSkeleton');
-    if (skeletonRoot) {
-      headRef.current = skeletonRoot.getObjectByName('SM_HumanSkeleton_17');
-      jawRef.current = skeletonRoot.getObjectByName('SM_HumanSkeleton_18');
-    }
-
-    const outlineObject = ref.current.getObjectByName('OutLine');
-    if (outlineObject) {
-      outlineObject.visible = false;
+    if (scene) {
+      const outlineObject = scene.getObjectByName('OutLine');
+      if (outlineObject) {
+        outlineObject.visible = false;
+      }
     }
   }, [scene]);
 
-  return <primitive ref={ref} object={scene} {...props} />;
+  useEffect(() => {
+    if (!ref.current || !animateExit) return;
+
+    const tween = gsap.to(ref.current.position, {
+      x: 5,
+      duration: 1.2,
+      ease: 'power2.in'
+    });
+
+    return () => {
+      tween.kill();
+    };
+  }, [animateExit]);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const sectionPositions = {
+      hero: [0.08, 0, 0],
+      about: [-0.075, 0.4, -0.05],
+      features: [0, 0.15, -0.4],
+      creator: [0, -0.55, 0.1],
+    };
+
+    const sectionRotations = {
+      hero: [0, -Math.PI / 4, 0],
+      about: [0, Math.PI / 2.5, 0],
+      features: [0.1, 0, 0],
+      creator: [0.3, 0, 0]
+    };
+
+    const targetPosition = sectionPositions[currentSection] || sectionPositions.hero;
+    const targetRotation = sectionRotations[currentSection] || sectionRotations.hero;
+
+    const positionTween = gsap.to(ref.current.position, {
+      x: targetPosition[0],
+      y: targetPosition[1],
+      z: targetPosition[2],
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+
+    const rotationTween = gsap.to(ref.current.rotation, {
+      x: targetRotation[0],
+      y: targetRotation[1],
+      z: targetRotation[2],
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+
+    return () => {
+      positionTween.kill();
+      rotationTween.kill();
+    };
+  }, [currentSection]);
+
+  return <primitive ref={ref} object={scene} position={[0.08, 0, 0]} rotation={[0, -Math.PI / 4, 0]} />;
 }
 
 
 
-export default function HeroCanvas() {
+export default function HeroCanvas({ currentSection, animateExit = false }) {
   return (
-    <div className="absolute inset-0 z-10">
+    <div className="absolute inset-0 z-0">
       <Canvas
         camera={{ position: [0, 1.6, 0.25], fov: 50 }}
-        gl={{ antialias: true }}
+        gl={{
+          antialias: true,
+          powerPreference: 'default',
+          failIfMajorPerformanceCaveat: false,
+          preserveDrawingBuffer: false,
+          alpha: false,
+          depth: true,
+          stencil: false
+        }}
+        dpr={Math.min(window.devicePixelRatio, 2)}
+        onCreated={({ gl }) => {
+          const canvas = gl.domElement;
+          canvas.addEventListener('webglcontextlost', (event) => {
+            console.warn('WebGL context lost');
+          });
+        }}
       >
         <SceneSetup />
         <color attach="background" args={['#0a0f1a']} />
@@ -116,12 +139,15 @@ export default function HeroCanvas() {
           castShadow
         />
         <ScreenLight />
-        <pointLight position={[-2, 1, -2]} intensity={0.2} color="#60a5fa" /> 
-        <Model position={[0.08, 0, 0]} rotation={[0, -Math.PI / 4, 0]} />
+        <pointLight position={[-2, 1, -2]} intensity={0.2} color="#60a5fa" />
+        <Model currentSection={currentSection} animateExit={animateExit} />
 
-        <OrbitControls enablePan={false} enableZoom={false} />
-        <OrbitControls target={[0, 1.7, 0]} />
-        
+        <OrbitControls
+          enablePan={false}
+          enableZoom={false}
+          target={[0, 1.7, 0]}
+        />
+
       </Canvas>
     </div>
   );
