@@ -38,3 +38,7 @@ aws-exports.ts
 
 # Hidden local cache
 .amplify/
+
+# Ignore AWS credentials and tokens
+.aws/
+*.aws
