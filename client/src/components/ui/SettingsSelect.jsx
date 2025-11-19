@@ -9,6 +9,9 @@ const SettingsSelect = ({
   placeholder = "Select...",
   className = ""
 }) => {
+  const currentOption = options.find(option => option.value === value);
+  const displayText = currentOption ? currentOption.label : placeholder;
+
   return (
     <div className="space-y-2">
       <label className="block text-white text-xs font-medium">
@@ -19,7 +22,9 @@ const SettingsSelect = ({
         onValueChange={onValueChange}
       >
         <SelectTrigger className={`w-full bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600 hover:border-slate-500 text-white h-8 text-xs rounded-lg px-2 transition-all duration-200 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 shadow-sm ${className}`}>
-          <SelectValue placeholder={placeholder} />
+          <SelectValue>
+            {displayText}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent className="bg-slate-800/95 backdrop-blur-sm border border-slate-600 rounded-lg shadow-xl">
           {options.map((option) => (
