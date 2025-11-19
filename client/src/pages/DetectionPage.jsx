@@ -1,28 +1,42 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import DetectionCanvas from '../components/DetectionCanvas';
 import Vignette from '../components/Vignette';
 import SlidingSettingsPanel from '../components/SlidingSettingsPanel';
 import SettingsPanel from '../components/SettingsPanel';
+import DataPanel from '../components/DataPanel';
 import { initPose, startPoseDetection, stopPoseDetection, runPostureChecks } from '../lib/pose';
+import { useCanvas } from '../contexts/CanvasContext';
+
+const VIDEO_WIDTH = 640;
+const VIDEO_HEIGHT = 480;
 
 const DetectionPage = () => {
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [cameraStatus, setCameraStatus] = useState('disconnected');
-  const [alerts, setAlerts] = useState([]);
+  const [alerts, setAlerts] = useState({
+    eyeHeight: null,
+    shoulder: null,
+    headTilt: null,
+    camera: null
+  });
   const [poseLandmarks, setPoseLandmarks] = useState(null);
   const [poseCanvas, setPoseCanvas] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [panelMode, setPanelMode] = useState('settings');
+  const { updateCanvasProps } = useCanvas();
 
   const [settings, setSettings] = useState({
     enableAudioAlerts: true,
     enableVisualAlerts: true,
-    alertCooldown: 30,
+    alertVolume: 50,
     alertSound: 'beep',
     landmarkDetection: 'full',
     smoothingFactor: 0.8,
-    showLandmarks: false,
+    showLandmarks: true,
     landmarkRadius: 3,
     landmarkColor: 'white',
     enableHeightDetection: true,
@@ -38,9 +52,20 @@ const DetectionPage = () => {
     headTiltTolerance: 15,
     headTiltTimeTolerance: 2,
     headTiltViolationStart: null,
-    shoulderUnevennessLeniency: 0.1,
+    shoulderUnevennessTolerancePx: 10,
     shoulderTimeTolerance: 2,
     shoulderViolationStart: null,
+    errorBarColor: 'red',
+    errorBarBorderStyle: 'solid',
+    calibrationBarColor: 'red',
+    calibrationBarStyle: 'solid',
+    phoneRotation: 0,
+    deviceType: 'phone',
+    activeErrors: {
+      eyeHeight: { active: false, lastActive: null },
+      shoulder: { active: false, lastActive: null },
+      headTilt: { active: false, lastActive: null }
+    }
   });
   const settingsRef = useRef(settings);
 
@@ -54,7 +79,7 @@ const DetectionPage = () => {
       const rightEye = poseLandmarks[5];
       
       if (leftEye && rightEye) {
-        const avgEyeY = ((leftEye.y + rightEye.y) / 2) * 480;
+        const avgEyeY = ((leftEye.y + rightEye.y) / 2) * VIDEO_HEIGHT;
         setSettings(prev => ({
           ...prev,
           eyeHeightCalibrationLine: avgEyeY,
@@ -66,6 +91,52 @@ const DetectionPage = () => {
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
+  };
+
+  const onGoHome = () => {
+    navigate('/');
+  };
+
+  const handlePanelModeChange = (mode) => {
+    setPanelMode(mode);
+    setShowSettings(true);
+  };
+
+  const handleViolation = (violationType, isViolating, timeToleranceKey, violationStartKey, alertMessage) => {
+    const currentSettings = settingsRef.current;
+    const now = Date.now();
+
+    if (isViolating) {
+      if (!currentSettings[violationStartKey]) {
+        setSettings(prev => ({ ...prev, [violationStartKey]: now }));
+      } else {
+        const violationDuration = (now - currentSettings[violationStartKey]) / 1000;
+        if (violationDuration >= currentSettings[timeToleranceKey]) {
+          setSettings(prev => ({
+            ...prev,
+            activeErrors: {
+              ...prev.activeErrors,
+              [violationType]: { active: true, lastActive: now }
+            }
+          }));
+          setAlerts(prev => ({ ...prev, [violationType]: { type: 'error', message: alertMessage } }));
+        }
+      }
+    } else {
+      if (currentSettings[violationStartKey]) {
+        setSettings(prev => ({ ...prev, [violationStartKey]: null }));
+      }
+      if (currentSettings.activeErrors[violationType].active) {
+        setSettings(prev => ({
+          ...prev,
+          activeErrors: {
+            ...prev.activeErrors,
+            [violationType]: { active: false, lastActive: null }
+          }
+        }));
+        setAlerts(prev => ({ ...prev, [violationType]: null }));
+      }
+    }
   };
 
   useEffect(() => {
@@ -86,7 +157,7 @@ const DetectionPage = () => {
         setPoseCanvas(canvas);
 
         const postureResults = runPostureChecks(landmarks, {
-          shoulderUnevennessLeniency: settingsRef.current.shoulderUnevennessLeniency,
+          shoulderUnevennessTolerancePx: settingsRef.current.shoulderUnevennessTolerancePx,
           headHeightLeniency: 0.05,
           eyeHeightCalibrationLine: settingsRef.current.eyeHeightCalibrationLine,
           eyeHeightTolerance: settingsRef.current.eyeHeightTolerance,
@@ -99,75 +170,25 @@ const DetectionPage = () => {
           currentTime: Date.now()
         });
 
-        if (settingsRef.current.enableHeightDetection && postureResults.eyeHeightViolation) {
-          const now = Date.now();
-
-          if (!settingsRef.current.eyeHeightViolationStart) {
-            setSettings(prev => ({ ...prev, eyeHeightViolationStart: now }));
-          } else {
-            const violationDuration = (now - settingsRef.current.eyeHeightViolationStart) / 1000;
-
-            if (violationDuration >= settingsRef.current.eyeHeightTimeTolerance) {
-              postureResults.errors.push('Poor posture: Head too low');
-              setSettings(prev => ({ ...prev, eyeHeightViolationStart: null }));
-            }
-          }
-        } else {
-          if (settingsRef.current.eyeHeightViolationStart) {
-            setSettings(prev => ({ ...prev, eyeHeightViolationStart: null }));
-          }
-          if (settingsRef.current.enableHeightDetection) {
-            setAlerts([]);
-          }
+        if (settingsRef.current.enableHeightDetection) {
+          handleViolation('eyeHeight', postureResults.eyeHeightViolation, 'eyeHeightTimeTolerance', 'eyeHeightViolationStart', 'Poor posture: Head too low');
         }
 
-        if (settingsRef.current.enableShoulderDetection && postureResults.shoulderViolation) {
-          const now = Date.now();
-
-          if (!settingsRef.current.shoulderViolationStart) {
-            setSettings(prev => ({ ...prev, shoulderViolationStart: now }));
-          } else {
-            const violationDuration = (now - settingsRef.current.shoulderViolationStart) / 1000;
-
-            if (violationDuration >= settingsRef.current.shoulderTimeTolerance) {
-              postureResults.errors.push('Uneven shoulders');
-              setSettings(prev => ({ ...prev, shoulderViolationStart: null }));
-            }
-          }
-        } else {
-          if (settingsRef.current.shoulderViolationStart) {
-            setSettings(prev => ({ ...prev, shoulderViolationStart: null }));
-          }
-          if (settingsRef.current.enableShoulderDetection) {
-            setAlerts([]);
-          }
+        if (settingsRef.current.enableShoulderDetection) {
+          handleViolation('shoulder', postureResults.shoulderViolation, 'shoulderTimeTolerance', 'shoulderViolationStart', 'Uneven shoulders');
         }
 
-        if (settingsRef.current.enableHeadTiltDetection && postureResults.headTiltViolation) {
-          const now = Date.now();
-
-          if (!settingsRef.current.headTiltViolationStart) {
-            setSettings(prev => ({ ...prev, headTiltViolationStart: now }));
-          } else {
-            const violationDuration = (now - settingsRef.current.headTiltViolationStart) / 1000;
-
-            if (violationDuration >= settingsRef.current.headTiltTimeTolerance) {
-              postureResults.errors.push('Head tilt detected');
-              setSettings(prev => ({ ...prev, headTiltViolationStart: null }));
-            }
-          }
-        } else {
-          if (settingsRef.current.headTiltViolationStart) {
-            setSettings(prev => ({ ...prev, headTiltViolationStart: null }));
-          }
-          if (settingsRef.current.enableHeadTiltDetection) {
-            setAlerts([]);
-          }
+        if (settingsRef.current.enableHeadTiltDetection) {
+          handleViolation('headTilt', postureResults.headTiltViolation, 'headTiltTimeTolerance', 'headTiltViolationStart', 'Head tilt detected');
         }
 
-        if (postureResults.errors.length > 0 && settingsRef.current.enableVisualAlerts) {
-          setAlerts(postureResults.errors.map(error => ({ type: 'error', message: error })));
-        }
+        updateCanvasProps({
+          videoRef,
+          isStreaming,
+          poseLandmarks: landmarks,
+          poseCanvas: canvas,
+          alerts
+        });
       }, () => settingsRef.current);
     }
   }, [settings.landmarkDetection, settings.smoothingFactor, settings.showLandmarks, isStreaming]);
@@ -178,8 +199,8 @@ const DetectionPage = () => {
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { 
-          width: 640, 
-          height: 480, 
+          width: VIDEO_WIDTH, 
+          height: VIDEO_HEIGHT, 
           facingMode: 'user',
           frameRate: { ideal: 30, max: 30 }
         }
@@ -199,15 +220,11 @@ const DetectionPage = () => {
       }
     } catch (error) {
       setCameraStatus('error');
-      setAlerts([{
-        type: 'error',
-        message: `Unable to access camera: ${error.message}. Please check permissions.`
-      }]);
+      setAlerts(prev => ({ ...prev, camera: { type: 'error', message: `Unable to access camera: ${error.message}. Please check permissions.` } }));
     }
   };
 
   const stopCamera = () => {
-
     stopPoseDetection();
 
     if (videoRef.current?.srcObject) {
@@ -219,29 +236,36 @@ const DetectionPage = () => {
 
     setIsStreaming(false);
     setCameraStatus('disconnected');
-    setAlerts([]);
+    setAlerts({
+      eyeHeight: null,
+      shoulder: null,
+      headTilt: null,
+      camera: null
+    });
     setPoseLandmarks(null);
     setPoseCanvas(null);
+
+    updateCanvasProps({
+      videoRef: null,
+      isStreaming: false,
+      poseLandmarks: null,
+      poseCanvas: null,
+      alerts: {
+        eyeHeight: null,
+        shoulder: null,
+        headTilt: null,
+        camera: null
+      }
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <DetectionCanvas 
-          videoRef={videoRef} 
-          isStreaming={isStreaming}
-          poseLandmarks={poseLandmarks}
-          poseCanvas={poseCanvas}
-          onStartCamera={startCamera}
-          onStopCamera={stopCamera}
-          alerts={alerts}
-        />
-      </div>
+    <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 z-5">
         <Vignette intensity={0.3} size={150} />
       </div>
 
-      <Navbar />
+      <Navbar onGoHome={onGoHome} />
 
       <video
         ref={videoRef}
@@ -249,19 +273,34 @@ const DetectionPage = () => {
         playsInline
         muted
         className="hidden"
-        style={{ width: '640px', height: '480px' }}
+        style={{ width: `${VIDEO_WIDTH}px`, height: `${VIDEO_HEIGHT}px` }}
       />
 
-      <SlidingSettingsPanel isOpen={showSettings} onToggle={toggleSettings}>
-        <SettingsPanel 
-          settings={settings} 
-          setSettings={setSettings}
-          onStartCamera={startCamera}
-          onStopCamera={stopCamera}
-          isStreaming={isStreaming}
-          onCalibrateHeight={calibrateHeight}
-        />
-      </SlidingSettingsPanel>
+      <SlidingSettingsPanel
+        isOpen={showSettings}
+        onToggle={() => setShowSettings(false)}
+        mode={panelMode}
+        onModeChange={handlePanelModeChange}
+        settingsContent={
+          <SettingsPanel
+            settings={settings}
+            setSettings={setSettings}
+            onStartCamera={startCamera}
+            onStopCamera={stopCamera}
+            isStreaming={isStreaming}
+            onCalibrateHeight={calibrateHeight}
+          />
+        }
+        dataContent={
+          <DataPanel
+            settings={settings}
+            poseLandmarks={poseLandmarks}
+            alerts={alerts}
+            isStreaming={isStreaming}
+            cameraStatus={cameraStatus}
+          />
+        }
+      />
     </div>
   );
 };
