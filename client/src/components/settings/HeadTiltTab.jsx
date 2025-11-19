@@ -1,6 +1,7 @@
 import React from 'react';
 import SettingsButton from '../ui/SettingsButton';
 import SettingsSlider from '../ui/SettingsSlider';
+import SettingsActionButton from '../ui/SettingsActionButton';
 
 const HeadTiltTab = ({ settings, setSettings }) => {
   return (
@@ -22,7 +23,7 @@ const HeadTiltTab = ({ settings, setSettings }) => {
         onValueChange={([value]) => {
           setSettings({...settings, headTiltTolerance: value});
         }}
-        min={5}
+        min={0}
         max={50}
         step={1}
         displayValue={settings.headTiltTolerance}
@@ -35,30 +36,25 @@ const HeadTiltTab = ({ settings, setSettings }) => {
         onValueChange={([value]) => {
           setSettings({...settings, headTiltTimeTolerance: value});
         }}
-        min={1}
+        min={0}
         max={10}
         step={0.5}
         displayValue={settings.headTiltTimeTolerance}
         unit="s"
       />
 
-      <div className="space-y-2">
-        <label className="block text-white text-xs font-medium">
-          Reset Settings
-        </label>
-        <button
-          className="w-full bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs h-8 transition-colors"
-          onClick={() => {
-            setSettings({
-              ...settings,
-              headTiltTolerance: 15,
-              headTiltTimeTolerance: 2
-            });
-          }}
-        >
-          Reset
-        </button>
-      </div>
+      <SettingsActionButton
+        label="Reset Settings"
+        onClick={() => {
+          setSettings({
+            ...settings,
+            headTiltTolerance: 15,
+            headTiltTimeTolerance: 2
+          });
+        }}
+        buttonText="Reset"
+        variant="danger"
+      />
     </div>
   );
 };

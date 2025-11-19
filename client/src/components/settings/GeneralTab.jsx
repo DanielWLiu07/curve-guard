@@ -2,6 +2,9 @@ import React from 'react';
 import SettingsButton from '../ui/SettingsButton';
 import SettingsInput from '../ui/SettingsInput';
 import SettingsSelect from '../ui/SettingsSelect';
+import SettingsSlider from '../ui/SettingsSlider';
+import SettingsActionButton from '../ui/SettingsActionButton';
+import DeviceTypeSelector from '../ui/DeviceTypeSelector';
 
 const GeneralTab = ({ settings, setSettings }) => {
   return (
@@ -28,11 +31,11 @@ const GeneralTab = ({ settings, setSettings }) => {
       />
 
       <SettingsInput
-        label="Landmark Radius"
+        label="Landmark Radius (px)"
         type="number"
         value={settings.landmarkRadius}
-        onChange={(e) => setSettings({...settings, landmarkRadius: parseInt(e.target.value) || 1})}
-        min="1"
+        onChange={(e) => setSettings({...settings, landmarkRadius: parseInt(e.target.value) || 0})}
+        min="0"
         max="20"
         step="1"
       />
@@ -49,6 +52,49 @@ const GeneralTab = ({ settings, setSettings }) => {
           { value: 'yellow', label: 'Yellow' },
           { value: 'cyan', label: 'Cyan' }
         ]}
+      />
+
+      <SettingsSlider
+        label="Phone Rotation"
+        value={settings.phoneRotation ?? 0}
+        onValueChange={(value) => setSettings({...settings, phoneRotation: value})}
+        min={-45}
+        max={45}
+        step={1}
+        unit="°"
+      />
+
+      <DeviceTypeSelector
+        value={settings.deviceType}
+        onChange={(value) => setSettings({...settings, deviceType: value})}
+      />
+
+      <SettingsActionButton
+        label=""
+        onClick={() => setSettings({
+          ...settings,
+          showLandmarks: true,
+          isRecording: false,
+          landmarkRadius: 3,
+          landmarkColor: 'white',
+          enableAudioAlerts: true,
+          enableVisualAlerts: true,
+          alertVolume: 50,
+          alertSound: 'beep',
+          enableHeadTiltDetection: true,
+          headTiltTolerance: 15,
+          headTiltTimeTolerance: 2,
+          enableHeightDetection: true,
+          eyeHeightTolerance: 20,
+          eyeHeightTimeTolerance: 3,
+          enableShoulderDetection: true,
+          shoulderUnevennessTolerancePx: 10,
+          shoulderTimeTolerance: 2,
+          phoneRotation: 0,
+          deviceType: 'phone'
+        })}
+        buttonText="Reset All"
+        variant="danger"
       />
     </div>
   );

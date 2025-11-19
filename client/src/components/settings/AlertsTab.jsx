@@ -1,32 +1,37 @@
 import React from 'react';
-import SettingsToggle from '../ui/SettingsToggle';
-import SettingsSlider from '../ui/SettingsSlider';
 import SettingsSelect from '../ui/SettingsSelect';
+import SettingsColorSelect from '../ui/SettingsColorSelect';
+import SettingsStyleSelect from '../ui/SettingsStyleSelect';
+import SettingsToggleButton from '../ui/SettingsToggleButton';
+import SettingsSlider from '../ui/SettingsSlider';
+import SettingsActionButton from '../ui/SettingsActionButton';
 
 const AlertsTab = ({ settings, setSettings }) => {
   return (
     <div className="space-y-3">
-      <SettingsToggle
+      <SettingsToggleButton
         label="Audio Alerts"
-        checked={settings.enableAudioAlerts}
-        onCheckedChange={(checked) => setSettings({...settings, enableAudioAlerts: checked})}
+        isActive={settings.enableAudioAlerts}
+        onClick={() => setSettings({...settings, enableAudioAlerts: !settings.enableAudioAlerts})}
+        activeText="Disable Audio Alerts"
+        inactiveText="Enable Audio Alerts"
       />
 
-      <SettingsToggle
+      <SettingsToggleButton
         label="Visual Alerts"
-        checked={settings.enableVisualAlerts}
-        onCheckedChange={(checked) => setSettings({...settings, enableVisualAlerts: checked})}
+        isActive={settings.enableVisualAlerts}
+        onClick={() => setSettings({...settings, enableVisualAlerts: !settings.enableVisualAlerts})}
+        activeText="Disable Visual Alerts"
+        inactiveText="Enable Visual Alerts"
       />
 
       <SettingsSlider
-        label="Alert Cooldown"
-        value={[settings.alertCooldown]}
-        onValueChange={([value]) => setSettings({...settings, alertCooldown: value})}
-        min={5}
-        max={120}
-        step={5}
-        displayValue={settings.alertCooldown}
-        unit="s"
+        label="Alert Volume"
+        value={[settings.alertVolume]}
+        onValueChange={(value) => setSettings({...settings, alertVolume: value[0]})}
+        min={0}
+        max={100}
+        unit="%"
       />
 
       <SettingsSelect
@@ -39,6 +44,33 @@ const AlertsTab = ({ settings, setSettings }) => {
           { value: 'bell', label: 'Bell' },
           { value: 'none', label: 'None' }
         ]}
+      />
+
+      <SettingsColorSelect
+        label="Error Bar Color"
+        value={settings.errorBarColor || 'red'}
+        onValueChange={(value) => setSettings({...settings, errorBarColor: value})}
+      />
+
+      <SettingsStyleSelect
+        label="Error Bar Border Style"
+        value={settings.errorBarBorderStyle || 'solid'}
+        onValueChange={(value) => setSettings({...settings, errorBarBorderStyle: value})}
+      />
+
+      <SettingsActionButton
+        label=""
+        onClick={() => setSettings({
+          ...settings,
+          enableAudioAlerts: true,
+          enableVisualAlerts: true,
+          alertVolume: 50,
+          alertSound: 'beep',
+          errorBarColor: 'red',
+          errorBarBorderStyle: 'solid'
+        })}
+        buttonText="Reset Alerts"
+        variant="danger"
       />
     </div>
   );

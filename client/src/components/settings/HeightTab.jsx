@@ -1,6 +1,9 @@
 import React from 'react';
 import SettingsButton from '../ui/SettingsButton';
 import SettingsSlider from '../ui/SettingsSlider';
+import SettingsColorSelect from '../ui/SettingsColorSelect';
+import SettingsStyleSelect from '../ui/SettingsStyleSelect';
+import SettingsActionButton from '../ui/SettingsActionButton';
 
 const HeightTab = ({ settings, setSettings, onCalibrateHeight }) => {
   return (
@@ -22,7 +25,7 @@ const HeightTab = ({ settings, setSettings, onCalibrateHeight }) => {
         onValueChange={([value]) => {
           setSettings({...settings, eyeHeightTolerance: value});
         }}
-        min={5}
+        min={0}
         max={100}
         step={5}
         displayValue={settings.eyeHeightTolerance}
@@ -35,42 +38,47 @@ const HeightTab = ({ settings, setSettings, onCalibrateHeight }) => {
         onValueChange={([value]) => {
           setSettings({...settings, eyeHeightTimeTolerance: value});
         }}
-        min={1}
+        min={0}
         max={10}
         step={0.5}
         displayValue={settings.eyeHeightTimeTolerance}
         unit="s"
       />
 
-      <div className="space-y-2">
-        <label className="block text-white text-xs font-medium">
-          Reset Settings
-        </label>
-        <button
-          className="w-full bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs h-8 transition-colors"
-          onClick={() => {
-            setSettings({
-              ...settings,
-              eyeHeightTolerance: 20,
-              eyeHeightTimeTolerance: 3
-            });
-          }}
-        >
-          Reset
-        </button>
-      </div>
+      <SettingsActionButton
+        label="Height Calibration"
+        onClick={onCalibrateHeight}
+        buttonText="Calibrate"
+        variant="primary"
+      />
 
-      <div className="space-y-2">
-        <label className="block text-white text-xs font-medium">
-          Height Calibration
-        </label>
-        <button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs h-8 transition-colors"
-          onClick={onCalibrateHeight}
-        >
-          Calibrate
-        </button>
-      </div>
+      <SettingsColorSelect
+        label="Calibration Bar Color"
+        value={settings.calibrationBarColor || 'red'}
+        onValueChange={(value) => setSettings({...settings, calibrationBarColor: value})}
+      />
+
+      <SettingsStyleSelect
+        label="Calibration Bar Style"
+        value={settings.calibrationBarStyle || 'solid'}
+        onValueChange={(value) => setSettings({...settings, calibrationBarStyle: value})}
+      />
+
+      <SettingsActionButton
+        label="Reset Settings"
+        onClick={() => {
+          setSettings({
+            ...settings,
+            eyeHeightTolerance: 20,
+            eyeHeightTimeTolerance: 3,
+            eyeHeightCalibrationLine: 0,
+            calibrationBarColor: 'red',
+            calibrationBarStyle: 'solid'
+          });
+        }}
+        buttonText="Reset"
+        variant="danger"
+      />
     </div>
   );
 };

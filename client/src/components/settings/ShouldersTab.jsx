@@ -1,6 +1,7 @@
 import React from 'react';
 import SettingsButton from '../ui/SettingsButton';
 import SettingsSlider from '../ui/SettingsSlider';
+import SettingsActionButton from '../ui/SettingsActionButton';
 
 const ShouldersTab = ({ settings, setSettings }) => {
   return (
@@ -17,14 +18,14 @@ const ShouldersTab = ({ settings, setSettings }) => {
       />
 
       <SettingsSlider
-        label="Shoulder Unevenness"
-        value={[settings.shoulderUnevennessLeniency]}
-        onValueChange={([value]) => setSettings({...settings, shoulderUnevennessLeniency: value})}
-        min={0.01}
-        max={0.3}
-        step={0.01}
-        displayValue={(settings.shoulderUnevennessLeniency * 100).toFixed(1)}
-        unit="%"
+        label="Shoulder Unevenness Tolerance"
+        value={[settings.shoulderUnevennessTolerancePx]}
+        onValueChange={([value]) => setSettings({...settings, shoulderUnevennessTolerancePx: value})}
+        min={0}
+        max={50}
+        step={1}
+        displayValue={settings.shoulderUnevennessTolerancePx}
+        unit="px"
       />
 
       <SettingsSlider
@@ -33,30 +34,25 @@ const ShouldersTab = ({ settings, setSettings }) => {
         onValueChange={([value]) => {
           setSettings({...settings, shoulderTimeTolerance: value});
         }}
-        min={1}
+        min={0}
         max={10}
         step={0.5}
         displayValue={settings.shoulderTimeTolerance}
         unit="s"
       />
 
-      <div className="space-y-2">
-        <label className="block text-white text-xs font-medium">
-          Reset Settings
-        </label>
-        <button
-          className="w-full bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs h-8 transition-colors"
-          onClick={() => {
-            setSettings({
-              ...settings,
-              shoulderUnevennessLeniency: 0.1,
-              shoulderTimeTolerance: 2
-            });
-          }}
-        >
-          Reset
-        </button>
-      </div>
+      <SettingsActionButton
+        label="Reset Settings"
+        onClick={() => {
+          setSettings({
+            ...settings,
+            shoulderUnevennessTolerancePx: 10,
+            shoulderTimeTolerance: 2
+          });
+        }}
+        buttonText="Reset"
+        variant="danger"
+      />
     </div>
   );
 };
