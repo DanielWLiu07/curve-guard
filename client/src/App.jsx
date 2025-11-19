@@ -4,17 +4,23 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import Landing from './pages/Landing.jsx';
 import ProtectedApp from './pages/ProtectedApp.jsx';
 import DetectionPage from './pages/DetectionPage.jsx';
+import CanvasContentManager from './components/CanvasContentManager.jsx';
+import { CanvasProvider } from './contexts/CanvasContext.jsx';
 
 export default function App() {
   return (
     <Authenticator.Provider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/app" element={<ProtectedApp />} />
-          <Route path="/detection" element={<DetectionPage />} />
-        </Routes>
-      </Router>
+      <CanvasProvider>
+        <Router>
+          <CanvasContentManager />
+
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/app" element={<ProtectedApp />} />
+            <Route path="/detection" element={<DetectionPage />} />
+          </Routes>
+        </Router>
+      </CanvasProvider>
     </Authenticator.Provider>
   );
 }
