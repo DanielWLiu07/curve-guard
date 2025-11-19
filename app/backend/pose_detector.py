@@ -5,17 +5,6 @@ import math
 
 class PoseDetector:
     def __init__(self, staticMode=False, modelComplexity=1, smooth=True, detectCon=0.5, trackCon=0.5, landmarkMode='full'):
-        """
-        Initializes the pose detector with configurable parameters.
-
-        Parameters:
-        - staticMode: bool — for static images (vs video)
-        - modelComplexity: int — 0 (lite), 1 (full), 2 (heavy)
-        - smooth: bool — whether to smooth landmarks across frames
-        - detectCon: float — minimum detection confidence
-        - trackCon: float — minimum tracking confidence
-        - landmarkMode: str — 'full' (33 landmarks), 'upper_body' (25 landmarks), 'minimal' (17 landmarks)
-        """
 
         self.staticMode = staticMode
         self.landmarkMode = landmarkMode

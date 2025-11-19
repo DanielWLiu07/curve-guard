@@ -25,10 +25,10 @@ class PostureAnalyzer(QObject):
             trackCon=self.settings['trackingConfidence'],
             landmarkMode=self.settings['landmarkDetection']
         )
-        self.height_line_visibility = True
-        self.shoulder_visibility = True
-        self.head_visibility = True
-        self.landmark_visiblity = True
+        self.height_line_visibility = False
+        self.shoulder_visibility = False
+        self.head_visibility = False
+        self.landmark_visiblity = False
 
         self.eye_height_leniency = 50
         self.eye_time_leniency = 3

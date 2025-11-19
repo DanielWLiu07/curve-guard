@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         font_path = os.path.join(self.base_dir, "assets", "Orbitron", "static", "Orbitron-Regular.ttf")
         font_id = QFontDatabase.addApplicationFont(font_path)
         if font_id == -1:
-            self.orbitron = QFont("Arial", 12)  # fallback
+            self.orbitron = QFont("Arial", 12)
         else:
             font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
             self.orbitron = QFont(font_family, 12)
@@ -137,7 +137,7 @@ class MainWindow(QMainWindow):
         self.line_visibility_text.setObjectName("blue_settings_text")
         self.line_visibility_text.setFont(self.orbitron)
         self.line_visibility_checkbox=QCheckBox(self)
-        self.line_visibility_checkbox.setChecked(True)
+        self.line_visibility_checkbox.setChecked(False)
         self.line_visibility_checkbox.toggled.connect(self.analyzer.toggle_height_line)
         self.height_monitor_layout.addWidget(self.line_visibility_checkbox, 4, 1)
     
@@ -178,7 +178,7 @@ class MainWindow(QMainWindow):
         self.shoulder_monitor_layout.addWidget(self.shoulder_visibility_text, 4, 0)
         self.shoulder_visibility_text.setObjectName("purple_settings_text")
         self.shoulder_visibility_checkbox=QCheckBox(self)
-        self.shoulder_visibility_checkbox.setChecked(True)
+        self.shoulder_visibility_checkbox.setChecked(False)
         self.shoulder_monitor_layout.addWidget(self.shoulder_visibility_checkbox, 4, 1)
         self.shoulder_visibility_checkbox.toggled.connect(self.analyzer.toggle_shoulder_visibility)
 
@@ -219,7 +219,7 @@ class MainWindow(QMainWindow):
         self.head_monitor_layout.addWidget(self.head_visibility_text, 4, 0)
         self.head_visibility_text.setObjectName("green_settings_text")
         self.head_visibility_checkbox=QCheckBox(self)
-        self.head_visibility_checkbox.setChecked(True)
+        self.head_visibility_checkbox.setChecked(False)
         self.head_monitor_layout.addWidget(self.head_visibility_checkbox, 4, 1)
         self.head_visibility_checkbox.toggled.connect(self.analyzer.toggle_head_visibility)
 
@@ -242,7 +242,7 @@ class MainWindow(QMainWindow):
         self.landmarks_layout.addWidget(self.landmark_visibility_text, 1, 0)
         self.landmark_visibility_text.setObjectName("yellow_settings_text")
         self.landmark_visibility_checkbox = QCheckBox(self)
-        self.landmark_visibility_checkbox.setChecked(True)
+        self.landmark_visibility_checkbox.setChecked(False)
         self.landmarks_layout.setSpacing(2)
         self.landmarks_layout.addWidget(self.landmark_visibility_checkbox, 1, 1)
         self.landmarks_layout.setColumnStretch(0, 1)
