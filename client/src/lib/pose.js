@@ -6,6 +6,10 @@ let pose = null;
 let camera = null;
 let isRunning = false;
 
+const VIDEO_WIDTH = 640;
+const VIDEO_HEIGHT = 480;
+const PIXEL_MULTIPLIER = 480;
+
 export async function initPose(settings = {}) {
   if (!pose) {
     const poseConfig = {
@@ -58,8 +62,8 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
     const currentSettings = typeof settingsOrGetter === 'function' ? settingsOrGetter() : settingsOrGetter;
     
     const frameCanvas = document.createElement('canvas');
-    frameCanvas.width = 640;
-    frameCanvas.height = 480;
+    frameCanvas.width = VIDEO_WIDTH;
+    frameCanvas.height = VIDEO_HEIGHT;
     const frameCtx = frameCanvas.getContext('2d');
     
     frameCtx.fillStyle = 'black';
@@ -108,9 +112,27 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
       }
 
       if (currentSettings.eyeHeightCalibrationLine != null && frameCtx && frameCanvas) {
-        frameCtx.strokeStyle = '#ff6b6b';
-        frameCtx.lineWidth = 3;
-        frameCtx.setLineDash([10, 5]);
+        const colorMap = {
+          red: '#ff0000',
+          orange: '#ff8000',
+          yellow: '#ffff00',
+          green: '#00ff00',
+          blue: '#0000ff',
+          purple: '#8000ff',
+          white: '#ffffff'
+        };
+        
+        frameCtx.strokeStyle = colorMap[currentSettings.calibrationBarColor] || '#ff0000';
+        frameCtx.lineWidth = 4;
+        
+        if (currentSettings.calibrationBarStyle === 'dotted') {
+          frameCtx.setLineDash([2, 2]);
+        } else if (currentSettings.calibrationBarStyle === 'dashed') {
+          frameCtx.setLineDash([10, 5]);
+        } else {
+          frameCtx.setLineDash([]);
+        }
+        
         frameCtx.beginPath();
         frameCtx.moveTo(0, currentSettings.eyeHeightCalibrationLine);
         frameCtx.lineTo(frameCanvas.width, currentSettings.eyeHeightCalibrationLine);
@@ -119,8 +141,6 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
       }
 
       if (currentSettings.alerts && currentSettings.alerts.length > 0 && frameCtx && frameCanvas) {
-
-        frameCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         frameCtx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
         frameCtx.lineWidth = 3;
         frameCtx.font = 'bold 24px Arial';
@@ -152,8 +172,8 @@ export function startPoseDetection(videoElement, onResults, settingsOrGetter = {
         await pose.send({ image: videoElement });
       }
     },
-    width: 640,
-    height: 480,
+    width: VIDEO_WIDTH,
+    height: VIDEO_HEIGHT,
   });
 
   camera.start();
@@ -182,9 +202,10 @@ export function runPostureChecks(landmarks, settings) {
   const rightShoulder = getLandmark(12);
 
   let shoulderViolation = false;
-  if (settings.enableShoulderDetection && leftShoulder && rightShoulder && settings.shoulderUnevennessLeniency != null) {
+  if (settings.enableShoulderDetection && leftShoulder && rightShoulder && settings.shoulderUnevennessTolerancePx != null) {
     const shoulderDelta = Math.abs(leftShoulder.y - rightShoulder.y);
-    if (shoulderDelta > settings.shoulderUnevennessLeniency) {
+    const shoulderDeltaPixels = shoulderDelta * PIXEL_MULTIPLIER;
+    if (shoulderDeltaPixels > settings.shoulderUnevennessTolerancePx) {
       shoulderViolation = true;
     }
   }
@@ -192,7 +213,7 @@ export function runPostureChecks(landmarks, settings) {
   let headTiltViolation = false;
   if (settings.enableHeadTiltDetection && leftEye && rightEye && settings.headTiltTolerance != null) {
     const eyeDelta = Math.abs(leftEye.y - rightEye.y);
-    const eyeDeltaPixels = eyeDelta * 480;
+    const eyeDeltaPixels = eyeDelta * PIXEL_MULTIPLIER;
     if (eyeDeltaPixels > settings.headTiltTolerance) {
       headTiltViolation = true;
     }
@@ -201,7 +222,7 @@ export function runPostureChecks(landmarks, settings) {
   let eyeHeightViolation = false;
   if (settings.enableHeightDetection && leftEye && rightEye && settings.eyeHeightCalibrationLine != null && settings.eyeHeightTolerance != null) {
     const avgEyeY = (leftEye.y + rightEye.y) / 2;
-    const eyeYPixels = avgEyeY * 480;
+    const eyeYPixels = avgEyeY * PIXEL_MULTIPLIER;
     if (eyeYPixels > settings.eyeHeightCalibrationLine + settings.eyeHeightTolerance) {
       eyeHeightViolation = true;
     }
