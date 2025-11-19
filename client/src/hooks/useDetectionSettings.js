@@ -25,7 +25,11 @@ const defaultSettings = {
   shoulderViolationStart: null,
   landmarkRadius: 6,
   landmarkColor: 'white',
-  alertSound: 'beep'
+  alertSound: 'beep',
+  errorBarColor: 'red',
+  errorBarBorderStyle: 'solid',
+  calibrationBarColor: 'red',
+  calibrationBarStyle: 'solid'
 };
 
 export const useDetectionSettings = () => {
