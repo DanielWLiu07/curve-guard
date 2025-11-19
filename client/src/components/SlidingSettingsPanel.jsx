@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { PanelHeader, PanelContent } from './ui/PanelParts';
+import PanelControls from './ui/PanelControls';
 
-const SlidingSettingsPanel = ({ isOpen, onToggle, children }) => {
+const SlidingSettingsPanel = ({ isOpen, onToggle, mode, onModeChange, settingsContent, dataContent }) => {
   const panelRef = useRef(null);
   const timelineRef = useRef(null);
 
@@ -45,23 +47,17 @@ const SlidingSettingsPanel = ({ isOpen, onToggle, children }) => {
         ref={panelRef}
         className="w-96 h-screen bg-slate-900/95 backdrop-blur-sm border-l border-slate-700 shadow-lg flex relative"
       >
-        <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b border-slate-700">
-            <h2 className="text-lg font-semibold text-white">Settings</h2>
-          </div>
-          <div className="flex-1 p-4 overflow-y-auto">
-            {children}
-          </div>
+        <div className="flex-1 flex flex-col min-h-0">
+          <PanelHeader mode={mode} />
+          <PanelContent mode={mode} settingsContent={settingsContent} dataContent={dataContent} />
         </div>
 
-        <div className="absolute -left-12 top-0 h-full w-12 bg-slate-800/80 border-r border-slate-600 shadow-lg flex flex-col justify-center z-10">
-          <button
-            onClick={onToggle}
-            className="transform -rotate-90 text-center py-8 px-2 font-medium text-sm text-white/80 hover:text-white transition-all duration-300 whitespace-nowrap w-full h-full flex items-center justify-center"
-          >
-            {isOpen ? '▶ Settings' : '◀ Settings'}
-          </button>
-        </div>
+        <PanelControls
+          isOpen={isOpen}
+          mode={mode}
+          onToggle={onToggle}
+          onModeChange={onModeChange}
+        />
       </div>
     </div>
   );
