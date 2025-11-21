@@ -28,9 +28,11 @@
     "@react-three/drei": "^9.86.7",
     "@react-three/fiber": "^8.15.10",
     "aws-amplify": "^6.15.7",
+    "chart.js": "^4.5.1",
     "gsap": "^3.13.0",
     "normalize.css": "^8.0.1",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.9.5",
     "three": "^0.170.0"
