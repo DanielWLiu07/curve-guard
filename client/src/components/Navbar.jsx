@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Button } from "@radix-ui/themes";
 
 export default function Navbar({ signOut, user, onShowSignIn, onShowAbout, onShowCreator, onShowFeatures, onGoHome, showSignIn, currentSection }) {
   const location = useLocation();
