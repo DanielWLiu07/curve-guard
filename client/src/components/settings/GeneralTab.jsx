@@ -6,7 +6,17 @@ import SettingsSlider from '../ui/SettingsSlider';
 import SettingsActionButton from '../ui/SettingsActionButton';
 import DeviceTypeSelector from '../ui/DeviceTypeSelector';
 
-const GeneralTab = ({ settings, setSettings }) => {
+const GeneralTab = ({ settings, setSettings, onStartRecording, onStopRecording }) => {
+  const handleRecordingToggle = () => {
+    if (settings.isRecording) {
+      console.log('🛑 Stopping recording from GeneralTab', { currentState: settings.isRecording });
+      onStopRecording();
+    } else {
+      console.log('🎬 Starting recording from GeneralTab', { currentState: settings.isRecording });
+      onStartRecording();
+    }
+  };
+
   return (
     <div className="space-y-3">
       <SettingsButton
@@ -24,7 +34,8 @@ const GeneralTab = ({ settings, setSettings }) => {
         label="Record Data"
         isActive={settings.isRecording}
         onClick={() => {
-          setSettings({...settings, isRecording: !settings.isRecording});
+          console.log('🔘 Button clicked, current isRecording:', settings.isRecording);
+          handleRecordingToggle();
         }}
         activeText="Stop Recording"
         inactiveText="Start Recording"
