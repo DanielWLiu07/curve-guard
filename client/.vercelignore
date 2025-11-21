@@ -1,0 +1,4 @@
+amplify/
+.amplify/
+amplify_outputs.json
+AWSCLIV2.pkg
