@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 import { LightningBoltIcon } from '@radix-ui/react-icons';
 
 const HeroTitle = () => {
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    gsap.set(titleRef.current, { opacity: 0, y: 20 });
+
+    gsap.to(titleRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "back.out(1.7)",
+      delay: 0.5
+    });
+  }, []);
+
   return (
-    <h1 className="text-6xl md:text-7xl font-black tracking-tight">
+    <h1 ref={titleRef} className="text-6xl md:text-7xl font-black tracking-tight">
       <br />
       <span className="bg-gradient-to-r from-jade-9 via-jade-6 to-white bg-clip-text text-transparent animate-pulse">
         FIX GOBLIN

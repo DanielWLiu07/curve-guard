@@ -6,7 +6,7 @@ import ShouldersTab from './settings/ShouldersTab';
 import HeadTiltTab from './settings/HeadTiltTab';
 import AlertsTab from './settings/AlertsTab';
 
-const SettingsPanel = ({ settings, setSettings, onStartCamera, onStopCamera, isStreaming, onCalibrateHeight }) => {
+const SettingsPanel = ({ settings, setSettings, onStartCamera, onStopCamera, isStreaming, onCalibrateHeight, onStartRecording, onStopRecording }) => {
   return (
     <div className="space-y-4">
       <div>
@@ -54,7 +54,12 @@ const SettingsPanel = ({ settings, setSettings, onStartCamera, onStopCamera, isS
 
         <div className="overflow-y-auto h-[65vh]">
           <Tabs.Content value="general" className="space-y-3 mt-0">
-            <GeneralTab settings={settings} setSettings={setSettings} />
+            <GeneralTab 
+              settings={settings} 
+              setSettings={setSettings} 
+              onStartRecording={onStartRecording}
+              onStopRecording={onStopRecording}
+            />
           </Tabs.Content>
 
           <Tabs.Content value="height" className="space-y-3 mt-0">
