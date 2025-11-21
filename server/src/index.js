@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import settingsRouter from './routes/settings.js';
+import postureRouter from './routes/posture.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/settings', settingsRouter);
+app.use('/api/posture', postureRouter);
 
 const port = process.env.PORT || 8080;
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/curve_guard';
