@@ -1,99 +1,65 @@
-import React from 'react';
-import StatusSection from './StatusSection.jsx';
+import React, { useState } from 'react';
+import PostureStats from './PostureStats';
+import DebugPanel from './DebugPanel';
 
-const DataPanel = ({ settings, poseLandmarks, alerts, isStreaming, cameraStatus }) => {
-  const getRecordingStatus = () => {
-    if (!isStreaming) return 'Camera not streaming';
-    if (settings.isRecording) return 'Recording active';
-    return 'Ready to record';
-  };
-
-  const getPoseData = () => {
-    if (!poseLandmarks || poseLandmarks.length === 0) {
-      return 'No pose data detected';
-    }
-    return `${poseLandmarks.length} landmarks detected`;
-  };
-
-  const getActiveAlerts = () => {
-    const activeAlerts = Object.values(alerts).filter(alert => alert !== null);
-    if (activeAlerts.length === 0) return 'No active alerts';
-    return `${activeAlerts.length} active alert(s)`;
-  };
-
-  const recordingItems = [
-    {
-      label: 'Status',
-      value: getRecordingStatus(),
-      statusColor: settings.isRecording ? 'text-green-400' : isStreaming ? 'text-yellow-400' : 'text-red-400'
-    },
-    {
-      label: 'Camera',
-      value: cameraStatus,
-      statusColor: cameraStatus === 'streaming' ? 'text-green-400' : cameraStatus === 'connecting' ? 'text-yellow-400' : 'text-red-400'
-    }
-  ];
-
-  const liveDataItems = [
-    {
-      label: 'Pose Detection',
-      value: getPoseData(),
-      statusColor: 'text-white'
-    },
-    {
-      label: 'Active Alerts',
-      value: getActiveAlerts(),
-      statusColor: 'text-white'
-    }
-  ];
-
-  const detectionSettingsItems = [
-    {
-      label: 'Height Detection',
-      value: settings.enableHeightDetection ? 'ON' : 'OFF',
-      statusColor: settings.enableHeightDetection ? 'text-green-400' : 'text-red-400'
-    },
-    {
-      label: 'Shoulder Detection',
-      value: settings.enableShoulderDetection ? 'ON' : 'OFF',
-      statusColor: settings.enableShoulderDetection ? 'text-green-400' : 'text-red-400'
-    },
-    {
-      label: 'Head Tilt Detection',
-      value: settings.enableHeadTiltDetection ? 'ON' : 'OFF',
-      statusColor: settings.enableHeadTiltDetection ? 'text-green-400' : 'text-red-400'
-    }
-  ];
-
-  const alertSettingsItems = [
-    {
-      label: 'Audio Alerts',
-      value: settings.enableAudioAlerts ? 'ON' : 'OFF',
-      statusColor: settings.enableAudioAlerts ? 'text-green-400' : 'text-red-400'
-    },
-    {
-      label: 'Visual Alerts',
-      value: settings.enableVisualAlerts ? 'ON' : 'OFF',
-      statusColor: settings.enableVisualAlerts ? 'text-green-400' : 'text-red-400'
-    },
-    {
-      label: 'Alert Volume',
-      value: `${settings.alertVolume}%`,
-      statusColor: 'text-white'
-    },
-    {
-      label: 'Alert Sound',
-      value: settings.alertSound.charAt(0).toUpperCase() + settings.alertSound.slice(1),
-      statusColor: 'text-white'
-    }
-  ];
+const DataPanel = ({ settings, poseLandmarks, alerts, isStreaming, cameraStatus, currentStats }) => {
+  const [showDebug, setShowDebug] = useState(false);
 
   return (
-    <div className="space-y-4">
-      <StatusSection title="Recording Status" items={recordingItems} />
-      <StatusSection title="Live Data" items={liveDataItems} />
-      <StatusSection title="Detection Settings" items={detectionSettingsItems} />
-      <StatusSection title="Alert Settings" items={alertSettingsItems} />
+    <div className="space-y-3 pb-4">
+      <div className="bg-slate-800/40 rounded-lg p-3 border border-slate-700/30">
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-slate-400">Status</span>
+            <span className={`text-xs font-medium ${
+              settings.isRecording ? 'text-green-400' : 
+              isStreaming ? 'text-yellow-400' : 'text-red-400'
+            }`}>
+              {!isStreaming ? 'Camera off' : 
+               settings.isRecording ? 'Recording' : 'Ready'}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-slate-400">Landmarks</span>
+            <span className="text-xs text-white">
+              {!poseLandmarks || poseLandmarks.length === 0 
+                ? 'None' 
+                : poseLandmarks.length}
+            </span>
+          </div>
+          {settings.isRecording && (
+            <>
+              <div className="flex justify-between items-center pt-2 border-t border-slate-700/30">
+                <span className="text-xs text-slate-400">Recording Active</span>
+                <span className="text-xs text-green-400 font-medium">
+                  Data updating...
+                </span>
+              </div>
+              <button
+                onClick={() => setShowDebug(!showDebug)}
+                className="w-full mt-2 px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 text-xs text-slate-300 rounded transition-colors"
+              >
+                {showDebug ? 'Hide' : 'Show'} Debug Info
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {showDebug && settings.isRecording && (
+        <DebugPanel 
+          settings={settings} 
+          currentStats={currentStats}
+          isRecording={settings.isRecording}
+        />
+      )}
+
+      <PostureStats 
+        userId="demo-user" 
+        compact={true} 
+        alwaysShow={true}
+        isRecording={settings.isRecording}
+      />
     </div>
   );
 };
