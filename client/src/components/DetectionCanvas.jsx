@@ -23,7 +23,6 @@ export default function DetectionCanvas({ videoRef, isStreaming, poseLandmarks, 
         onCreated={({ gl }) => {
           const canvas = gl.domElement;
           canvas.addEventListener('webglcontextlost', (event) => {
-            console.warn("Detection Canvas: WebGL context lost");
           });
         }}
       >

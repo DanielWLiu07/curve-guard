@@ -32,16 +32,13 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
   const [dailyData, setDailyData] = useState(null);
   const [weeklyData, setWeeklyData] = useState([]);
   const [calendarData, setCalendarData] = useState([]);
-  const [viewMode, setViewMode] = useState('daily'); // 'daily', 'weekly', 'monthly'
+  const [viewMode, setViewMode] = useState('daily');
 
-  // Fetch daily stats
   const fetchDailyStats = async (date) => {
     try {
       const dateStr = date.toISOString().split('T')[0];
-      console.log('📊 Fetching daily stats for:', dateStr, 'userId:', userId);
       const response = await fetch(`/api/posture/daily/${userId}/${dateStr}`);
       const result = await response.json();
-      console.log('📊 Daily stats response:', result);
       if (result.success && result.data) {
         // Add a timestamp to force re-render
         const dataWithTimestamp = {
@@ -52,18 +49,14 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
         // Only update if we have actual data OR if this is the first fetch (dailyData is null)
         const hasRealData = result.data.totalGoodTime > 0 || result.data.totalBadTime > 0;
         if (hasRealData || dailyData === null) {
-          console.log('✅ Setting daily data:', dataWithTimestamp);
           setDailyData(dataWithTimestamp);
-        } else {
-          console.log('⏭️ Skipping empty data update (keeping existing data)');
         }
       }
     } catch (error) {
-      console.error('❌ Error fetching daily stats:', error);
+      // Error fetching daily stats
     }
   };
 
-  // Fetch weekly stats
   const fetchWeeklyStats = async () => {
     try {
       const endDate = new Date();
@@ -78,11 +71,10 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
         setWeeklyData(result.data);
       }
     } catch (error) {
-      console.error('Error fetching weekly stats:', error);
+      // Error fetching weekly stats
     }
   };
 
-  // Fetch calendar data
   const fetchCalendarData = async (year, month) => {
     try {
       const response = await fetch(`/api/posture/calendar/${userId}/${year}/${month}`);
@@ -91,7 +83,7 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
         setCalendarData(result.data);
       }
     } catch (error) {
-      console.error('Error fetching calendar data:', error);
+      // Error fetching calendar data
     }
   };
 
@@ -101,29 +93,21 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
     fetchCalendarData(selectedDate.getFullYear(), selectedDate.getMonth() + 1);
   }, [userId, selectedDate]);
 
-  // Poll for updates when recording is active
   useEffect(() => {
     if (!isRecording) return;
 
-    console.log('Starting data polling - recording is active');
-    
-    // Refresh data every 5 seconds while recording
     const pollInterval = setInterval(() => {
-      console.log('Polling for updated stats...');
       fetchDailyStats(selectedDate);
       fetchWeeklyStats();
     }, 5000);
 
     return () => {
-      console.log('Stopping data polling');
       clearInterval(pollInterval);
     };
   }, [isRecording, userId, selectedDate]);
 
-  // Chart data for daily view
   const getDailyChartData = () => {
     if (!dailyData) {
-      console.log('getDailyChartData: no dailyData');
       // If alwaysShow is true, return empty data structure
       if (alwaysShow) {
         return {
@@ -166,11 +150,9 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
       }]
     };
     
-    console.log('getDailyChartData:', chartData);
     return chartData;
   };
 
-  // Chart data for weekly view
   const getWeeklyChartData = () => {
     if (weeklyData.length === 0) {
       // If alwaysShow is true, return empty data structure with 7 days
@@ -250,7 +232,6 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
     }
   };
 
-  // Calendar view
   const renderCalendar = () => {
     const year = selectedDate.getFullYear();
     const month = selectedDate.getMonth();
@@ -258,13 +239,10 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     
     const days = [];
-    
-    // Empty cells for days before month starts
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} className="h-16 border border-slate-700/30"></div>);
     }
     
-    // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
       const dayData = calendarData.find(d => 
@@ -302,15 +280,6 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
 
   const hasAnyData = dailyData && (dailyData.totalGoodTime > 0 || dailyData.totalBadTime > 0);
   const hasWeeklyData = weeklyData && weeklyData.length > 0;
-
-  console.log('PostureStats render:', { 
-    viewMode, 
-    hasAnyData, 
-    dailyData, 
-    hasWeeklyData, 
-    weeklyData,
-    userId 
-  });
 
   return (
     <div className={`bg-slate-900/80 backdrop-blur-xl rounded-xl border border-slate-700/50 ${

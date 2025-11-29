@@ -48,11 +48,8 @@ router.post('/update', async (req, res) => {
   try {
     const { sessionId, sessionIndex, isGoodPosture, violationType, duration } = req.body;
     
-    console.log('UPDATE REQUEST:', { sessionId, sessionIndex, isGoodPosture, violationType, duration });
-
     const session = await PostureSession.findById(sessionId);
     if (!session) {
-      console.log('Session not found:', sessionId);
       return res.status(404).json({ success: false, error: 'Session not found' });
     }
 
@@ -76,12 +73,6 @@ router.post('/update', async (req, res) => {
 
     await session.save();
     
-    console.log('Updated session stats:', {
-      totalGood: session.totalGoodPostureTime,
-      totalBad: session.totalBadPostureTime,
-      percentage: session.goodPosturePercentage
-    });
-
     res.json({
       success: true,
       goodPosturePercentage: session.goodPosturePercentage,
@@ -131,15 +122,11 @@ router.get('/daily/:userId/:date', async (req, res) => {
     const startOfDay = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
     const endOfDay = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
     
-    console.log(`Searching for userId: ${userId}, date range: ${startOfDay.toISOString()} to ${endOfDay.toISOString()}`);
-
     const session = await PostureSession.findOne({
       userId,
       date: { $gte: startOfDay, $lte: endOfDay }
     });
     
-    console.log('Found session:', session ? 'YES' : 'NO');
-
     if (!session) {
       return res.json({
         success: true,

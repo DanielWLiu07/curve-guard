@@ -125,7 +125,6 @@ export default function HeroCanvas({ currentSection, animateExit = false }) {
         onCreated={({ gl }) => {
           const canvas = gl.domElement;
           canvas.addEventListener('webglcontextlost', (event) => {
-            console.warn('WebGL context lost');
           });
         }}
       >

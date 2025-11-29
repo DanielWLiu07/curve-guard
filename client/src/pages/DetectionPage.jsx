@@ -38,7 +38,7 @@ const DetectionPage = () => {
     startRecording, 
     stopRecording, 
     recordPostureState 
-  } = usePostureRecording('demo-user'); // TODO: Replace with actual user ID from auth
+  } = usePostureRecording('demo-user');
 
   const [settings, setSettings] = useState({
     enableAudioAlerts: true,
@@ -84,9 +84,7 @@ const DetectionPage = () => {
     settingsRef.current = settings;
   }, [settings]);
 
-  // Sync recording state with settings
   useEffect(() => {
-    console.log('🔄 Syncing recording state:', isRecording);
     setSettings(prev => ({
       ...prev,
       isRecording: isRecording
@@ -129,7 +127,6 @@ const DetectionPage = () => {
     if (isViolating) {
       if (!currentSettings[violationStartKey]) {
         setSettings(prev => ({ ...prev, [violationStartKey]: now }));
-        console.log(`⚠️ ${violationType} violation started`);
       } else {
         const violationDuration = (now - currentSettings[violationStartKey]) / 1000;
         if (violationDuration >= currentSettings[timeToleranceKey]) {
@@ -141,7 +138,6 @@ const DetectionPage = () => {
             }
           }));
           setAlerts(prev => ({ ...prev, [violationType]: { type: 'error', message: alertMessage } }));
-          console.log(`🚨 ${violationType} ERROR activated after ${violationDuration.toFixed(1)}s - "${alertMessage}"`);
         }
       }
     } else {
@@ -157,7 +153,6 @@ const DetectionPage = () => {
           }
         }));
         setAlerts(prev => ({ ...prev, [violationType]: null }));
-        console.log(`✅ ${violationType} error cleared`);
       }
     }
   };
@@ -195,18 +190,6 @@ const DetectionPage = () => {
 
         // Log violations occasionally (2% of frames)
         if (Math.random() < 0.02) {
-          console.log('🔍 Posture check results:', {
-            eyeHeightViolation: postureResults.eyeHeightViolation,
-            shoulderViolation: postureResults.shoulderViolation,
-            headTiltViolation: postureResults.headTiltViolation,
-            heightCalibrated: settingsRef.current.eyeHeightCalibrationLine !== null,
-            calibrationLine: settingsRef.current.eyeHeightCalibrationLine,
-            detectionEnabled: {
-              height: settingsRef.current.enableHeightDetection,
-              shoulder: settingsRef.current.enableShoulderDetection,
-              headTilt: settingsRef.current.enableHeadTiltDetection
-            }
-          });
         }
 
         if (settingsRef.current.enableHeightDetection) {
@@ -221,8 +204,6 @@ const DetectionPage = () => {
           handleViolation('headTilt', postureResults.headTiltViolation, 'headTiltTimeTolerance', 'headTiltViolationStart', 'Head tilt detected');
         }
 
-        // Record posture state if recording is active
-        // Use active errors (which have passed time tolerance) for recording
         if (isRecording) {
           const activeErrors = settingsRef.current.activeErrors;
           const hasActiveError = activeErrors.eyeHeight.active || 
@@ -236,53 +217,12 @@ const DetectionPage = () => {
             else if (activeErrors.headTilt.active) violationType = 'head_tilt';
           }
           
-          // ALWAYS log recording state when we have violations - this is critical debugging
-          const hasAnyViolation = postureResults.eyeHeightViolation || 
-                                  postureResults.shoulderViolation || 
+          const hasAnyViolation = postureResults.eyeHeightViolation ||
+                                  postureResults.shoulderViolation ||
                                   postureResults.headTiltViolation;
-          
+
           if (hasAnyViolation || hasActiveError) {
-            const currentTime = Date.now();
-            const eyeHeightDuration = settingsRef.current.eyeHeightViolationStart 
-              ? (currentTime - settingsRef.current.eyeHeightViolationStart) / 1000 
-              : 0;
-            const shoulderDuration = settingsRef.current.shoulderViolationStart 
-              ? (currentTime - settingsRef.current.shoulderViolationStart) / 1000 
-              : 0;
-            const headTiltDuration = settingsRef.current.headTiltViolationStart 
-              ? (currentTime - settingsRef.current.headTiltViolationStart) / 1000 
-              : 0;
-              
-            console.log('🚨 VIOLATION DETECTED:', {
-              isGoodPosture: !hasActiveError,
-              hasActiveError,
-              violationType,
-              heightCalibrated: settingsRef.current.eyeHeightCalibrationLine !== null,
-              calibrationLine: settingsRef.current.eyeHeightCalibrationLine,
-              violations: {
-                eyeHeight: postureResults.eyeHeightViolation,
-                shoulder: postureResults.shoulderViolation,
-                headTilt: postureResults.headTiltViolation
-              },
-              violationDurations: {
-                eyeHeight: eyeHeightDuration.toFixed(1) + 's (needs ' + settingsRef.current.eyeHeightTimeTolerance + 's)',
-                shoulder: shoulderDuration.toFixed(1) + 's (needs ' + settingsRef.current.shoulderTimeTolerance + 's)',
-                headTilt: headTiltDuration.toFixed(1) + 's (needs ' + settingsRef.current.headTiltTimeTolerance + 's)'
-              },
-              activeErrors: {
-                eyeHeight: activeErrors.eyeHeight.active,
-                shoulder: activeErrors.shoulder.active,
-                headTilt: activeErrors.headTilt.active
-              },
-              detectionEnabled: {
-                height: settingsRef.current.enableHeightDetection,
-                shoulder: settingsRef.current.enableShoulderDetection,
-                headTilt: settingsRef.current.enableHeadTiltDetection
-              }
-            });
-          }
-          
-          recordPostureState(!hasActiveError, violationType);
+          }          recordPostureState(!hasActiveError, violationType);
         }
 
         updateCanvasProps({
@@ -362,7 +302,6 @@ const DetectionPage = () => {
     });
   };
 
-  // Convert alerts object to array for PostureAlerts component
   const alertsArray = Object.entries(alerts)
     .filter(([key, value]) => value !== null)
     .map(([key, value]) => value);
