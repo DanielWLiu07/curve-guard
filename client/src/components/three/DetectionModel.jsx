@@ -5,14 +5,16 @@ import GLTFModel from './GLTFModel';
 const DetectionModel = ({ alerts = {} }) => {
   const ref = useRef();
 
+  // Initial entrance animation
   useEffect(() => {
     if (ref.current) {
-      ref.current.position.set(1, -2, -0.2);
+      // Start from right and down
+      ref.current.position.set(2, -0.5, -0.2);
 
+      // Animate to final position
       gsap.to(ref.current.position, {
         x: 0.15,
-        z:-0.2,
-        y: -0.05,
+        y: 0,
         duration: 1.2,
         ease: 'power2.out',
         delay: 0.1
@@ -20,6 +22,7 @@ const DetectionModel = ({ alerts = {} }) => {
     }
   }, []);
 
+  // Alert-based position adjustments
   useEffect(() => {
     if (!ref.current) return;
 
@@ -52,7 +55,7 @@ const DetectionModel = ({ alerts = {} }) => {
     <GLTFModel
       ref={ref}
       url="/skeleton.glb"
-      position={[0, 0, 0]}
+      position={[2, -0.5, -0.2]}
       rotation={[0, 0, 0]}
     />
   );

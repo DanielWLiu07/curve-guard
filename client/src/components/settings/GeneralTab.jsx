@@ -9,10 +9,8 @@ import DeviceTypeSelector from '../ui/DeviceTypeSelector';
 const GeneralTab = ({ settings, setSettings, onStartRecording, onStopRecording }) => {
   const handleRecordingToggle = () => {
     if (settings.isRecording) {
-      console.log('🛑 Stopping recording from GeneralTab', { currentState: settings.isRecording });
       onStopRecording();
     } else {
-      console.log('🎬 Starting recording from GeneralTab', { currentState: settings.isRecording });
       onStartRecording();
     }
   };
@@ -34,7 +32,6 @@ const GeneralTab = ({ settings, setSettings, onStartRecording, onStopRecording }
         label="Record Data"
         isActive={settings.isRecording}
         onClick={() => {
-          console.log('🔘 Button clicked, current isRecording:', settings.isRecording);
           handleRecordingToggle();
         }}
         activeText="Stop Recording"

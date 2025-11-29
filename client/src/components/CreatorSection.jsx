@@ -34,7 +34,7 @@ const CreatorSection = () => {
     const particles = particlesRef.current;
     for (let i = 0; i < 20; i++) {
       const particle = document.createElement('div');
-      particle.className = 'absolute w-1 h-1 bg-blue-400/30 rounded-full';
+      particle.className = 'absolute w-1 h-1 bg-jade-4/30 rounded-full';
       particle.style.left = Math.random() * 100 + '%';
       particle.style.top = Math.random() * 100 + '%';
 
@@ -66,7 +66,7 @@ const CreatorSection = () => {
   return (
     <div ref={containerRef} className="absolute inset-0 flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-jade-9/20 via-jade-8/20 to-jade-7/20" />
 
       {/* Floating particles container */}
       <div className="absolute inset-0 pointer-events-none" />
@@ -119,20 +119,20 @@ const CreatorSection = () => {
               </h3>
 
               <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
-                <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30">
+                <span className="px-3 py-1 bg-jade-5/20 text-jade-3 rounded-full text-sm font-medium border border-jade-5/30">
                   AI Engineer
                 </span>
-                <span className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-medium border border-purple-500/30">
+                <span className="px-3 py-1 bg-jade-6/20 text-jade-4 rounded-full text-sm font-medium border border-jade-6/30">
                   Computer Vision
                 </span>
-                <span className="px-3 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm font-medium border border-pink-500/30">
+                <span className="px-3 py-1 bg-jade-7/20 text-jade-5 rounded-full text-sm font-medium border border-jade-7/30">
                   Full Stack Developer
                 </span>
               </div>
 
               <p className="text-slate-300 leading-relaxed mb-8 text-lg">
-                Passionate about creating innovative solutions that blend <span className="text-blue-400 font-semibold">artificial intelligence</span> with
-                <span className="text-purple-400 font-semibold"> human-centered design</span>. Currently pursuing Computer Science while building
+                Passionate about creating innovative solutions that blend <span className="text-jade-8 font-semibold">artificial intelligence</span> with
+                <span className="text-jade-9 font-semibold"> human-centered design</span>. Currently pursuing Computer Science while building
                 the next generation of posture correction technology using cutting-edge computer vision and modern web technologies.
               </p>
 
@@ -141,14 +141,14 @@ const CreatorSection = () => {
                 <h4 className="text-white font-semibold mb-4">Tech Stack - Technologies used to build this project</h4>
                 <div className="flex flex-wrap justify-center lg:justify-start gap-3">
                   {[
-                    { name: 'React', color: 'bg-blue-500' },
-                    { name: 'JavaScript', color: 'bg-yellow-500' },
-                    { name: 'MediaPipe', color: 'bg-orange-500' },
-                    { name: 'Three.js', color: 'bg-green-500' },
-                    { name: 'Node.js', color: 'bg-green-600' },
-                    { name: 'MongoDB', color: 'bg-green-700' },
-                    { name: 'Mongoose', color: 'bg-red-500' },
-                    { name: 'AWS', color: 'bg-orange-600' }
+                    { name: 'React', color: 'bg-gradient-to-r from-jade-9 to-jade-10' },
+                    { name: 'JavaScript', color: 'bg-gradient-to-r from-jade-9 to-jade-10' },
+                    { name: 'MediaPipe', color: 'bg-gradient-to-r from-jade-9 to-jade-10' },
+                    { name: 'Three.js', color: 'bg-gradient-to-r from-jade-9 to-jade-10' },
+                    { name: 'Node.js', color: 'bg-gradient-to-r from-jade-9 to-jade-10' },
+                    { name: 'MongoDB', color: 'bg-gradient-to-r from-jade-9 to-jade-10' },
+                    { name: 'Mongoose', color: 'bg-gradient-to-r from-jade-9 to-jade-10' },
+                    { name: 'AWS', color: 'bg-gradient-to-r from-jade-9 to-jade-10' }
                   ].map((tech, index) => (
                     <span
                       key={tech.name}
@@ -164,7 +164,7 @@ const CreatorSection = () => {
               {/* Social links with enhanced styling */}
               <div className="flex justify-center lg:justify-start gap-4">
                 <a
-                  href="https://github.com/LTKers"
+                  href="https://github.com/DanielWLiu07"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative p-4 bg-slate-700/50 hover:bg-slate-600/50 rounded-xl border border-slate-600/50 hover:border-slate-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"

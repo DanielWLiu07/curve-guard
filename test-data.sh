@@ -1,7 +1,7 @@
 #!/bin/bash
 # Quick script to add sample posture data for testing
 
-echo "🧪 Adding sample posture data..."
+echo "Adding sample posture data..."
 
 # Add data for today
 curl -X POST http://localhost:8080/api/posture/start \
@@ -12,7 +12,7 @@ curl -X POST http://localhost:8080/api/posture/start \
   -s | python3 -m json.tool
 
 echo ""
-echo "✅ Session started! Now adding some sample data..."
+echo "Session started! Now adding some sample data..."
 echo ""
 
 # Simulate a 60-second recording with good posture
@@ -60,8 +60,8 @@ curl -X POST http://localhost:8080/api/posture/stop \
   }" -s | python3 -m json.tool
 
 echo ""
-echo "✅ Sample data added!"
-echo "📊 Check your Data section to see the graphs!"
+echo "Sample data added!"
+echo "Check your Data section to see the graphs!"
 echo ""
 echo "Expected results:"
 echo "  - Good posture: 75% (45 seconds)"

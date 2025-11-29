@@ -7,8 +7,8 @@ import './index.css';
 const amplifyConfig = {
   Auth: {
     Cognito: {
-      userPoolId: import.meta.env.VITE_USER_POOL_ID || 'us-east-1_placeholder',
-      userPoolClientId: import.meta.env.VITE_USER_POOL_CLIENT_ID || 'placeholder',
+      userPoolId: import.meta.env.VITE_USER_POOL_ID || 'us-east-2_kSAz2maKM',
+      userPoolClientId: import.meta.env.VITE_USER_POOL_CLIENT_ID || 'pcfsuhra84a4cjcmilalmedla',
       signUpVerificationMethod: 'code',
       loginWith: {
         email: true

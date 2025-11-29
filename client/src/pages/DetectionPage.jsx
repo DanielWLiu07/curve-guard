@@ -205,24 +205,24 @@ const DetectionPage = () => {
         }
 
         if (isRecording) {
-          const activeErrors = settingsRef.current.activeErrors;
-          const hasActiveError = activeErrors.eyeHeight.active || 
-                                 activeErrors.shoulder.active || 
-                                 activeErrors.headTilt.active;
-          
-          let violationType = null;
-          if (hasActiveError) {
-            if (activeErrors.eyeHeight.active) violationType = 'slouch';
-            else if (activeErrors.shoulder.active) violationType = 'shoulder_misalignment';
-            else if (activeErrors.headTilt.active) violationType = 'head_tilt';
-          }
-          
+          // Check if there are ANY violations happening right now
           const hasAnyViolation = postureResults.eyeHeightViolation ||
                                   postureResults.shoulderViolation ||
                                   postureResults.headTiltViolation;
 
-          if (hasAnyViolation || hasActiveError) {
-          }          recordPostureState(!hasActiveError, violationType);
+          let violationType = null;
+          if (hasAnyViolation) {
+            // Determine which violation type to record
+            if (postureResults.eyeHeightViolation) violationType = 'slouch';
+            else if (postureResults.shoulderViolation) violationType = 'shoulder_misalignment';
+            else if (postureResults.headTiltViolation) violationType = 'head_tilt';
+          }
+
+          // Record the posture state: good posture = NO violations
+          // Bad posture = ANY violation (don't wait for time tolerance)
+          const isGoodPosture = !hasAnyViolation;
+          console.log('Recording posture:', { isGoodPosture, hasAnyViolation, violationType });
+          recordPostureState(isGoodPosture, violationType);
         }
 
         updateCanvasProps({

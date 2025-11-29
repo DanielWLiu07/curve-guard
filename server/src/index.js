@@ -26,11 +26,18 @@ const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/curve_gua
 
 async function start() {
   try {
+    console.log('Connecting to MongoDB...');
     await mongoose.connect(mongoUri, { dbName: process.env.MONGODB_DB || undefined });
+    console.log('Connected to MongoDB successfully');
   } catch (err) {
+    console.error('Failed to connect to MongoDB:', err);
+    process.exit(1);
   }
 
-  app.listen(port, () => {});
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Health check: http://localhost:${port}/api/health`);
+  });
 }
 
 start();

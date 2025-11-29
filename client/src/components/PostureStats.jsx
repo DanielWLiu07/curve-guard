@@ -36,24 +36,32 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
 
   const fetchDailyStats = async (date) => {
     try {
-      const dateStr = date.toISOString().split('T')[0];
-      const response = await fetch(`/api/posture/daily/${userId}/${dateStr}`);
+      // Create date string in local timezone, not UTC
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
+
+      const url = `/api/posture/daily/${userId}/${dateStr}`;
+      console.log('Fetching daily stats from:', url, 'for local date:', date);
+
+      const response = await fetch(url);
       const result = await response.json();
+      console.log('Daily stats response:', result);
+
       if (result.success && result.data) {
         // Add a timestamp to force re-render
         const dataWithTimestamp = {
           ...result.data,
           _fetchedAt: Date.now()
         };
-        
-        // Only update if we have actual data OR if this is the first fetch (dailyData is null)
-        const hasRealData = result.data.totalGoodTime > 0 || result.data.totalBadTime > 0;
-        if (hasRealData || dailyData === null) {
-          setDailyData(dataWithTimestamp);
-        }
+
+        console.log('Setting daily data:', dataWithTimestamp);
+        // Always update the data to show latest stats
+        setDailyData(dataWithTimestamp);
       }
     } catch (error) {
-      // Error fetching daily stats
+      console.error('Error fetching daily stats:', error);
     }
   };
 
@@ -62,16 +70,19 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
       const endDate = new Date();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - 7);
-      
-      const response = await fetch(
-        `/api/posture/range/${userId}?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
-      );
+
+      const url = `/api/posture/range/${userId}?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
+      console.log('Fetching weekly stats from:', url);
+
+      const response = await fetch(url);
       const result = await response.json();
+      console.log('Weekly stats response:', result);
+
       if (result.success) {
         setWeeklyData(result.data);
       }
     } catch (error) {
-      // Error fetching weekly stats
+      console.error('Error fetching weekly stats:', error);
     }
   };
 
@@ -87,21 +98,45 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
     }
   };
 
+  // Initial fetch
   useEffect(() => {
+    console.log('PostureStats: Initial fetch for', userId, selectedDate);
     fetchDailyStats(selectedDate);
     fetchWeeklyStats();
     fetchCalendarData(selectedDate.getFullYear(), selectedDate.getMonth() + 1);
   }, [userId, selectedDate]);
 
+  // Listen for recording stopped event
+  useEffect(() => {
+    const handleRecordingStopped = (event) => {
+      console.log('PostureStats: Recording stopped event received', event.detail);
+      // Wait a bit for backend to finish processing
+      setTimeout(() => {
+        console.log('PostureStats: Refreshing all data...');
+        fetchDailyStats(selectedDate);
+        fetchWeeklyStats();
+        fetchCalendarData(selectedDate.getFullYear(), selectedDate.getMonth() + 1);
+      }, 500);
+    };
+
+    window.addEventListener('postureRecordingStopped', handleRecordingStopped);
+    return () => {
+      window.removeEventListener('postureRecordingStopped', handleRecordingStopped);
+    };
+  }, [selectedDate, userId]);
+
+  // Poll while recording
   useEffect(() => {
     if (!isRecording) return;
 
+    console.log('PostureStats: Starting polling (recording active)');
     const pollInterval = setInterval(() => {
       fetchDailyStats(selectedDate);
       fetchWeeklyStats();
     }, 5000);
 
     return () => {
+      console.log('PostureStats: Stopping polling');
       clearInterval(pollInterval);
     };
   }, [isRecording, userId, selectedDate]);
@@ -322,7 +357,6 @@ const PostureStats = ({ userId, compact = false, alwaysShow = false, isRecording
       {/* No Data Message */}
       {!hasAnyData && viewMode === 'daily' && !alwaysShow && (
         <div className={`text-center ${compact ? 'py-8' : 'py-16'}`}>
-          <div className={`${compact ? 'text-4xl' : 'text-6xl'} mb-3`}>📊</div>
           <h3 className={`${compact ? 'text-lg' : 'text-2xl'} font-bold text-white mb-2`}>No Data Yet</h3>
           <p className={`text-slate-400 ${compact ? 'text-xs mb-3' : 'text-sm mb-6'}`}>
             {compact ? 'Start recording to track posture!' : 'Start recording in the Detection page to see your posture statistics here!'}
