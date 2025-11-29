@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { signIn, signUp, confirmSignUp, signInWithRedirect } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 
-export default function SignInSection({ showSignIn, onBackToHero }) {
+export default function SignInSection({ showSignIn, onBackToHero, onAuthSuccess }) {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
@@ -30,6 +30,7 @@ export default function SignInSection({ showSignIn, onBackToHero }) {
       const result = await signIn(signInInput);
 
       if (result.isSignedIn) {
+        onAuthSuccess && onAuthSuccess();
         handleBackToHeroInternal();
       } else if (result.nextStep.signInStep === 'CONFIRM_SIGN_UP') {
         setIsConfirming(true);
