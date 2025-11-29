@@ -3,7 +3,7 @@ import React from 'react';
 const SceneLighting = () => {
   return (
     <>
-      <ambientLight intensity={0.5} color="#4a5568" />
+      <ambientLight intensity={0.3} color="#4a5568" />
       <directionalLight
         position={[3, 2, 3]}
         intensity={0.4}

@@ -1,41 +1,24 @@
 import React, { useRef, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 
-const GLTFModel = ({ url, hideOutline = true, ...props }) => {
+const GLTFModel = React.forwardRef(({ url, position = [0, 0, 0], rotation = [0, 0, 0] }, ref) => {
   const { scene } = useGLTF(url);
-  const ref = useRef();
+  const internalRef = useRef();
 
   useEffect(() => {
-    if (hideOutline) {
-      const outlineObject = ref.current.getObjectByName('OutLine');
+    if (scene) {
+      const outlineObject = scene.getObjectByName('OutLine');
       if (outlineObject) {
         outlineObject.visible = false;
       }
     }
-  }, [scene, hideOutline]);
+  }, [scene]);
 
-  const clonedScene = scene ? scene.clone() : null;
+  React.useImperativeHandle(ref, () => internalRef.current);
 
-  useEffect(() => {
-    return () => {
-      if (clonedScene) {
-        clonedScene.traverse((child) => {
-          if (child.isMesh) {
-            child.geometry?.dispose();
-            if (child.material) {
-              if (Array.isArray(child.material)) {
-                child.material.forEach(material => material.dispose());
-              } else {
-                child.material.dispose();
-              }
-            }
-          }
-        });
-      }
-    };
-  }, [clonedScene]);
+  return <primitive ref={internalRef} object={scene} position={position} rotation={rotation} />;
+});
 
-  return <primitive ref={ref} object={clonedScene} {...props} />;
-};
+GLTFModel.displayName = 'GLTFModel';
 
 export default GLTFModel;

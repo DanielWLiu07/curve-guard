@@ -10,3 +10,5 @@ export { default as WebcamScreen } from './WebcamScreen';
 export { default as PhoneModel } from './PhoneModel';
 export { default as PhoneDisplay } from './PhoneDisplay';
 export { default as PhoneWithWebcam } from './PhoneWithWebcam';
+export { default as LandingModel } from './LandingModel';
+export { default as DetectionModel } from './DetectionModel';
