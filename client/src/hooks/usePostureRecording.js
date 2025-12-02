@@ -48,21 +48,17 @@ export const usePostureRecording = (userId) => {
         accumulatedGoodTime.current = 0;
         accumulatedBadTime.current = 0;
 
-        console.log('Recording started - state reset');
-
         updateInterval.current = setInterval(() => {
           sendAccumulatedUpdate();
         }, 5000);
       }
     } catch (error) {
-      console.error('Error starting recording:', error);
+      // Error starting recording
     }
   };
 
   const stopRecording = async () => {
     try {
-      console.log('Stopping recording...');
-
       if (updateInterval.current) {
         clearInterval(updateInterval.current);
         updateInterval.current = null;
@@ -81,7 +77,6 @@ export const usePostureRecording = (userId) => {
       });
 
       const result = await response.json();
-      console.log('Stop recording result:', result);
 
       if (result.success) {
         isRecordingRef.current = false;
@@ -92,23 +87,20 @@ export const usePostureRecording = (userId) => {
           badTime: result.totalStats.totalBadTime
         });
 
-        // Emit custom event to force refresh of stats
         window.dispatchEvent(new CustomEvent('postureRecordingStopped', {
           detail: {
             userId,
             timestamp: Date.now()
           }
         }));
-        console.log('Recording stopped successfully, event dispatched');
       }
     } catch (error) {
-      console.error('Error stopping recording:', error);
+      // Error stopping recording
     }
   };
 
   const updatePostureData = async (isGoodPosture, violationType = null, duration = null) => {
     if (!isRecordingRef.current || !sessionIdRef.current) {
-      console.log('updatePostureData: Not recording or no session');
       return;
     }
 
@@ -127,8 +119,6 @@ export const usePostureRecording = (userId) => {
         duration
       };
 
-      console.log('Sending to /api/posture/update:', payload);
-
       const response = await fetch('/api/posture/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,7 +126,6 @@ export const usePostureRecording = (userId) => {
       });
 
       const result = await response.json();
-      console.log('Update response:', result);
 
       if (result.success) {
         setCurrentStats({
@@ -146,25 +135,17 @@ export const usePostureRecording = (userId) => {
         });
       }
     } catch (error) {
-      console.error('Error updating posture data:', error);
+      // Error updating posture data
     }
   };
 
   const sendAccumulatedUpdate = async () => {
     if (!isRecordingRef.current || !sessionIdRef.current) {
-      console.log('sendAccumulatedUpdate: Not recording or no session');
       return;
     }
 
     const now = Date.now();
     const timeSinceLastChange = now - lastStateChangeTime.current;
-
-    console.log('sendAccumulatedUpdate: Current state:', {
-      lastPostureState: lastPostureState.current ? 'good' : 'bad',
-      timeSinceLastChange,
-      accumulatedGood: accumulatedGoodTime.current,
-      accumulatedBad: accumulatedBadTime.current
-    });
 
     if (lastPostureState.current) {
       accumulatedGoodTime.current += timeSinceLastChange;
@@ -175,13 +156,11 @@ export const usePostureRecording = (userId) => {
     lastStateChangeTime.current = now;
 
     if (accumulatedGoodTime.current > 0) {
-      console.log('Sending good posture data:', accumulatedGoodTime.current);
       await updatePostureData(true, null, accumulatedGoodTime.current);
       accumulatedGoodTime.current = 0;
     }
 
     if (accumulatedBadTime.current > 0) {
-      console.log('Sending bad posture data:', accumulatedBadTime.current, 'violationType:', lastViolationType.current);
       await updatePostureData(false, lastViolationType.current, accumulatedBadTime.current);
       accumulatedBadTime.current = 0;
     }
@@ -189,13 +168,10 @@ export const usePostureRecording = (userId) => {
 
   const recordPostureState = (isGoodPosture, violationType = null) => {
     if (!isRecordingRef.current) {
-      console.log('recordPostureState: Not recording, skipping');
       return;
     }
 
-    // First time recording? Just set the state without accumulating
     if (lastPostureState.current === null) {
-      console.log('recordPostureState: First state recorded:', isGoodPosture ? 'good' : 'bad');
       lastPostureState.current = isGoodPosture;
       lastViolationType.current = violationType;
       lastStateChangeTime.current = Date.now();
@@ -206,19 +182,10 @@ export const usePostureRecording = (userId) => {
       const now = Date.now();
       const duration = now - lastStateChangeTime.current;
 
-      console.log('Posture state changed:', {
-        from: lastPostureState.current ? 'good' : 'bad',
-        to: isGoodPosture ? 'good' : 'bad',
-        duration: duration,
-        violationType
-      });
-
       if (lastPostureState.current) {
         accumulatedGoodTime.current += duration;
-        console.log('Added to good time:', duration, 'Total good:', accumulatedGoodTime.current);
       } else {
         accumulatedBadTime.current += duration;
-        console.log('Added to bad time:', duration, 'Total bad:', accumulatedBadTime.current);
       }
 
       lastStateChangeTime.current = now;

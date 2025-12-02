@@ -34,7 +34,7 @@ const DataSection = ({ user }) => {
 
         {/* Quick Tips */}
         <div className="mt-8 bg-slate-800/40 backdrop-blur-xl rounded-2xl p-6 border border-slate-700/30">
-          <h3 className="text-xl font-bold text-white mb-4">💡 Tips for Better Posture</h3>
+          <h3 className="text-xl font-bold text-white mb-4">Tips for Better Posture</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
