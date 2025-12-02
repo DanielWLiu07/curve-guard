@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import GlobalCanvas from './GlobalCanvas';
+import GlobalCanvas from './canvas/GlobalCanvas';
 import { useCanvas } from '../contexts/CanvasContext';
 
 export default function CanvasContentManager() {

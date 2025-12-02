@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import DetectionCanvas from '../components/DetectionCanvas';
+import DetectionCanvas from '../components/canvas/DetectionCanvas';
 import Vignette from '../components/Vignette';
 import SlidingSettingsPanel from '../components/SlidingSettingsPanel';
 import SettingsPanel from '../components/SettingsPanel';
@@ -218,10 +218,7 @@ const DetectionPage = () => {
             else if (postureResults.headTiltViolation) violationType = 'head_tilt';
           }
 
-          // Record the posture state: good posture = NO violations
-          // Bad posture = ANY violation (don't wait for time tolerance)
           const isGoodPosture = !hasAnyViolation;
-          console.log('Recording posture:', { isGoodPosture, hasAnyViolation, violationType });
           recordPostureState(isGoodPosture, violationType);
         }
 

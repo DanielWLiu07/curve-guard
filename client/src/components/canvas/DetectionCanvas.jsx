@@ -1,7 +1,7 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import DetectionScene from './DetectionScene';
-import { useDetectionAnimations } from '../hooks/useDetectionAnimations';
+import DetectionScene from '../DetectionScene';
+import { useDetectionAnimations } from '../../hooks/useDetectionAnimations';
 
 export default function DetectionCanvas({ videoRef, isStreaming, poseLandmarks, poseCanvas, alerts = {}, settings = {} }) {
   const { skeletonRef, phoneRef } = useDetectionAnimations(alerts);

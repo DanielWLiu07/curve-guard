@@ -1,7 +1,7 @@
 import React from 'react';
-import { HeroTitle, HeroSubtitle, HeroDescription } from './ui/HeroContent';
-import HeroActions from './ui/HeroActions';
-import HeroFeatures from './ui/HeroFeatures';
+import { HeroTitle, HeroSubtitle, HeroDescription } from '../ui/HeroContent';
+import HeroActions from '../ui/HeroActions';
+import HeroFeatures from '../ui/HeroFeatures';
 
 export default function HeroSection({ onShowSignIn, onShowAbout, user, onGoToApp }) {
   return (

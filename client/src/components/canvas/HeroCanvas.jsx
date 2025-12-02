@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { gsap } from 'gsap';
-import { SceneSetup } from './three';
+import { SceneSetup } from '../three';
 
 
 function ScreenLight() {

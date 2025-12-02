@@ -9,7 +9,7 @@ import {
   SceneControls,
   LandingModel,
   DetectionModel
-} from './three';
+} from '../three';
 
 export default function GlobalCanvas({
   contentType = 'landing',
