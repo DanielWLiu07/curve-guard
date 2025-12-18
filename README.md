@@ -1,79 +1,172 @@
 # CurveGuard
 
-**Posture-aware wellness tool powered by AI**  
-**CurveGuard** is a real-time posture monitoring desktop app that uses computer vision to promote healthy spinal habits. It leverages [MediaPipe](https://mediapipe.dev/) for body landmark detection and provides an intuitive PyQt5 interface to alert users of poor posture while using their computer. By encouraging upright sitting posture, CurveGuard aims to prevent long-term spinal issues such as **scoliosis**, **lordosis**, and **kyphosis**.
+**AI-Powered Posture Wellness Platform**  
 
-
-![default_screen](media/default.png)
+CurveGuard is a real-time posture monitoring platform that uses computer vision and AI to promote healthy spinal habits. Available as both a **web application** and **desktop app**, CurveGuard leverages [MediaPipe](https://mediapipe.dev/) for body landmark detection to alert users of poor posture. By encouraging upright sitting posture, CurveGuard aims to prevent long-term spinal issues such as **scoliosis**, **lordosis**, and **kyphosis**.
 
 ---
 
-## Features
+## Web Application
 
-- 🔍 Non-invasive posture tracking (no wearables or sensors needed)
-- 📐 Real-time feedback on head tilt, shoulder slope, and back alignment
-- ⏱️ Adjustable posture check frequency
-- 🪟 Lightweight PyQt5 GUI for status and settings
-- 💾 Modular and extensible codebase for future features like stats/history tracking
+The web version of CurveGuard provides a modern, immersive 3D experience with cloud-powered posture tracking and analytics.
+
+<!-- Add screenshot of landing page here -->
+
+### Features
+
+- **Interactive 3D Interface** - Stunning Three.js visualizations with a skeleton model that responds to your posture in real-time
+- **Cloud-Powered Analytics** - Track your posture history and view detailed statistics over time
+- **AWS Amplify Authentication** - Secure user accounts with data persistence
+- **Responsive Design** - Works seamlessly across desktop and mobile browsers
+- **Real-Time Detection** - Live posture feedback using MediaPipe Pose
+- **Customizable Settings** - Adjust sensitivity, thresholds, and detection parameters
+- **Visual Charts** - View your posture trends with interactive Chart.js graphs
+
+<!-- Add screenshot of detection page here -->
+
+### Web Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| **Frontend Framework** | [React](https://react.dev/) + [Vite](https://vitejs.dev/) |
+| **3D Graphics** | [Three.js](https://threejs.org/) + [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/) |
+| **Pose Detection** | [MediaPipe Pose](https://google.github.io/mediapipe/solutions/pose.html) |
+| **UI Components** | [Radix UI](https://www.radix-ui.com/) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
+| **Animations** | [GSAP](https://greensock.com/gsap/) |
+| **Charts** | [Chart.js](https://www.chartjs.org/) + React Chart.js 2 |
+| **Backend** | [AWS Amplify](https://aws.amazon.com/amplify/) |
+| **Routing** | [React Router](https://reactrouter.com/) |
+
+### Getting Started (Web)
+
+#### Prerequisites
+- Node.js 16+ and npm/yarn
+- AWS account (for deployment)
+
+#### Installation
+
+1. **Navigate to the client directory:**
+   ```bash
+   cd client
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser:**
+   Navigate to `http://localhost:5173`
+
+<!-- Add screenshot of data analytics page here -->
+
+#### Deployment
+
+Deploy to AWS Amplify:
+```bash
+npx ampx sandbox
+```
+
+For production deployment, follow the [AWS Amplify deployment guide](https://docs.amplify.aws/).
 
 ---
 
-##  Posture Metrics Tracked
+## Desktop Application
 
-CurveGuard monitors three key indicators of posture in real-time:
+The desktop version provides a lightweight, standalone posture monitoring tool with a PyQt5 interface.
 
-### Eye Height Monitor
+![Desktop Application Screenshot](media/desktop-default.png)
+
+### Desktop Features
+
+- **Non-invasive Tracking** - No wearables or sensors needed
+- **Real-time Feedback** - Instant alerts on head tilt, shoulder slope, and back alignment
+- **Adjustable Check Frequency** - Customize how often posture is evaluated
+- **Lightweight GUI** - Simple PyQt5 interface for status and settings
+- **Modular Design** - Extensible codebase for future enhancements
+
+###  Posture Metrics Tracked
+
+The desktop app monitors three key indicators of posture in real-time:
+
+#### Eye Height Monitor
 Users can calibrate an eye-level reference line to help ensure they sit upright while using their device. This calibration is based on **MediaPipe pose landmarks 2 and 3**, which correspond to the left and right eyes.
 
 A demo of the calibration can be seen below:
-![default_screen](media/calibrate.gif)
+![Eye Height Calibration Demo](media/desktop-calibrate.gif)
 
 The system allows customizable settings:
 - **Calibrate**: Create a reference line based on the average eye positions (landmarks 2 and 3).
 - **Leniency**: Set the number of pixels the eyes can fall below the reference line before triggering a warning.
 - **Delay**: Define how many seconds the eyes must remain below the line before the system responds.
 - **Visibility**: Enable visibility of the reference line.
+
 This feature encourages better posture by helping users maintain consistent vertical alignment between their eyes and the screen.
 
-![default_screen](media/height_monitor.png)
+![Eye Height Monitor Screenshot](media/desktop-height-monitor.png)
 
-### Shoulder Slope Monitor
+#### Shoulder Slope Monitor
 The shoulder slope monitor tracks whether a user's shoulders are level or slanted while sitting. It uses MediaPipe pose landmarks 11 and 12, which correspond to the left and right shoulders.
 
 Customizable settings include:
-
 - **Leniency**: Set the maximum vertical difference (in pixels) between the two shoulders.
 - **Delay**: Set the number of seconds the shoulders must remain uneven before triggering a warning.
 - **Visibility**: Enable visibility of highlighted shoulder landmarks.
 
-![shoulder_monitor](media/shoulder_monitor.png)
+![Shoulder Monitor Screenshot](media/desktop-shoulder-monitor.png)
 
 This promotes symmetrical posture and can help users avoid leaning or slouching over time.
 
-### Head Tilt Monitor
+#### Head Tilt Monitor
 The head tilt monitor detects whether a user's head is tilted too far forward or sideways. It calculates the vertical difference between the left and right landmarks present on face.
 
 Customizable settings include:
-
 - **Leniency**: Set the maximum vertical difference (in pixels) before it's considered incorrect posture.  
 - **Delay**: Set the number of seconds the head must remain tilted before triggering a warning.  
 - **Visibility**: Enable visibility of the on-screen tilt guideline for real-time feedback.
 
-![head_monitor](media/head_monitor.png)
+![Head Tilt Monitor Screenshot](media/desktop-head-monitor.png)
 
 This feature helps reinforce neutral head alignment and reduce the risk of neck strain caused by prolonged poor posture.
 
----
-## Tech Stack
+### Desktop Tech Stack
 
-| Component        | Technology                  |
-|------------------|------------------------------|
+| Component | Technology |
+|-----------|-----------|
 | **Pose Detection** | [MediaPipe Pose](https://google.github.io/mediapipe/solutions/pose.html) |
 | **Computer Vision** | [OpenCV](https://opencv.org/) |
-| **GUI Framework**   | [PyQt5](https://riverbankcomputing.com/software/pyqt/) |
+| **GUI Framework** | [PyQt5](https://riverbankcomputing.com/software/pyqt/) |
 | **Programming Language** | Python 3.8+ |
 | **Style** | Qt Stylesheets (`.qss`) |
-| **Utilities** | NumPy, Python’s `threading` module |
+| **Utilities** | NumPy, Python's `threading` module |
+
+### Getting Started (Desktop)
+
+#### Prerequisites
+- Python 3.8+
+
+#### Installation
+
+1. **Navigate to the desktop directory:**
+   ```bash
+   cd desktop
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the application:**
+   ```bash
+   python main.py
+   ```
 
 ---
 
@@ -88,27 +181,12 @@ This project uses the following CC-BY 3D assets:
 
 - **"Headphones Free Model"** by **OSCAR CREATIVO**, licensed under **CC BY 4.0**.  
   Source: https://sketchfab.com/3d-models/headphones-free-model-xxxx
-  Some assets have been modified from their originals.
+
+Some assets have been modified from their originals.
 
 ---
 
-## Installation
-
-### Requirements
-
-- Python 3.8+
-- PyQt5
-- OpenCV
-- MediaPipe
-- Numpy
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-## 📄 License
+## License
 
 This project is licensed under the **MIT License**.
 
