@@ -10,7 +10,7 @@ CurveGuard is a real-time posture monitoring platform that uses computer vision 
 
 The web version of CurveGuard provides a modern, immersive 3D experience with cloud-powered posture tracking and analytics.
 
-<!-- Add screenshot of landing page here -->
+![Web Application Landing Page](media/web_landing.png)
 
 ### Features
 
@@ -22,7 +22,38 @@ The web version of CurveGuard provides a modern, immersive 3D experience with cl
 - **Customizable Settings** - Adjust sensitivity, thresholds, and detection parameters
 - **Visual Charts** - View your posture trends with interactive Chart.js graphs
 
-<!-- Add screenshot of detection page here -->
+![Web Detection Interface](media/web_general.png)
+
+### Customizable Posture Metrics
+
+The web application tracks multiple posture indicators with customizable thresholds:
+
+#### Head Tilt Detection
+Monitors head alignment to prevent forward head posture and neck strain.
+
+![Head Tilt Settings](media/web_headtilt.png)
+
+#### Eye Height Tracking
+Ensures proper eye level alignment with your screen for optimal viewing posture.
+
+![Eye Height Settings](media/web_height.png)
+
+#### Shoulder Balance
+Detects shoulder asymmetry to promote balanced sitting posture.
+
+![Shoulder Settings](media/web_shoulders.png)
+
+### Alerts and Notifications
+
+Receive real-time alerts when poor posture is detected, with customizable sensitivity and timing.
+
+![Posture Alerts](media/web_alerts.png)
+
+### Settings Panel
+
+Comprehensive settings panel for fine-tuning detection parameters and preferences.
+
+![Settings Panel](media/settings.png)
 
 ### Web Tech Stack
 
@@ -64,7 +95,39 @@ The web version of CurveGuard provides a modern, immersive 3D experience with cl
 4. **Open your browser:**
    Navigate to `http://localhost:5173`
 
-<!-- Add screenshot of data analytics page here -->
+### Analytics and Data Tracking
+
+Track your posture improvement over time with detailed analytics:
+
+#### Daily Statistics
+View detailed daily posture metrics and trends.
+
+![Daily Analytics](media/web_setting_daily.png)
+
+#### Weekly Overview
+Analyze weekly patterns to understand your posture habits.
+
+![Weekly Analytics](media/web_setting_weekly.png)
+
+#### Calendar View
+Navigate through your posture history with an intuitive calendar interface.
+
+![Calendar View](media/web_setting_calender.png)
+
+#### Feature Information
+Learn about each posture metric and how it affects your health.
+
+![Feature Info](media/web_info.png)
+
+#### Creator Profile
+About the developer and project information.
+
+![Creator Page](media/web_creator.png)
+
+#### Features Overview
+Explore all available features and capabilities.
+
+![Features Page](media/web_features.png)
 
 #### Deployment
 
